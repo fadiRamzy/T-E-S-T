@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10263c"><meta name="rasd-api-base" content=""><title>رَصْد — منصة مراجعة السجلات</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="رصد — منصة مراجعة السجلات">
+      <span class="brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18 24 9l16 9H8Z"/><path d="M11 38h26M14 20v15m7-15v15m7-15v15m7-15v15M9 39h30"/></svg></span>
+      <span><b data-t="brand">رَصْد</b><small data-t="tagline">منصة مراجعة السجلات المالية</small></span>
+    </a>
+    <nav class="main-nav" aria-label="التنقل الرئيسي"><a href="#overview" data-t="navOverview">نظرة عامة</a><a href="#records" data-t="navRecords">السجلات</a><a href="#sourceSummary" data-t="navSources">المصادر</a></nav>
+    <div class="header-actions"><span class="live-pill" id="livePill"><i></i><span data-t="live">المصادر متصلة</span></span><button id="langBtn" class="lang-button" type="button">EN</button><button id="refreshBtn" class="refresh-btn" type="button"><span class="refresh-icon">↻</span><span data-t="refresh">تحديث البيانات</span></button><button class="avatar" title="حساب المستخدم">ر</button></div>
+  </header>
+  <main>
+    <section class="hero" id="overview">
+      <div class="hero-copy"><div class="eyebrow"><span class="sparkle">•</span><span data-t="eyebrow">مركز البحث والاستكشاف</span></div><h1><span data-t="headline">كل السجلات،</span> <em data-t="accent">في مكان واحد.</em></h1><p data-t="subhead">ابحث، صفِّ، وافتح الملفات الأصلية — بيانات مباشرة من جداولك.</p>
+        <div class="source-chips" id="sourceChips"></div>
+      </div>
+      <aside class="source-summary" id="sourceSummary"><div class="summary-head"><span class="summary-icon">▤</span><span data-t="connectionStatus">حالة اتصال المصادر</span><span class="summary-live" id="summaryLive"><i></i> LIVE</span></div><div class="summary-main"><strong id="summaryRows">—</strong><span data-t="connectedRecords">سجل مسترجع من المصدرين</span></div><div class="summary-legend"><span><i></i><b id="summarySourceOne">—</b><em id="summaryCountOne">—</em></span><span><i></i><b id="summarySourceTwo">—</b><em id="summaryCountTwo">—</em></span></div><div class="summary-bar"><i id="summaryBar"></i></div><div class="summary-foot"><span data-t="updatedLabel">آخر مزامنة</span><b id="summaryUpdated">—</b></div></aside>
+    </section>
+    <section class="stats" aria-label="إحصائيات"><article class="stat stat-pink"><div class="stat-icon">▤</div><div><small data-t="totalRecords">إجمالي السجلات</small><strong id="statTotal">—</strong></div><span class="stat-deco">✳</span></article><article class="stat stat-lilac"><div class="stat-icon">▧</div><div><small data-t="withFiles">سجلات بمرفقات</small><strong id="statFiles">—</strong></div><span class="stat-deco">✦</span></article><article class="stat stat-peach"><div class="stat-icon">◉</div><div><small data-t="sources">مصادر البيانات</small><strong id="statSources">—</strong></div><span class="stat-deco">♡</span></article><article class="stat stat-mint"><div class="stat-icon">◷</div><div><small data-t="lastUpdated">آخر تحديث ناجح</small><strong id="statUpdated" class="updated-value">—</strong></div><span class="stat-deco">✿</span></article></section>
+    <section class="workspace" id="records">
+      <div class="section-heading"><div><span class="heading-kicker" data-t="browse">تصفّح البيانات</span><h2 data-t="recordsTitle">سجلّاتك</h2></div><div id="statusMessage" class="status-message" aria-live="polite"></div></div>
+      <div class="search-card">
+        <div class="search-row"><label class="searchbox"><span class="search-symbol">⌕</span><input id="searchInput" type="search" autocomplete="off" data-placeholder="searchPlaceholder" placeholder="ابحث في كل الأعمدة…"><kbd>⌘ K</kbd><button id="clearSearch" type="button" aria-label="مسح البحث" class="clear-search">×</button></label><button id="filtersToggle" class="filter-toggle" type="button"><span>☷</span><span data-t="filters">الفلاتر</span><b id="filterCount" class="filter-count">0</b></button></div>
+        <div class="filter-tray" id="filterTray"><div class="filter-label"><span class="filter-diamond">✳</span><span data-t="filterBy">تصفية حسب العمود</span></div><div id="filterRows" class="filter-rows"></div><button id="addFilter" class="add-filter" type="button"><span>＋</span><span data-t="addFilter">إضافة فلتر</span></button><button id="resetFilters" class="reset-filters" type="button" data-t="clearFilters">مسح الكل</button></div>
+        <div class="search-foot"><span><i class="mini-dot"></i><span data-t="searchHint">يدعم البحث بالعربية والإنجليزية</span></span><span id="resultCount">—</span></div>
+      </div>
+      <div class="table-card"><div class="table-top"><div class="table-title"><span class="table-flower">▤</span><div><b data-t="results">النتائج</b><small id="pageSummary">—</small></div></div><label class="page-size-label"><span data-t="show">عرض</span><select id="pageSize"><option>10</option><option>20</option><option>50</option></select></label></div>
+        <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table><div id="loading" class="loading-state"><span class="loader"></span><span data-t="loading">نحمّل بياناتك…</span></div><div id="emptyState" class="empty-state" hidden><span>⌕</span><b data-t="emptyTitle">لا توجد نتائج هنا</b><p data-t="emptyText">جرّب كلمات بحث أخرى أو أزل بعض الفلاتر.</p></div></div>
+        <div class="table-bottom"><span id="rangeLabel">—</span><div class="pagination"><button id="prevPage" aria-label="السابق">‹</button><div id="pageNumbers"></div><button id="nextPage" aria-label="التالي">›</button></div></div>
+      </div>
+      <div class="footer-note"><span class="footer-heart">●</span><span data-t="footer">مصدر البيانات: جداول Google المرتبطة — يتم جلب أحدث نسخة عند التحديث.</span></div>
+    </section>
+  </main>
+  <footer class="site-footer"><span>رَصْد <span data-t="footerSmall">منصة عمليات البيانات</span></span><span class="footer-scribble">INTERNAL DATA OPERATIONS</span></footer>
+</div>
+<div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="recordDrawer" class="record-drawer" aria-label="تفاصيل السجل" aria-hidden="true"><div class="drawer-head"><div><small data-t="recordDetail">تفاصيل السجل</small><h2 id="drawerTitle">—</h2></div><button id="closeDrawer" aria-label="إغلاق">×</button></div><div id="drawerContent" class="drawer-content"></div></aside>
+<div id="toast" class="toast" role="status"></div>
+<script src="./app.js" defer></script>
+</body></html>

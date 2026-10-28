@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: rasd-sheets-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: CACHE_TTL
+        value: "300"
