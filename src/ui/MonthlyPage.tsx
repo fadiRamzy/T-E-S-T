@@ -2,19 +2,24 @@ import { useMemo, useState } from 'react';
 import { monthTotal } from '../domain/calc';
 import { CAP, MONTH_NAMES, SCORE_SHORT, SCORE_HEADERS } from '../domain/constants';
 import { isoToSerial, serialToISO } from '../domain/dates';
-import { addMonthRecord, blankRecord, copyRosterFromPrevious, deleteMonthRecord, updateMonthRecord } from '../domain/model';
+import { addMonthRecord, blankRecord, copyRosterFromPrevious, deleteMonthRecord, gridOf, updateMonthRecord } from '../domain/model';
 import { buildRoster, codeKey } from '../domain/roster';
 import type { AppModel, MonthRecord, Raw } from '../domain/types';
 import { isIntInRange, validateMonthRecord } from '../domain/validate';
-import { CellInput, Empty, Field, Modal, TextCell, parseCell } from './kit';
+import { Icon } from './icons';
+import { CellInput, Empty, Field, Modal, Pagination, TextCell, parseCell, slicePage } from './kit';
 import { commit, confirmDialog, toast, useStore } from './store';
 
 export function MonthlyPage({ model }: { model: AppModel }) {
   const [month, setMonth] = useState(1);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(25);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<MonthRecord | null>(null);
   const recs = useMemo(() => model.months.filter((r) => r.month === month).sort((a, b) => a.row - b.row), [model, month]);
   const free = CAP.monthRows - recs.length;
+  const paged = slicePage(recs, page, size);
+  const base = gridOf(model).firstRow - 1;
 
   const upd = (r: MonthRecord, patch: Partial<MonthRecord>) =>
     commit('تعديل تقييم شهري', (m) => updateMonthRecord(m, r.month, r.row, { ...r, ...patch }));
@@ -33,14 +38,15 @@ export function MonthlyPage({ model }: { model: AppModel }) {
 
   return (
     <>
+      <div className="pagehead"><div><h1>التقييم الشهري</h1><p>إدخال الزيارات والمعايير الثمانية لكل موظف حسب الشهر</p></div></div>
       <div className="tabs" role="tablist">
         {MONTH_NAMES.map((n, i) => {
           const c = model.months.filter((r) => r.month === i + 1).length;
-          return <button key={n} role="tab" aria-selected={month === i + 1} className={`tab ${month === i + 1 ? 'active' : ''}`} onClick={() => setMonth(i + 1)}>{n}<small>{c}</small></button>;
+          return <button key={n} role="tab" aria-selected={month === i + 1} className={`tab ${month === i + 1 ? 'active' : ''}`} onClick={() => { setMonth(i + 1); setPage(1); }}>{n}<small>{c}</small></button>;
         })}
       </div>
       <div className="filters">
-        <button className="btn primary" onClick={() => setAdding(true)} disabled={free <= 0}>+ إضافة موظف لشهر {MONTH_NAMES[month - 1]}</button>
+        <button className="btn primary" onClick={() => setAdding(true)} disabled={free <= 0}><Icon name="plus" /> إضافة موظف لشهر {MONTH_NAMES[month - 1]}</button>
         <button className="btn" onClick={copyPrev} disabled={month === 1 || free <= 0}>نسخ الموظفين من الشهر السابق</button>
         <span className="note">الصفوف المتاحة: {free} من {CAP.monthRows} · إجمالي الصف = الزيارات + 8 تقييمات (كما في العمود Q)</span>
       </div>
@@ -52,15 +58,15 @@ export function MonthlyPage({ model }: { model: AppModel }) {
                 <th>صف</th><th className="sticky1">اسم الموظف</th><th>الكود</th><th>القطاع</th><th>المحافظة</th><th>الوظيفة</th><th>تاريخ الالتحاق</th>
                 <th>{MONTH_NAMES[month - 1]} (زيارات)</th>
                 {SCORE_SHORT.map((s, i) => <th key={i} title={SCORE_HEADERS[i]} style={{ minWidth: 64, whiteSpace: 'normal' }}>{s}</th>)}
-                <th style={{ background: '#b59a00' }}>الإجمالي</th><th style={{ minWidth: 240 }}>ملاحظات</th><th />
+                <th>الإجمالي</th><th style={{ minWidth: 240 }}>ملاحظات</th><th />
               </tr>
             </thead>
             <tbody>
-              {recs.map((r) => {
+              {paged.map((r) => {
                 const issues = validateMonthRecord(model, r, r);
                 return (
                   <tr key={r.row}>
-                    <td className="c">{r.row - 2}</td>
+                    <td className="c">{r.row - base}</td>
                     <td className="name sticky1">{r.name || <i className="note">بدون اسم</i>}</td>
                     <td className="c">{String(r.code ?? '')}</td>
                     <td>{r.sector}</td><td>{r.gov.replace('محافظه - ', '')}</td><td>{r.job}</td>
@@ -72,12 +78,12 @@ export function MonthlyPage({ model }: { model: AppModel }) {
                         upd(r, { scores: r.scores.map((x, j) => (j === i ? v : x)) });
                       }} /></td>
                     ))}
-                    <td className="c" style={{ background: '#fffbe0', fontWeight: 700 }}>{monthTotal(r)}</td>
+                    <td className="c" style={{ background: '#e6f4f4', fontWeight: 700 }}>{monthTotal(r)}</td>
                     <td><TextCell value={r.notes} onCommit={(v) => upd(r, { notes: v })} width={240} /></td>
                     <td style={{ whiteSpace: 'nowrap' }}>
                       {issues.some((i) => i.field === 'code') && <span className="warnchip" title={issues.find((i) => i.field === 'code')!.message}>كود</span>}{' '}
-                      <button className="btn sm" onClick={() => setEditing(r)}>تعديل</button>{' '}
-                      <button className="btn sm danger" onClick={() => del(r)} aria-label="حذف">حذف</button>
+                      <button className="rowbtn" onClick={() => setEditing(r)} aria-label="تعديل" title="تعديل"><Icon name="edit" /></button>
+                      <button className="rowbtn danger" onClick={() => del(r)} aria-label="حذف" title="حذف"><Icon name="trash" /></button>
                     </td>
                   </tr>
                 );
@@ -86,6 +92,7 @@ export function MonthlyPage({ model }: { model: AppModel }) {
           </table>
         )}
       </div>
+      <Pagination total={recs.length} page={page} size={size} onPage={setPage} onSize={(n) => { setSize(n); setPage(1); }} />
       <p className="note">نص مكتوب في خانة رقمية (مثل «تدريب») يُحفظ كما هو ويُحسب 0 — تمامًا كما تفعل SUM في Excel. التقييمات المقبولة: أعداد صحيحة 1–5.</p>
       {adding && <AddModal model={model} month={month} onClose={() => setAdding(false)} />}
       {editing && <RecordModal model={model} initial={editing} onClose={() => setEditing(null)} />}

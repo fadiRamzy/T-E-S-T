@@ -4,7 +4,8 @@ import { OpError, clone } from '../domain/model';
 import type { AppModel } from '../domain/types';
 import { todayISO } from '../domain/dates';
 
-interface Snapshot { label: string; model: AppModel }
+interface TplSnap { bytes: Uint8Array | null; meta: State['template'] }
+interface Snapshot { label: string; model: AppModel; tpl?: TplSnap }
 export interface State {
   ready: boolean;
   model: AppModel | null;
@@ -104,27 +105,45 @@ export function commit(label: string, fn: (m: AppModel) => AppModel): boolean {
   }
 }
 
+const curTpl = (): TplSnap => ({ bytes: templateBytes, meta: state.template });
+async function restoreTpl(t: TplSnap) {
+  templateBytes = t.bytes;
+  if (t.bytes && t.meta) await saveTemplate({ bytes: t.bytes, ...t.meta });
+}
+
 export function undo() {
   const last = state.past[state.past.length - 1];
   if (!last || !state.model) return;
-  set({ model: last.model, past: state.past.slice(0, -1), future: [...state.future, { label: last.label, model: state.model }], changesSinceExport: state.changesSinceExport + 1 });
+  const redoTpl = last.tpl ? curTpl() : undefined;
+  if (last.tpl) { void restoreTpl(last.tpl); }
+  set({ model: last.model, template: last.tpl ? last.tpl.meta : state.template, past: state.past.slice(0, -1), future: [...state.future, { label: last.label, model: state.model, tpl: redoTpl }], changesSinceExport: state.changesSinceExport + 1 });
   scheduleSave();
   toast(`تم التراجع عن: ${last.label}`, 'info');
 }
 export function redo() {
   const nx = state.future[state.future.length - 1];
   if (!nx || !state.model) return;
-  set({ model: nx.model, future: state.future.slice(0, -1), past: [...state.past, { label: nx.label, model: state.model }] });
+  const undoTpl = nx.tpl ? curTpl() : undefined;
+  if (nx.tpl) { void restoreTpl(nx.tpl); }
+  set({ model: nx.model, template: nx.tpl ? nx.tpl.meta : state.template, future: state.future.slice(0, -1), past: [...state.past, { label: nx.label, model: state.model, tpl: undoTpl }] });
   scheduleSave();
 }
 
-export async function loadImported(model: AppModel, tpl: TemplateRecord) {
+/**
+ * Apply an import (already previewed + confirmed by the user). The model AND the export template are switched together
+ * and the whole step is undoable (when there was data before).
+ */
+export async function applyImport(model: AppModel, tpl: TemplateRecord, label: string) {
+  const prev = state.model;
+  const snap: Snapshot | null = prev ? { label, model: prev, tpl: curTpl() } : null;
   templateBytes = tpl.bytes;
   await saveTemplate(tpl);
   set({
     model: clone(model),
     template: { name: tpl.name, hash: tpl.hash, importedAt: tpl.importedAt },
-    past: [], future: [], changesSinceExport: 0,
+    past: snap ? [...state.past, snap].slice(-20) : [],
+    future: [],
+    changesSinceExport: 0,
   });
   scheduleSave();
 }

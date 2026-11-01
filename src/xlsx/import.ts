@@ -1,31 +1,42 @@
-import { CAP, LEAVE_TYPES, MONTH_NAMES, SHEET, SHEET_ORDER } from '../domain/constants';
+import { CAP, MONTH_NAMES } from '../domain/constants';
 import { isoToSerial } from '../domain/dates';
 import { clone, emptyModel } from '../domain/model';
 import { buildRoster, codeKey } from '../domain/roster';
-import type { AppModel, Correction, LeaveRow, MonthRecord, Raw, VisitRow } from '../domain/types';
-import { XlsxPackage } from './package';
-import { SheetXml } from './sheetxml';
-import { numToCol } from './xml';
+import type { AppModel, Correction, MonthRecord, Raw } from '../domain/types';
+import { detectLayout, hasBlockingIssues, type Issue, type Layout } from './layout';
+import { readWorkbookGrid, ReadError, type Grid, type WorkbookGrid } from './reader';
 
 export class ImportError extends Error {}
 
-export interface ImportResult {
-  model: AppModel;
-  /** model exactly as read from the file, before approved corrections */
-  rawModel: AppModel;
+export interface IgnoredRow { sheet: string; row: number; reason: string; code?: string }
+export interface Analysis {
+  fileName: string;
+  format: 'xlsx' | 'xls';
   hash: string;
-  warnings: string[];
+  /** model exactly as read from the file, with the owner-approved corrections applied */
+  model: AppModel;
+  rawModel: AppModel;
+  layout: Layout;
+  issues: Issue[];
+  ignored: IgnoredRow[];
+  blocking: boolean;
+  /** bytes to keep as the export template (.xls files are converted to .xlsx) */
+  templateBytes: Uint8Array;
+  counts: { month: number; records: number; employees: number }[];
 }
 
-function str(v: Raw | undefined): string {
-  if (v === null || v === undefined) return '';
-  return typeof v === 'number' ? String(v) : v;
-}
-const rawOrNull = (v: Raw | undefined): Raw => (v === undefined || v === '' ? null : v);
+const str = (v: Raw | undefined): string => (v === null || v === undefined ? '' : typeof v === 'number' ? String(v) : v);
 
 export async function sha256Hex(bytes: Uint8Array): Promise<string> {
-  const buf = await crypto.subtle.digest('SHA-256', bytes as unknown as BufferSource);
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  try {
+    const buf = await crypto.subtle.digest('SHA-256', bytes as unknown as BufferSource);
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  } catch {
+    // insecure context (plain http) — the hash is informational only
+    let h = 2166136261;
+    for (const b of bytes) h = Math.imul(h ^ b, 16777619) >>> 0;
+    return `fnv-${h.toString(16)}`;
+  }
 }
 
 /** Explicit user-approved corrections (decision recorded in the project brief). */
@@ -54,115 +65,139 @@ export function applyApprovedCorrections(model: AppModel): AppModel {
   return m;
 }
 
-export async function importWorkbook(bytes: Uint8Array, opts: { applyCorrections?: boolean; fileName?: string } = {}): Promise<ImportResult> {
-  if (opts.fileName && !/\.xlsx$/i.test(opts.fileName)) throw new ImportError('يُقبل ملف بصيغة .xlsx فقط.');
-  const pkg = await XlsxPackage.open(bytes).catch((e) => {
-    throw new ImportError(e.message);
-  });
-  const missing = SHEET_ORDER.filter((n) => !pkg.sheet(n));
-  if (missing.length) throw new ImportError(`الملف لا يطابق القالب المتوقع — شيتات مفقودة أو متغيّرة الاسم: ${missing.join('، ')}`);
-
-  const warnings: string[] = [];
-  const model = emptyModel();
-  model.date1904 = pkg.date1904;
-  const open = async (name: string) => new SheetXml(await pkg.sheetText(name), pkg.sst);
-  const val = (sx: SheetXml, ref: string): Raw => rawOrNull(sx.get(ref)?.value ?? null);
-
-  // --- header sanity checks (loose: trimmed substring) ---
-  const expect = (sx: SheetXml, sheet: string, ref: string, needle: string) => {
-    const got = str(val(sx, ref)).trim();
-    if (!got.includes(needle)) throw new ImportError(`الشيت «${sheet}» لا يطابق القالب: الخلية ${ref} يجب أن تحتوي «${needle}» لكن وُجد «${got}».`);
-  };
-
-  // --- Data ---
-  const data = await open(SHEET.data);
-  expect(data, SHEET.data, 'J1', 'القطاع');
-  expect(data, SHEET.data, 'K1', 'المحافظة');
-  for (let r = 2; r <= 200; r++) {
-    const s = str(val(data, `J${r}`));
-    if (s.trim()) model.lists.sectors.push(s);
-    const g = str(val(data, `K${r}`));
-    if (g.trim()) model.lists.governorates.push(g);
+/** Numeric-looking codes ("1001877", " 1001877 ", 1001877.0) become numbers so matching is reliable. */
+export function normalizeCode(v: Raw): Raw {
+  if (typeof v === 'string') {
+    const t = v.replace(/[\u200E\u200F\s]/g, '');
+    if (/^\d+$/.test(t)) return Number(t);
+    return t === '' ? null : v.trim();
   }
+  return v;
+}
 
-  // --- Month sheets ---
-  for (let mi = 0; mi < 12; mi++) {
-    const name = MONTH_NAMES[mi];
-    const sx = await open(name);
-    expect(sx, name, 'E2', 'الكود');
-    expect(sx, name, 'Q2', 'الاجمالي');
-    for (let r = CAP.monthFirstRow; r <= CAP.monthScanLast; r++) {
-      const cols: Record<string, Raw> = {};
-      for (const c of ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R']) cols[c] = val(sx, `${c}${r}`);
-      if (Object.values(cols).every((v) => v === null)) continue;
-      const code = cols.E;
+function gridByName(wb: WorkbookGrid, name: string): Grid | undefined {
+  return wb.sheets.find((s) => s.name === name);
+}
+
+/**
+ * Reads ANY Excel workbook and maps it into the app model. Sheets are identified by name/content and columns by
+ * their header text — never by file hash, internal XML, formatting or metadata. Nothing is applied to the app here.
+ */
+export async function analyzeWorkbook(bytes: Uint8Array, fileName = 'workbook.xlsx'): Promise<Analysis> {
+  let wb: WorkbookGrid;
+  try {
+    wb = await readWorkbookGrid(bytes);
+  } catch (e) {
+    throw new ImportError(e instanceof ReadError ? e.message : `تعذّر قراءة الملف: ${(e as Error).message}`);
+  }
+  const layout = detectLayout(wb);
+  const issues = [...layout.issues];
+  const ignored: IgnoredRow[] = [];
+  const model = emptyModel();
+  model.date1904 = wb.date1904;
+
+  // ---- monthly sheets ----
+  let firstRow = Infinity, lastRow = 0;
+  for (const ml of layout.months) {
+    if (!ml) continue;
+    const g = gridByName(wb, ml.sheet)!;
+    const c = ml.cols;
+    firstRow = Math.min(firstRow, ml.firstRow);
+    const seen = new Map<string, number>();
+    let noCode = 0;
+    const end = Math.min(g.maxRow, ml.headerRow + 2000);
+    for (let r = ml.firstRow; r <= end; r++) {
+      const get = (col?: number): Raw => (col === undefined ? null : g.get(r, col));
+      const vals = [c.sector, c.gov, c.name, c.code, c.join, c.job, c.visits, ...c.scores, c.notes].map(get);
+      if (vals.every((v) => v === null)) continue;
+      const code = normalizeCode(get(c.code));
       const rec: MonthRecord = {
-        month: mi + 1,
-        row: r,
-        sector: str(cols.B),
-        gov: str(cols.C),
-        name: str(cols.D),
-        code: typeof code === 'string' && /^\s*\d+\s*$/.test(code) ? code.trim() : code,
-        join: cols.F,
-        job: str(cols.G),
-        visits: cols.H,
-        scores: ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'].map((c) => cols[c]),
-        notes: str(cols.R),
+        month: ml.month, row: r, sector: str(get(c.sector)), gov: str(get(c.gov)), name: str(get(c.name)), code,
+        join: get(c.join), job: str(get(c.job)), visits: get(c.visits), scores: c.scores.map((x) => get(x)), notes: str(get(c.notes)),
       };
+      const key = codeKey(code);
+      if (key === null) {
+        noCode++;
+        model.months.push(rec);
+        continue;
+      }
+      if (seen.has(key)) {
+        ignored.push({ sheet: ml.sheet, row: r, code: key, reason: `كود مكرر في نفس الشهر (يُحتفظ بالصف ${seen.get(key)} فقط)` });
+        continue;
+      }
+      seen.set(key, r);
       model.months.push(rec);
+      lastRow = Math.max(lastRow, r);
+    }
+    if (noCode) issues.push({ level: 'warn', sheet: ml.sheet, message: `شيت «${ml.sheet}»: ${noCode} صف به بيانات بدون كود — يُحتفظ به لكنه لا يدخل في الحسابات السنوية.` });
+    const rep = layout.reports.find((x) => x.sheet === ml.sheet);
+    if (rep) rep.rows = model.months.filter((x) => x.month === ml.month).length;
+  }
+  if (isFinite(firstRow)) model.grid = { firstRow, lastRow: Math.max(firstRow + CAP.monthRows - 1, lastRow) };
+  const dupCount = ignored.length;
+  if (dupCount) issues.push({ level: 'warn', message: `${dupCount} صفاً مكرر الكود داخل نفس الشهر تم تجاهله (يُحتفظ بأول ظهور) لمنع تكرار الموظفين.` });
+
+  // ---- lists ----
+  if (layout.data) {
+    const g = gridByName(wb, layout.data.sheet)!;
+    const col = (c: number | undefined) => {
+      const out: string[] = [];
+      if (c === undefined) return out;
+      for (let r = layout.data!.headerRow + 1; r <= Math.min(g.maxRow, 500); r++) {
+        const v = str(g.get(r, c));
+        if (v.trim() && !out.includes(v)) out.push(v);
+      }
+      return out;
+    };
+    model.lists.sectors = col(layout.data.sectorCol);
+    model.lists.governorates = col(layout.data.govCol);
+  }
+  if (!model.lists.sectors.length) model.lists.sectors = [...new Set(model.months.map((r) => r.sector).filter(Boolean))];
+  if (!model.lists.governorates.length) model.lists.governorates = [...new Set(model.months.map((r) => r.gov).filter(Boolean))];
+
+  // ---- annual sheet notes (mapped by roster position, like the sheet's own formulas) ----
+  if (layout.main?.cols.notes !== undefined) {
+    const g = gridByName(wb, layout.main.sheet)!;
+    const roster = buildRoster(model).rows;
+    for (let r = layout.main.firstRow; r < layout.main.firstRow + CAP.main && r <= g.maxRow; r++) {
+      const note = str(g.get(r, layout.main.cols.notes));
+      if (!note) continue;
+      const e = roster[r - layout.main.firstRow];
+      if (e) model.mainNotes[String(e.code)] = note;
+      else model.mainNotes[`#row${r}`] = note;
     }
   }
 
-  // --- Main sheet notes (L) — mapped by roster position ---
-  const main = await open(SHEET.main);
-  expect(main, SHEET.main, 'E2', 'الكود');
-  const roster = buildRoster(model).rows;
-  for (let r = 3; r <= 2 + CAP.main; r++) {
-    const note = str(val(main, `L${r}`));
-    if (!note) continue;
-    const e = roster[r - 3];
-    if (e) model.mainNotes[String(e.code)] = note;
-    else model.mainNotes[`#row${r}`] = note;
-  }
-
-  // --- Visits ---
-  const vs = await open(SHEET.visits);
-  expect(vs, SHEET.visits, 'C8', 'اسم الموظف');
-  let lastVisit: number = CAP.visitTemplateLast;
-  for (const r of [...vs.rowNumbers()].sort((a, b) => a - b)) {
-    const f = vs.getFormula(`Q${r}`);
-    const m = f ? /^SUM\(Q9:Q(\d+)\)$/.exec(f.replace(/\s/g, '')) : null;
-    if (m) { lastVisit = Number(m[1]); break; }
-  }
-  const visits: VisitRow[] = [];
-  for (let r = CAP.visitFirst; r <= lastVisit; r++) {
-    const months = Array.from({ length: 12 }, (_, i) => val(vs, `${numToCol(5 + i)}${r}`));
-    const row: VisitRow = { row: r, no: val(vs, `B${r}`), name: str(val(vs, `C${r}`)), area: str(val(vs, `D${r}`)), months };
-    if (row.no === null && !row.name && !row.area && months.every((x) => x === null)) continue;
-    visits.push(row);
-  }
-  model.visits = visits.map((v, i) => ({ ...v, row: CAP.visitFirst + i }));
-
-  // --- Leave log ---
-  const lv = await open(SHEET.leave);
-  expect(lv, SHEET.leave, 'A2', 'اسم الموظف');
-  const kind = (v: Raw): 'date' | 'text' | 'empty' => (v === null ? 'empty' : typeof v === 'number' ? 'date' : 'text');
-  const leave: LeaveRow[] = [];
-  for (let r = CAP.leaveFirst; r <= CAP.leaveLast; r++) {
-    const a = val(lv, `A${r}`), b = val(lv, `B${r}`), c = val(lv, `C${r}`), d = val(lv, `D${r}`), e = val(lv, `E${r}`);
-    if ([a, b, c, d, e].every((x) => x === null)) continue;
-    leave.push({ row: r, name: str(a), type: str(b), start: c, startKind: kind(c), end: d, endKind: kind(d), days: e });
-    if (b !== null && !(LEAVE_TYPES as readonly string[]).includes(str(b))) warnings.push(`الإجازات صف ${r}: نوع غير معروف «${str(b)}»`);
-  }
-  model.leave = leave.map((l, i) => ({ ...l, row: CAP.leaveFirst + i }));
-  const fcells: Raw[] = [];
-  for (let r = CAP.leaveFirst; r <= CAP.leaveLast; r++) {
-    const v = val(lv, `F${r}`);
-    if (v !== null) fcells.push(v);
-  }
-  for (let i = 0; i < fcells.length; i += 2) model.leaveTotals.push({ name: str(fcells[i]), total: i + 1 < fcells.length ? fcells[i + 1] : null });
-
   const rawModel = clone(model);
-  const finalModel = opts.applyCorrections === false ? model : applyApprovedCorrections(model);
-  return { model: finalModel, rawModel, hash: await sha256Hex(bytes), warnings };
+  const finalModel = applyApprovedCorrections(model);
+  const roster = buildRoster(finalModel);
+  if (roster.overflow) issues.push({ level: 'warn', message: `${roster.overflow} موظفاً يتجاوزون سعة الشيت الرئيسي (${CAP.main}).` });
+
+  const counts = MONTH_NAMES.map((_, i) => {
+    const recs = finalModel.months.filter((r) => r.month === i + 1);
+    return { month: i + 1, records: recs.length, employees: new Set(recs.map((r) => codeKey(r.code)).filter(Boolean)).size };
+  });
+
+  return {
+    fileName,
+    format: wb.kind,
+    hash: await sha256Hex(bytes),
+    model: finalModel,
+    rawModel,
+    layout,
+    issues,
+    ignored,
+    blocking: hasBlockingIssues(layout),
+    templateBytes: wb.converted ?? bytes,
+    counts,
+  };
+}
+
+export interface ImportResult { model: AppModel; rawModel: AppModel; hash: string; warnings: string[]; analysis: Analysis }
+
+/** Convenience: analyse + fail on blocking problems (used by tests and the demo loader). */
+export async function importWorkbook(bytes: Uint8Array, opts: { applyCorrections?: boolean; fileName?: string } = {}): Promise<ImportResult> {
+  const a = await analyzeWorkbook(bytes, opts.fileName);
+  if (a.blocking) throw new ImportError(a.issues.filter((i) => i.level === 'error').map((i) => i.message).join('\n'));
+  return { model: opts.applyCorrections === false ? a.rawModel : a.model, rawModel: a.rawModel, hash: a.hash, warnings: a.issues.filter((i) => i.level !== 'info').map((i) => i.message), analysis: a };
 }

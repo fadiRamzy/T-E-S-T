@@ -1,7 +1,7 @@
-import { CAP, LEAVE_TYPES } from './constants';
-import { leaveDateToISO, todayISO } from './dates';
+import { CAP } from './constants';
+import { todayISO } from './dates';
 import { codeKey } from './roster';
-import type { AppModel, LeaveRow, MonthRecord, Raw } from './types';
+import type { AppModel, MonthRecord, Raw } from './types';
 
 export interface FieldIssue {
   field: string;
@@ -51,22 +51,7 @@ export function validateMonthRecord(model: AppModel, rec: MonthRecord, original?
   return out;
 }
 
-export function validateLeave(model: AppModel, r: LeaveRow): FieldIssue[] {
-  const out: FieldIssue[] = [];
-  if (!r.name.trim()) out.push({ field: 'name', level: 'error', message: 'اسم الموظف مطلوب' });
-  if (r.type && !(LEAVE_TYPES as readonly string[]).includes(r.type))
-    out.push({ field: 'type', level: 'warn', message: 'نوع غير معروف (خارج القائمة الستة)' });
-  const s = leaveDateToISO(r.start, r.startKind, model.date1904);
-  const e = leaveDateToISO(r.end, r.endKind, model.date1904);
-  if (r.startKind === 'text' && !s) out.push({ field: 'start', level: 'warn', message: 'تاريخ البداية نص غير مفهوم' });
-  if (r.endKind === 'text' && !e) out.push({ field: 'end', level: 'warn', message: 'تاريخ النهاية نص غير مفهوم' });
-  if (s && e && e < s) out.push({ field: 'end', level: 'warn', message: 'تاريخ النهاية قبل تاريخ البداية' });
-  return out;
-}
-
 export const capacityMessage = {
   monthFull: `لا توجد صفوف فارغة في هذا الشهر (الحد الأقصى ${CAP.monthRows} صفاً حسب قالب الإكسل).`,
   mainFull: `تجاوز عدد الموظفين سعة الشيت الرئيسي (${CAP.main} موظف).`,
-  leaveFull: `تجاوز سجل الإجازات سعة القالب (${CAP.leaveLast - CAP.leaveFirst + 1} صفاً).`,
-  visitsFull: `تجاوز لوحة الزيارات الحد الأقصى المسموح (${CAP.visitMax} صفاً).`,
 };

@@ -10,10 +10,20 @@ export interface SheetRef {
   path: string; // zip path
 }
 
+export function resolvePath(baseDir: string, target: string): string {
+  if (target.startsWith('/')) return target.slice(1);
+  const parts = (baseDir + target).split('/');
+  const out: string[] = [];
+  for (const p of parts) { if (p === '..') out.pop(); else if (p !== '.' && p !== '') out.push(p); }
+  return out.join('/');
+}
+
 export class XlsxPackage {
   sheets: SheetRef[] = [];
   sst: SharedStrings = [];
   date1904 = false;
+  workbookPath = 'xl/workbook.xml';
+  workbookRelsPath = 'xl/_rels/workbook.xml.rels';
   constructor(public zip: JSZip) {}
 
   static async open(bytes: Uint8Array | ArrayBuffer): Promise<XlsxPackage> {
@@ -24,21 +34,32 @@ export class XlsxPackage {
       throw new Error('الملف تالف أو ليس بصيغة xlsx صالحة (تعذّر فتح الأرشيف).');
     }
     const pkg = new XlsxPackage(zip);
-    const wbXml = await pkg.text('xl/workbook.xml');
-    if (!wbXml) throw new Error('الملف لا يحتوي على xl/workbook.xml — ليس مصنف Excel صالحاً.');
-    const relsXml = (await pkg.text('xl/_rels/workbook.xml.rels')) ?? '';
+    // the workbook part is located through the package root relationships (not assumed)
+    let wbPath = 'xl/workbook.xml';
+    const rootRels = (await pkg.text('_rels/.rels')) ?? '';
+    for (const m of rootRels.matchAll(/<Relationship\b([^>]*?)\/?>/g)) {
+      const a = new Map(parseAttrs(m[1]));
+      if ((a.get('Type') ?? '').endsWith('/officeDocument') && a.get('Target')) wbPath = a.get('Target')!.replace(/^\//, '');
+    }
+    const wbXml = await pkg.text(wbPath);
+    if (!wbXml) throw new Error('الملف لا يحتوي على مصنف Excel (workbook.xml) — ليس ملف xlsx صالحاً.');
+    pkg.workbookPath = wbPath;
+    const wbDir = wbPath.includes('/') ? wbPath.slice(0, wbPath.lastIndexOf('/') + 1) : '';
+    const relsPath = `${wbDir}_rels/${wbPath.slice(wbDir.length)}.rels`;
+    pkg.workbookRelsPath = relsPath;
+    const relsXml = (await pkg.text(relsPath)) ?? '';
     const rels = new Map<string, string>();
     for (const m of relsXml.matchAll(/<Relationship\b([^>]*?)\/?>/g)) {
       const a = new Map(parseAttrs(m[1]));
       const id = a.get('Id');
       let target = a.get('Target');
       if (!id || !target) continue;
-      target = target.startsWith('/') ? target.slice(1) : `xl/${target}`;
+      target = resolvePath(wbDir, target);
       rels.set(id, target);
     }
-    for (const m of wbXml.matchAll(/<sheet\b([^>]*?)\/?>/g)) {
+    for (const m of wbXml.matchAll(/<(?:\w+:)?sheet\b([^>]*?)\/?>/g)) {
       const a = new Map(parseAttrs(m[1]));
-      const rid = a.get('r:id') ?? '';
+      const rid = a.get('r:id') ?? [...a.entries()].find(([k]) => k.endsWith(':id'))?.[1] ?? '';
       pkg.sheets.push({
         name: decodeXml(a.get('name') ?? ''),
         sheetId: a.get('sheetId') ?? '',

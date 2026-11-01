@@ -4,13 +4,15 @@ export const MONTH_NAMES = [
 ] as const;
 
 export const SHEET = {
-  leave: 'الاجازات والاذونات',
-  visits: 'الزيارات الميدانية',
   main: 'التقييم السنوي 2026',
   data: 'Data',
 } as const;
 
-export const SHEET_ORDER: string[] = [SHEET.leave, SHEET.visits, SHEET.main, ...MONTH_NAMES, SHEET.data];
+/** Sheets that are no longer supported by the app: ignored on import and removed from every export. */
+export const REMOVED_SHEETS = ['الاجازات والاذونات', 'الزيارات الميدانية'] as const;
+
+/** Sheets the app reads and writes (workbook order). */
+export const SHEET_ORDER: string[] = [SHEET.main, ...MONTH_NAMES, SHEET.data];
 
 export const SCORE_HEADERS = [
   'دقة الفحص والمتابعة واتمام الزيارة من جميع الاركان',
@@ -28,21 +30,12 @@ export const SCORE_SHORT = [
   'السياسات والإجراءات', 'الحضور والانصراف', 'التطوير الذاتي', 'روح الفريق',
 ];
 
-export const LEAVE_TYPES = [
-  'اجازه اعتيادي', 'اجازه مرضي', 'اجازه بخصم', 'اذن ساعه', 'اذن ساعتين', 'مامورية',
-] as const;
-
 export const CAP = {
   main: 100, // rows 3..102
   monthRows: 50, // rows 3..52
   monthFirstRow: 3,
   monthLastRow: 52,
   monthScanLast: 200,
-  leaveFirst: 3,
-  leaveLast: 150,
-  visitFirst: 9,
-  visitTemplateLast: 16,
-  visitMax: 60,
 } as const;
 
 /** Grade thresholds exactly as in the J-column formula. */

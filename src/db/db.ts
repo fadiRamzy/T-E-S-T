@@ -1,5 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import { z } from 'zod';
+import { migrateModel } from '../domain/model';
 import type { AppModel } from '../domain/types';
 
 export interface TemplateRecord {
@@ -27,7 +28,7 @@ export async function loadPersisted(): Promise<{ model: AppModel | null; templat
   try {
     const d = getDb();
     const [m, t, s] = await Promise.all([d.kv.get('model'), d.kv.get('template'), d.kv.get('lastSaved')]);
-    return { model: (m?.value as AppModel) ?? null, template: (t?.value as TemplateRecord) ?? null, lastSaved: (s?.value as number) ?? null };
+    return { model: m?.value ? migrateModel(m.value as AppModel & Record<string, unknown>) : null, template: (t?.value as TemplateRecord) ?? null, lastSaved: (s?.value as number) ?? null };
   } catch {
     return { model: null, template: null, lastSaved: null };
   }
@@ -53,10 +54,8 @@ const modelSchema = z.object({
   lists: z.object({ sectors: z.array(z.string()), governorates: z.array(z.string()) }),
   months: z.array(z.object({ month: z.number().int().min(1).max(12), row: z.number().int(), sector: z.string(), gov: z.string(), name: z.string(), code: rawS, join: rawS, job: z.string(), visits: rawS, scores: z.array(rawS).length(8), notes: z.string() })),
   mainNotes: z.record(z.string()),
-  visits: z.array(z.object({ row: z.number().int(), no: rawS, name: z.string(), area: z.string(), months: z.array(rawS).length(12) })),
-  leave: z.array(z.object({ row: z.number().int(), name: z.string(), type: z.string(), start: rawS, startKind: z.enum(['date', 'text', 'empty']), end: rawS, endKind: z.enum(['date', 'text', 'empty']), days: rawS })),
-  leaveTotals: z.array(z.object({ name: z.string(), total: rawS })),
   date1904: z.boolean(),
+  grid: z.object({ firstRow: z.number().int(), lastRow: z.number().int() }).optional(),
   appliedCorrections: z.array(z.object({ id: z.string(), code: z.number(), field: z.literal('join'), from: rawS, to: rawS, reason: z.string() })),
 });
 export const backupSchema = z.object({ app: z.literal('field-risk-evaluation'), version: z.literal(1), exportedAt: z.string(), model: modelSchema });
@@ -69,5 +68,5 @@ export function parseBackup(text: string): AppModel {
   try { json = JSON.parse(text); } catch { throw new Error('ملف النسخة الاحتياطية ليس JSON صالحاً.'); }
   const r = backupSchema.safeParse(json);
   if (!r.success) throw new Error('ملف النسخة الاحتياطية غير مطابق للبنية المتوقعة: ' + r.error.issues[0]?.path.join('.'));
-  return r.data.model as AppModel;
+  return migrateModel(r.data.model as unknown as AppModel & Record<string, unknown>);
 }

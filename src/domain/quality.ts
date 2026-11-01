@@ -1,11 +1,10 @@
 import { monthTotal } from './calc';
 import { CAP, MONTH_NAMES } from './constants';
-import { fmtSerial, leaveDateToISO, serialToISO, swapDayMonth, isoToSerial } from './dates';
+import { fmtSerial, serialToISO, swapDayMonth } from './dates';
 import { buildRoster, codeKey } from './roster';
 import { isIntInRange } from './validate';
 import type { AppModel, QualityItem } from './types';
 
-export const normName = (s: string) => s.replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
 
 /** Data-quality panel (spec §5). Never fixes anything — only reports. */
 export function computeQuality(model: AppModel, asOf?: string): QualityItem[] {
@@ -75,43 +74,13 @@ export function computeQuality(model: AppModel, asOf?: string): QualityItem[] {
     });
     if (r.row > CAP.monthLastRow) q.push({ id: `cap-${r.month}-${r.row}`, severity: 'error', title: `${mn(r.month)}: صف ${r.row} خارج السعة`, detail: 'قالب الإكسل يغطي الصفوف 3–52 فقط.' });
   }
-  for (const v of model.visits)
-    v.months.forEach((c, i) => {
-      if (typeof c === 'string' && c.trim() !== '')
-        q.push({ id: `vtxt-${v.row}-${i}`, severity: 'warn', title: `الزيارات الميدانية: نص «${c}» في ${v.name} / ${mn(i + 1)}`, detail: 'يُهمل في إجمالي الصف (يُحسب 0).' });
-    });
-
-  // 6 — leave log
-  let textDates = 0, reversed = 0, textDays = 0;
-  for (const l of model.leave) {
-    if (l.startKind === 'text' || l.endKind === 'text') textDates++;
-    const s = leaveDateToISO(l.start, l.startKind, model.date1904), e = leaveDateToISO(l.end, l.endKind, model.date1904);
-    if (s && e && e < s) reversed++;
-    if (typeof l.days === 'string' && l.days.trim() !== '') textDays++;
-  }
-  if (textDates) q.push({ id: 'leave-text-dates', severity: 'warn', title: `سجل الإجازات: ${textDates} صفاً بتواريخ نصية`, detail: 'بعض التواريخ مخزنة كنص (d/m/yyyy) وبعضها كتاريخ فعلي. التطبيق يحتفظ بالنوع الأصلي. يمكن توحيدها من صفحة الإجازات بزر اختياري.' });
-  if (reversed) q.push({ id: 'leave-reversed', severity: 'warn', title: `سجل الإجازات: ${reversed} صفاً تاريخ نهايته قبل بدايته`, detail: 'غالباً بسبب عكس اليوم/الشهر في الخلايا ذات التاريخ الفعلي. لم يتم تصحيحها تلقائياً.' });
-  if (textDays) q.push({ id: 'leave-text-days', severity: 'info', title: `سجل الإجازات: عمود «عدد الأيام» يحوي نصوصاً (${textDays})`, detail: 'العمود مختلط (أرقام ونصوص مثل «خميس العهد»)؛ يُعامل كمدخل حر.' });
-
-  // 7 — names across sheets (names are NOT keys)
-  const rosterNames = new Map(roster.rows.map((e) => [normName(e.name), e.name]));
-  const nameIssues = (label: string, names: string[]) => {
-    const miss = [...new Set(names.filter((n) => n && !rosterNames.has(normName(n))))];
-    const exactDiff = [...new Set(names.filter((n) => n && rosterNames.has(normName(n)) && rosterNames.get(normName(n)) !== n))];
-    if (miss.length) q.push({ id: `names-${label}`, severity: 'info', title: `${label}: أسماء غير موجودة في الشيت الرئيسي (${miss.length})`, detail: miss.join('، ') + ' — الأسماء ليست مفتاحاً؛ لم يتم أي ربط تلقائي.' });
-    if (exactDiff.length) q.push({ id: `names-sp-${label}`, severity: 'info', title: `${label}: أسماء بإملاء مختلف عن الشيت الرئيسي (${exactDiff.length})`, detail: exactDiff.join('، ') });
-  };
-  nameIssues('الزيارات الميدانية', model.visits.map((v) => v.name));
-  nameIssues('الاجازات والاذونات', model.leave.map((l) => l.name));
 
   // 8 — static items about the template
   q.push({ id: 'cf-literal', severity: 'info', title: 'قاعدة التلوين «جيد جدا» في الشيت الرئيسي لا تعمل في Excel', detail: 'الدالة تُرجع «جيد جداً» (بتنوين الفتح U+064B) بينما قاعدة التنسيق الشرطي تقارن بـ«جيد جدا» بدون التنوين. تم الإبقاء على القاعدة كما هي في الملف المُصدَّر (قرارك)، وفي التطبيق يُلوَّن بالأخضر الفاتح.' });
   q.push({ id: 'legend', severity: 'info', title: 'مفتاح الدرجات في الشيت الرئيسي ناقص', detail: 'لا يحتوي صف «ضعيف» ويعرض الحدود غير المُعدَّلة بمدة الخدمة. التطبيق يعرض مفتاحاً كاملاً مع نسب التدرج (25/50/75/100٪).' });
-  q.push({ id: 'refs', severity: 'info', title: 'Print_Area و Print_Titles لشيت «الزيارات الميدانية» = #REF!', detail: 'مكسورة في الملف الأصلي، تُحفظ كما هي عند التصدير ولا يتم "إصلاحها".' });
   const emptyMonths = MONTH_NAMES.map((_, i) => i + 1).filter((m) => model.months.filter((r) => r.month === m).every((r) => monthTotal(r) === 0));
   if (emptyMonths.length) q.push({ id: 'empty-months', severity: 'info', title: `شهور بدون درجات: ${emptyMonths.map(mn).join('، ')}`, detail: 'شهور نوفمبر/ديسمبر شبه فارغة في الملف.' });
   if (roster.overflow) q.push({ id: 'roster-cap', severity: 'error', title: `عدد الموظفين تجاوز ${CAP.main}`, detail: `${roster.overflow} موظفاً لن يظهروا في الشيت الرئيسي.` });
   if (!model.lists.sectors.length || !model.lists.governorates.length) q.push({ id: 'lists-empty', severity: 'warn', title: 'قوائم القطاع/المحافظة فارغة', detail: 'راجع صفحة «القوائم».' });
-  void isoToSerial;
   return q;
 }

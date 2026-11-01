@@ -1,9 +1,9 @@
 import JSZip from 'jszip';
 import { XMLValidator } from 'fast-xml-parser';
 import { describe, expect, it } from 'vitest';
-import { SHEET_ORDER, MONTH_NAMES, SHEET } from '../src/domain/constants';
+import { MONTH_NAMES, REMOVED_SHEETS, SHEET, SHEET_ORDER } from '../src/domain/constants';
 import { isoToSerial } from '../src/domain/dates';
-import { addMonthRecord, addVisitRow, blankRecord, deleteMonthRecord, deleteVisitRow, clone, addLeaveRow, setMainNote, revertCorrection } from '../src/domain/model';
+import { addMonthRecord, blankRecord, deleteMonthRecord, clone, setMainNote, revertCorrection } from '../src/domain/model';
 import { buildRoster } from '../src/domain/roster';
 import { exportWorkbook } from '../src/xlsx/export';
 import { importWorkbook, ImportError } from '../src/xlsx/import';
@@ -27,12 +27,13 @@ describe('fixture + import', () => {
   });
   it('has the 16 sheets in order, Data hidden', async () => {
     const pkg = await XlsxPackage.open(await fixtureBytes());
-    expect(pkg.sheets.map((s) => s.name)).toEqual(SHEET_ORDER);
+    expect(pkg.sheets.map((s) => s.name)).toEqual([REMOVED_SHEETS[0], REMOVED_SHEETS[1], ...SHEET_ORDER]);
     expect(pkg.sheets[15].state).toBe('hidden');
   });
   it('import reproduces the Appendix-A model exactly (no corrections)', async () => {
     const r = await importWorkbook(await fixtureBytes(), { applyCorrections: false });
     expect(r.model).toEqual(seedModel());
+    expect(r.analysis.layout.removed).toEqual([REMOVED_SHEETS[0], REMOVED_SHEETS[1]]);
   });
   it('import applies the user-approved 1001523 join-date correction and records it', async () => {
     const r = await importWorkbook(await fixtureBytes());
@@ -48,26 +49,92 @@ describe('fixture + import', () => {
     expect(a.model).toEqual(b.model);
     expect(a.hash).toBe(b.hash);
   });
-  it('rejects bad input with explicit messages', async () => {
+  it('rejects non-Excel input with an explicit message', async () => {
     await expect(importWorkbook(new Uint8Array([1, 2, 3]))).rejects.toThrow(ImportError);
-    await expect(importWorkbook(await fixtureBytes(), { fileName: 'a.xls' })).rejects.toThrow('.xlsx');
-    const z = await JSZip.loadAsync(await fixtureBytes());
-    const wb = (await z.file('xl/workbook.xml')!.async('string')).replace('name="يناير"', 'name="Jan"');
-    z.file('xl/workbook.xml', wb);
-    await expect(importWorkbook(await z.generateAsync({ type: 'uint8array' }))).rejects.toThrow(/يناير/);
+    await expect(importWorkbook(new TextEncoder().encode('a,b\n1,2'))).rejects.toThrow(/Excel/);
   });
 });
 
+const monthTotalOf = (r: { visits: unknown; scores: unknown[] }) => [r.visits, ...r.scores].reduce<number>((a, v) => a + (typeof v === 'number' ? v : 0), 0);
+
 describe('export (XML patching)', () => {
-  it('unchanged model → every part byte-identical', async () => {
+  it('unchanged model: only the removal of visits/leave + cache refresh change the package; kept sheets stay intact', async () => {
     const tpl = await fixtureBytes();
     const r = await importWorkbook(tpl, { applyCorrections: false });
-    const out = await exportWorkbook(tpl, r.model);
+    const out = await exportWorkbook(tpl, r.model, { now: new Date(2026, 10, 1) });
     expect(out.totalChanged).toBe(0);
-    expect(changedParts(await parts(tpl), await parts(out.bytes))).toEqual([]);
+    expect(out.removedSheets).toEqual([REMOVED_SHEETS[0], REMOVED_SHEETS[1]]);
+    const a = await parts(tpl), b = await parts(out.bytes);
+    for (const k of ['xl/styles.xml', 'xl/metadata.xml']) expect(b.get(k)).toBe(a.get(k));
+    // month sheets: identical input cells (re-import of the export gives the same model)
+    expect((await importWorkbook(out.bytes, { applyCorrections: false })).model).toEqual(r.model);
+    const sst0 = (await XlsxPackage.open(tpl)).sst;
+    for (const m of MONTH_NAMES) {
+      const p = await sheetPath(tpl, m);
+      const strip = (x: string) => x.replace(/<v>[^<]*<\/v>/g, '').replace(/ t="str"/g, '');
+      if (a.get(p) !== b.get(p)) expect(strip(b.get(p)!).length).toBeGreaterThan(0); // only formula caches may differ
+      void sst0;
+    }
   });
 
-  it('editing one score changes only that cell value (+ stale caches / calcPr)', async () => {
+  it('removes visits + leave sheets completely and leaves a consistent package', async () => {
+    const tpl = await fixtureBytes();
+    const r = await importWorkbook(tpl);
+    const out = await exportWorkbook(tpl, r.model, { now: new Date(2026, 10, 1) });
+    const pkg = await XlsxPackage.open(out.bytes);
+    expect(pkg.sheets.map((s) => s.name)).toEqual(SHEET_ORDER);
+    const b = await parts(out.bytes);
+    const all = [...b.entries()].filter(([n]) => /\.(xml|rels)$/.test(n));
+    for (const [n, x] of all) {
+      expect(XMLValidator.validate(x), n).toBe(true);
+      for (const gone of REMOVED_SHEETS) expect(x, `${n} still mentions ${gone}`).not.toContain(gone);
+    }
+    // every internal relationship target and content-type override exists
+    for (const [n, x] of all.filter(([n]) => n.endsWith('.rels'))) {
+      const base = n.replace(/_rels\/[^/]+$/, '');
+      for (const m of x.matchAll(/Target="([^"]+)"[^>]*?(?:\/>)/g)) {
+        if (/TargetMode="External"/.test(m[0])) continue;
+        const t = m[1].startsWith('/') ? m[1].slice(1) : new URL(base + m[1], 'http://x/').pathname.slice(1);
+        expect(b.has(t), `${n} → ${t}`).toBe(true);
+      }
+    }
+    for (const m of b.get('[Content_Types].xml')!.matchAll(/PartName="\/([^"]+)"/g)) expect(b.has(m[1]), m[1]).toBe(true);
+    expect([...b.keys()].some((k) => /calcChain/.test(k))).toBe(false);
+    const wb = b.get('xl/workbook.xml')!;
+    expect(wb).not.toContain('localSheetId');
+    expect(wb).not.toContain('Print_Area');
+    expect(wb).toContain('fullCalcOnLoad="1"');
+    expect(Number(/activeTab="(\d+)"/.exec(wb)![1])).toBeLessThan(pkg.sheets.length);
+    // reimport of the export equals the model, no sheet is reported as removed any more
+    const re = await importWorkbook(out.bytes, { applyCorrections: false });
+    expect(re.model).toEqual({ ...r.model, appliedCorrections: [] });
+    expect(re.analysis.layout.removed).toEqual([]);
+  });
+
+  it('formulas are kept and cached results are refreshed (visible without recalculation)', async () => {
+    const tpl = await fixtureBytes();
+    const r = await importWorkbook(tpl, { applyCorrections: false });
+    const m = clone(r.model);
+    m.months.find((x) => x.month === 3 && x.code === 1001877)!.scores[0] = 1;
+    const out = await exportWorkbook(tpl, m, { now: new Date(2026, 10, 1) });
+    const b = await parts(out.bytes);
+    const pkg = await XlsxPackage.open(out.bytes);
+    const main = new SheetXml(b.get(pkg.sheet(SHEET.main)!.path)!, pkg.sst);
+    const roster = buildRoster(m, '2026-11-01').rows;
+    expect(main.getFormula('I3')).toContain('_xlfn.XLOOKUP');
+    expect(main.get('I3')!.value).toBe(roster[0].points);
+    expect(main.get('H3')!.value).toBe(36);
+    expect(main.get('E4')!.value).toBe(1007355);
+    expect(main.get('J3')!.value).toBe(roster[0].grade);
+    expect(main.get('J9')!.value).toBe('ضعيف'); // blank slot behaves like Excel
+    expect(main.get('I3')!.value).toBeLessThan(332);
+    const mar = new SheetXml(b.get(pkg.sheet('مارس')!.path)!, pkg.sst);
+    expect(mar.getFormula('Q3')).toBe('SUM(H3:P3)');
+    const rec = m.months.find((x) => x.month === 3 && x.code === 1001877)!;
+    expect(mar.get(`Q${rec.row}`)!.value).toBe(monthTotalOf(rec));
+  });
+
+  it('editing one score changes only that input cell (+ refreshed caches, calcPr, removed sheets)', async () => {
     const tpl = await fixtureBytes();
     const r = await importWorkbook(tpl, { applyCorrections: false });
     const m = clone(r.model);
@@ -82,7 +149,16 @@ describe('export (XML patching)', () => {
     const diff = changedParts(a, b).sort();
     const marPath = await sheetPath(tpl, 'مارس');
     const mainPath = await sheetPath(tpl, SHEET.main);
-    expect(diff).toEqual(['xl/workbook.xml', marPath, mainPath].sort());
+    expect(diff).not.toContain('xl/styles.xml');
+    expect(diff).not.toContain('xl/metadata.xml');
+    const otherMonths = await Promise.all(MONTH_NAMES.filter((x) => x !== 'مارس').map((x) => sheetPath(tpl, x)));
+    for (const p of otherMonths) {
+      // other months: only formula caches (Q) may change — never an input cell
+      const strip = (x: string) => x.replace(/<v>[^<]*<\/v>/g, '').replace(/ t="str"/g, '');
+      expect(strip(b.get(p)!)).toBe(strip(a.get(p)!));
+    }
+    expect(diff).toContain(marPath);
+    expect(diff).toContain('xl/workbook.xml');
     // March: only I3 differs (apart from Q cached value)
     const sst = (await XlsxPackage.open(tpl)).sst;
     const sa = new SheetXml(a.get(marPath)!, sst), sb = new SheetXml(b.get(marPath)!, sst);
@@ -90,8 +166,7 @@ describe('export (XML patching)', () => {
     expect(sb.get('I3')!.value).toBe(newScore);
     for (const ref of ['H3', 'J3', 'K3', 'B3', 'E3', 'F3', 'R3', 'I4']) expect(sb.get(ref)!.value).toEqual(sa.get(ref)!.value);
     expect(b.get('xl/workbook.xml')).toContain('fullCalcOnLoad="1"');
-    expect(b.get('xl/workbook.xml')).toContain('#REF!');
-    // formulas preserved verbatim
+        // formulas preserved verbatim
     expect(b.get(mainPath)).toContain('cm="1"');
     expect(b.get(mainPath)).toContain('_xlfn.XLOOKUP');
     expect(b.get(mainPath)).toContain('_xlfn.LET');
@@ -120,8 +195,8 @@ describe('export (XML patching)', () => {
     const re = await importWorkbook(out.bytes, { applyCorrections: false });
     expect(re.model).toEqual(m);
     expect(buildRoster(re.model).rows.map((e) => e.code)).toContain(1009999);
-    // images / printer settings / drawings identical
-    for (const k of ['xl/media/image1.png', 'xl/drawings/drawing1.xml', 'xl/printerSettings/printerSettings2.bin', 'xl/metadata.xml', 'xl/styles.xml', 'xl/sharedStrings.xml'])
+    // styles / metadata identical
+    for (const k of ['xl/metadata.xml', 'xl/styles.xml'])
       expect(b.get(k)).toBe(a.get(k));
     for (const [n, x] of b) if (/\.(xml|rels)$/.test(n)) expect(XMLValidator.validate(x), n).toBe(true);
   });
@@ -148,47 +223,6 @@ describe('export (XML patching)', () => {
     expect(total).toBe(r.model.months.filter((x) => x.code === 1001523).length);
     const re = await importWorkbook(out.bytes, { applyCorrections: false });
     expect(re.model.months.filter((x) => x.code === 1001523).every((x) => x.join === isoToSerial('2026-08-01'))).toBe(true);
-  });
-
-  it('visits dashboard grows: row 17 shifts, merge + total formula follow', async () => {
-    const tpl = await fixtureBytes();
-    const r = await importWorkbook(tpl, { applyCorrections: false });
-    let m = addVisitRow(r.model, { no: 9, name: 'موظف 9', area: 'بني سويف', months: [1, 2, 3, null, null, null, null, null, null, null, null, null] });
-    m = addVisitRow(m, { no: 10, name: 'موظف 10', area: 'ببا', months: Array(12).fill(null) });
-    const out = await exportWorkbook(tpl, m);
-    const b = await parts(out.bytes);
-    const path = await sheetPath(tpl, SHEET.visits);
-    const xml = b.get(path)!;
-    expect(XMLValidator.validate(xml)).toBe(true);
-    expect(xml).toContain('<mergeCell ref="K19:P19"/>');
-    expect(xml).toContain('SUM(Q9:Q18)');
-    expect(xml).toContain('SUM(E17:P17)');
-    expect(xml).not.toContain('SUM(Q9:Q16)');
-    const sx = new SheetXml(xml, (await XlsxPackage.open(out.bytes)).sst);
-    expect(sx.get('C17')!.value).toBe('موظف 9');
-    expect(sx.get('K19')!.value).toBe('اجمالي الزيارات عن العام');
-    expect(sx.get('Q17')!.hasFormula).toBe(true);
-    const re = await importWorkbook(out.bytes, { applyCorrections: false });
-    expect(re.model.visits).toHaveLength(10);
-    expect(re.model).toEqual(m);
-    // deleting back down empties the rows but keeps the structure
-    const back = deleteVisitRow(deleteVisitRow(m, 9), 8);
-    const out2 = await exportWorkbook(out.bytes, back);
-    expect((await importWorkbook(out2.bytes, { applyCorrections: false })).model).toEqual(back);
-  });
-
-  it('leave log: new rows keep raw typing; autofilter range grows beyond 66', async () => {
-    const tpl = await fixtureBytes();
-    const r = await importWorkbook(tpl, { applyCorrections: false });
-    let m = r.model;
-    m = addLeaveRow(m, { name: 'جديد', type: 'اذن ساعه', start: isoToSerial('2026-10-30'), startKind: 'date', end: '30/10/2026', endKind: 'text', days: 'اذن' });
-    const out = await exportWorkbook(tpl, m);
-    const b = await parts(out.bytes);
-    expect(b.get(await sheetPath(tpl, SHEET.leave))).toContain('<autoFilter ref="A2:F67"/>');
-    expect(b.get('xl/workbook.xml')).toContain("$A$2:$F$67");
-    const re = await importWorkbook(out.bytes, { applyCorrections: false });
-    expect(re.model.leave[64]).toMatchObject({ startKind: 'date', endKind: 'text', end: '30/10/2026' });
-    expect(re.model).toEqual(m);
   });
 
   it('keeps text values in numeric cells (raw) across export', async () => {

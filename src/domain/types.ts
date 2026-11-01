@@ -16,30 +16,6 @@ export interface MonthRecord {
   notes: string;
 }
 
-export interface VisitRow {
-  row: number; // sheet row (9..16 in the template)
-  no: Raw;
-  name: string;
-  area: string;
-  months: Raw[]; // 12
-}
-
-export interface LeaveRow {
-  row: number; // 3..150
-  name: string;
-  type: string;
-  start: Raw; // serial number (kind=date) or text (kind=text)
-  startKind: 'date' | 'text' | 'empty';
-  end: Raw;
-  endKind: 'date' | 'text' | 'empty';
-  days: Raw;
-}
-
-export interface LeaveTotal {
-  name: string;
-  total: Raw;
-}
-
 export interface Lists {
   sectors: string[];
   governorates: string[];
@@ -49,10 +25,9 @@ export interface AppModel {
   lists: Lists;
   months: MonthRecord[]; // all months flattened
   mainNotes: Record<string, string>; // by code (stringified)
-  visits: VisitRow[];
-  leave: LeaveRow[];
-  leaveTotals: LeaveTotal[];
   date1904: boolean;
+  /** first / last data row of the monthly sheets (defaults 3..52 like the template) */
+  grid?: { firstRow: number; lastRow: number };
   /** corrections the user explicitly approved (applied on import) */
   appliedCorrections: Correction[];
 }

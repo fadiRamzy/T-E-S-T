@@ -1,6 +1,6 @@
 # Workbook specification (sections 1–5 of the implementation brief)
 
-> Copied verbatim from the project brief. Note: per the owner's decision the join date of code 1001523 is corrected on import (see README).
+> **Update (v2):** the app no longer reads, shows or exports sheets 1–2 (`الاجازات والاذونات`, `الزيارات الميدانية`); they are ignored on import and removed from every export. Import identifies sheets by name/content and columns by header (see README); the fixed cell positions below describe the original template only. The rest is copied verbatim from the project brief. Note: per the owner's decision the join date of code 1001523 is corrected on import (see README).
 
 ## 1. WORKBOOK OVERVIEW
 

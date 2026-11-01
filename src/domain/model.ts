@@ -1,17 +1,26 @@
 import { CAP, MONTH_NAMES } from './constants';
 import { capacityMessage } from './validate';
 import { buildRoster, codeKey } from './roster';
-import type { AppModel, Correction, LeaveRow, MonthRecord, Raw, VisitRow } from './types';
+import type { AppModel, Correction, MonthRecord, Raw } from './types';
 
 export class OpError extends Error {}
 
 export function emptyModel(): AppModel {
-  return { lists: { sectors: [], governorates: [] }, months: [], mainNotes: {}, visits: [], leave: [], leaveTotals: [], date1904: false, appliedCorrections: [] };
+  return { lists: { sectors: [], governorates: [] }, months: [], mainNotes: {}, date1904: false, appliedCorrections: [] };
 }
 
 export function clone<T>(x: T): T {
   return structuredClone(x);
 }
+
+/** Bring a persisted/backup model (possibly from an older app version) to the current shape. */
+export function migrateModel(raw: AppModel & Record<string, unknown>): AppModel {
+  const { visits: _v, leave: _l, leaveTotals: _t, ...rest } = raw;
+  void _v; void _l; void _t; // visits & leave sections were removed from the app
+  return { ...emptyModel(), ...(rest as AppModel) };
+}
+
+export const gridOf = (m: AppModel) => m.grid ?? { firstRow: CAP.monthFirstRow, lastRow: CAP.monthLastRow };
 
 export function blankRecord(month: number, row: number): MonthRecord {
   return { month, row, sector: '', gov: '', name: '', code: null, join: null, job: '', visits: null, scores: Array(8).fill(null), notes: '' };
@@ -19,7 +28,9 @@ export function blankRecord(month: number, row: number): MonthRecord {
 
 export function firstFreeRow(model: AppModel, month: number): number | null {
   const used = new Set(model.months.filter((r) => r.month === month).map((r) => r.row));
-  for (let r = CAP.monthFirstRow; r <= CAP.monthLastRow; r++) if (!used.has(r)) return r;
+  const g = gridOf(model);
+  const last = Math.max(g.lastRow, ...used);
+  for (let r = g.firstRow; r <= last; r++) if (!used.has(r)) return r;
   return null;
 }
 
@@ -35,6 +46,17 @@ export function addMonthRecord(model: AppModel, rec: Omit<MonthRecord, 'row'>): 
   if (isNew && buildRoster(m).rows.length >= CAP.main) throw new OpError(capacityMessage.mainFull);
   m.months.push({ ...clone(rec), row });
   return m;
+}
+
+export interface NewEmployee { code: number; name: string; sector: string; gov: string; job: string; join: Raw; month: number }
+
+/** Add a brand-new employee (identity only) in the chosen month. The code must be unused in EVERY month. */
+export function addEmployee(model: AppModel, e: NewEmployee): AppModel {
+  if (!Number.isInteger(e.code) || e.code <= 0) throw new OpError('الكود يجب أن يكون رقماً صحيحاً موجباً');
+  if (!e.name.trim()) throw new OpError('اسم الموظف مطلوب');
+  if (model.months.some((r) => codeKey(r.code) === String(e.code))) throw new OpError(`الكود ${e.code} مسجل بالفعل لموظف آخر`);
+  const { month, ...id } = e;
+  return addMonthRecord(model, { ...blankRecord(month, 0), ...id, name: id.name.trim(), code: id.code });
 }
 
 export function updateMonthRecord(model: AppModel, month: number, row: number, next: MonthRecord): AppModel {
@@ -54,6 +76,15 @@ export function deleteMonthRecord(model: AppModel, month: number, row: number): 
   return m;
 }
 
+/** Remove an employee (every row of the code in every month) together with the main-sheet note. */
+export function deleteEmployee(model: AppModel, code: Raw): AppModel {
+  const key = codeKey(code);
+  const m = clone(model);
+  m.months = m.months.filter((r) => codeKey(r.code) !== key);
+  if (key !== null) delete m.mainNotes[key];
+  return m;
+}
+
 export type IdentityPatch = Partial<Pick<MonthRecord, 'sector' | 'gov' | 'name' | 'join' | 'job'>>;
 
 /** Edit an employee's identity. scope=all rewrites every month where the code has a row. */
@@ -63,6 +94,18 @@ export function editIdentity(model: AppModel, code: Raw, patch: IdentityPatch, s
   const rows = m.months.filter((r) => codeKey(r.code) === key).sort((a, b) => a.month - b.month || a.row - b.row);
   const targets = scope === 'all' ? rows : rows.slice(0, 1);
   for (const r of targets) Object.assign(r, patch);
+  return m;
+}
+
+/** Change the employee code in every month (and move the main-sheet note). */
+export function changeEmployeeCode(model: AppModel, from: Raw, to: number): AppModel {
+  const fk = codeKey(from);
+  const tk = String(to);
+  if (fk === tk) return model;
+  if (model.months.some((r) => codeKey(r.code) === tk)) throw new OpError(`الكود ${tk} مستخدم لموظف آخر`);
+  const m = clone(model);
+  for (const r of m.months) if (codeKey(r.code) === fk) r.code = to;
+  if (fk && m.mainNotes[fk] !== undefined) { m.mainNotes[tk] = m.mainNotes[fk]; delete m.mainNotes[fk]; }
   return m;
 }
 
@@ -89,53 +132,6 @@ export function setMainNote(model: AppModel, code: Raw, note: string): AppModel 
   if (k === null) return m;
   if (note) m.mainNotes[k] = note;
   else delete m.mainNotes[k];
-  return m;
-}
-
-// ---- visits ------------------------------------------------------------------
-export function blankVisit(n: number): VisitRow {
-  return { row: CAP.visitFirst + n, no: n + 1, name: '', area: '', months: Array(12).fill(null) };
-}
-export function renumberVisits(rows: VisitRow[]): VisitRow[] {
-  return rows.map((r, i) => ({ ...r, row: CAP.visitFirst + i }));
-}
-export function addVisitRow(model: AppModel, v: Omit<VisitRow, 'row'>): AppModel {
-  const m = clone(model);
-  if (m.visits.length >= CAP.visitMax) throw new OpError(capacityMessage.visitsFull);
-  m.visits.push({ ...clone(v), row: CAP.visitFirst + m.visits.length });
-  return m;
-}
-export function updateVisitRow(model: AppModel, index: number, v: VisitRow): AppModel {
-  const m = clone(model);
-  m.visits[index] = { ...clone(v), row: m.visits[index].row };
-  return m;
-}
-export function deleteVisitRow(model: AppModel, index: number): AppModel {
-  const m = clone(model);
-  m.visits.splice(index, 1);
-  m.visits = renumberVisits(m.visits);
-  return m;
-}
-
-// ---- leave ---------------------------------------------------------------------
-export function renumberLeave(rows: LeaveRow[]): LeaveRow[] {
-  return rows.map((r, i) => ({ ...r, row: CAP.leaveFirst + i }));
-}
-export function addLeaveRow(model: AppModel, l: Omit<LeaveRow, 'row'>): AppModel {
-  const m = clone(model);
-  if (m.leave.length >= CAP.leaveLast - CAP.leaveFirst + 1) throw new OpError(capacityMessage.leaveFull);
-  m.leave.push({ ...clone(l), row: CAP.leaveFirst + m.leave.length });
-  return m;
-}
-export function updateLeaveRow(model: AppModel, index: number, l: LeaveRow): AppModel {
-  const m = clone(model);
-  m.leave[index] = { ...clone(l), row: m.leave[index].row };
-  return m;
-}
-export function deleteLeaveRow(model: AppModel, index: number): AppModel {
-  const m = clone(model);
-  m.leave.splice(index, 1);
-  m.leave = renumberLeave(m.leave);
   return m;
 }
 

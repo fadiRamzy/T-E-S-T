@@ -1,5 +1,5 @@
 import type { Raw } from '../domain/types';
-import { colToNum, decodeXml, escAttr, escXml, numToCol, parseAttrs, splitRef } from './xml';
+import { colToNum, decodeXml, escAttr, escXml, parseAttrs, splitRef } from './xml';
 
 export type SharedStrings = string[];
 
@@ -203,51 +203,27 @@ export class SheetXml {
     return n;
   }
 
-  /** Shift every row >= from by k (used when growing the visits dashboard). */
-  shiftRowsFrom(from: number, k: number): void {
-    const shifted = this.rows.filter((r) => r.n >= from);
-    for (const r of shifted) {
-      const nn = r.n + k;
-      r.head = r.head.replace(/\br="\d+"/, `r="${nn}"`).replace(/\sspans="[^"]*"/, (s) => s);
-      r.cells = r.cells.map((c) => ({ col: c.col, xml: c.xml.replace(/^(<c\b[^>]*?\br=")([A-Z]+)\d+(")/, `$1$2${nn}$3`) }));
-      r.n = nn;
-      r.dirty = true;
-    }
-    this.byRow.clear();
-    for (const r of this.rows) this.byRow.set(r.n, r);
-  }
-
-  /** Clone `templateRow` as new empty row `n` (styles kept, values/formulas dropped). `formulas` maps column letter -> formula text. */
-  cloneRowEmpty(templateRow: number, n: number, formulas: Record<string, string> = {}): void {
-    const t = this.byRow.get(templateRow);
-    if (!t) throw new Error(`template row ${templateRow} missing`);
-    const head = t.head.replace(/\br="\d+"/, `r="${n}"`);
-    const cells = t.cells.map((c) => {
-      const col = numToCol(c.col);
-      const attrs = /^<c\b([^>]*?)(?:\/>|>)/.exec(c.xml)![1];
-      const kept = parseAttrs(attrs)
-        .filter(([k]) => k !== 't' && k !== 'cm' && k !== 'vm')
-        .map(([k, v]) => `${k}="${k === 'r' ? `${col}${n}` : v}"`)
-        .join(' ');
-      const f = formulas[col];
-      return { col: c.col, xml: f ? `<c ${kept}><f>${escXml(f)}</f></c>` : `<c ${kept}/>` };
-    });
-    const node: RowNode = { n, head, cells, original: '', dirty: true, spansStale: false };
-    const idx = this.rows.findIndex((x) => x.n > n);
-    if (idx < 0) this.rows.push(node);
-    else this.rows.splice(idx, 0, node);
-    this.byRow.set(n, node);
-  }
-
-  setFormula(ref: string, formula: string): void {
+  /** Rewrite the cached result of a formula cell (the formula itself is never touched). */
+  setCached(ref: string, value: number | string): boolean {
     const { col, row } = splitRef(ref);
     const r = this.byRow.get(row);
     const i = r?.cells.findIndex((x) => x.col === colToNum(col)) ?? -1;
-    if (!r || i < 0) throw new Error(`cell ${ref} missing`);
-    const attrs = /^<c\b([^>]*?)(?:\/>|>)/.exec(r.cells[i].xml)![1];
-    const kept = parseAttrs(attrs).filter(([k]) => k !== 't').map(([k, v]) => `${k}="${v}"`).join(' ');
-    r.cells[i] = { col: r.cells[i].col, xml: `<c ${kept}><f>${escXml(formula)}</f></c>` };
+    if (!r || i < 0) return false;
+    const xml = r.cells[i].xml;
+    const m = /^<c\b([^>]*?)>([\s\S]*?)<\/c>$/.exec(xml);
+    if (!m || !/<f\b/.test(m[2])) return false;
+    if (typeof value === 'number' && !Number.isFinite(value)) return false;
+    const hasV = /<v\b/.test(m[2]);
+    if (hasV) {
+      const cur = readCellXml(xml, this.sst).value;
+      if (typeof value === 'number' ? typeof cur === 'number' && Math.abs(cur - value) < 1e-9 : (cur ?? '') === value && !/\bt="e"/.test(m[1])) return false;
+    }
+    const attrs = parseAttrs(m[1]).filter(([k]) => k !== 't');
+    if (typeof value === 'string') attrs.push(['t', 'str']);
+    const inner = m[2].replace(/<v\b[^>]*?>[\s\S]*?<\/v>/, '').replace(/<v\b[^>]*?\/>/, '');
+    r.cells[i] = { col: r.cells[i].col, xml: `<c ${attrs.map(([k, v]) => `${k}="${v}"`).join(' ')}>${inner}<v>${typeof value === 'string' ? escXml(value) : String(value)}</v></c>` };
     r.dirty = true;
+    return true;
   }
 
   getFormula(ref: string): string | null {

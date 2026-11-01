@@ -3,7 +3,7 @@ import { annualGrade, gradeFor, monthTotal, tenureFactor } from '../src/domain/c
 import { buildRoster } from '../src/domain/roster';
 import { isoToSerial, serialToISO } from '../src/domain/dates';
 import { computeQuality } from '../src/domain/quality';
-import { addMonthRecord, blankRecord, copyRosterFromPrevious, deleteMonthRecord, editIdentity, OpError } from '../src/domain/model';
+import { addEmployee, addMonthRecord, blankRecord, changeEmployeeCode, copyRosterFromPrevious, deleteEmployee, deleteMonthRecord, editIdentity, OpError, setMainNote } from '../src/domain/model';
 import { validateMonthRecord } from '../src/domain/validate';
 import { seedModel } from './helpers';
 
@@ -61,11 +61,6 @@ describe('roster + annual aggregates (as-of 2026-11-01)', () => {
     expect(e.monthsSince).toBeCloseTo(3.07, 2);
     expect(e.grade).toBe('جيد');
   });
-  it('visits dashboard totals', () => {
-    const tot = m.visits.map((v) => v.months.reduce<number>((a, x) => a + (typeof x === 'number' ? x : 0), 0));
-    expect(tot).toEqual([18, 18, 39, 32, 49, 18, 5, 18]);
-    expect(tot.reduce((a, b) => a + b, 0)).toBe(197);
-  });
 });
 
 describe('operations & validation', () => {
@@ -90,6 +85,23 @@ describe('operations & validation', () => {
     expect(n.visits).toBeNull();
     expect(n.scores.every((s) => s === null)).toBe(true);
   });
+  it('addEmployee: code is unique across ALL months and the name is required', () => {
+    expect(() => addEmployee(m, { code: 1001877, name: 'x', sector: '', gov: '', job: '', join: null, month: 5 })).toThrow(OpError);
+    expect(() => addEmployee(m, { code: 5, name: '  ', sector: '', gov: '', job: '', join: null, month: 5 })).toThrow(OpError);
+    const a = addEmployee(m, { code: 1009998, name: 'جديد', sector: 'الصعيد', gov: '', job: 'مسئول', join: null, month: 5 });
+    expect(buildRoster(a).rows.map((r) => r.code)).toContain(1009998);
+  });
+  it('deleteEmployee removes every month row and the note', () => {
+    const d = deleteEmployee(setMainNote(m, 1007355, 'x'), 1007355);
+    expect(d.months.some((r) => r.code === 1007355)).toBe(false);
+    expect(d.mainNotes['1007355']).toBeUndefined();
+    expect(buildRoster(d).rows).toHaveLength(6);
+  });
+  it('changeEmployeeCode renames everywhere and refuses duplicates', () => {
+    const c = changeEmployeeCode(m, 1007355, 1007356);
+    expect(c.months.filter((r) => r.code === 1007356).length).toBe(m.months.filter((r) => r.code === 1007355).length);
+    expect(() => changeEmployeeCode(m, 1007355, 1001877)).toThrow(OpError);
+  });
   it('scores outside 1-5 produce warnings', () => {
     const rec = { ...m.months[0], scores: [1, 2, 3, 4, 5, 6, 0, 'x'] };
     expect(validateMonthRecord(m, rec, m.months[0]).filter((i) => i.field.startsWith('s')).length).toBe(3);
@@ -97,9 +109,7 @@ describe('operations & validation', () => {
   it('data-quality panel reports the known items', () => {
     const ids = computeQuality(m, ASOF).map((q) => q.id);
     expect(ids).toContain('swap-1001523');
-    expect(ids).toContain('leave-text-dates');
     expect(ids).toContain('cf-literal');
     expect(ids.some((i) => i.startsWith('txtH-1-'))).toBe(true);
-    expect(ids.some((i) => i.startsWith('vtxt-'))).toBe(true);
   });
 });
