@@ -74,6 +74,11 @@ test('«الملاحظات والمتابعة» page is notes-only; notes HIDDEN
   expect(pageText).not.toContain('سجل المتابعة');
   expect(pageText).not.toContain('الملاحظات المسجلة');
   expect(document.querySelector('.unified-records-stack')).toBeNull();
+  // the separate follow-up register page is gone from navigation and routes
+  expect(document.querySelector('a[href="#/mgmt/observations"]')).toBeNull();
+  const navText = document.querySelector('.scope-mgmt .sidebar__nav')?.textContent ?? '';
+  expect(navText).not.toContain('سجل المتابعة');
+  expect(navText).toContain('الملاحظات والمتابعة');
 
   // employee picker + note form stay visible; the notes LIST is hidden by default
   expect(document.querySelector('.employee-note-form')).toBeTruthy();

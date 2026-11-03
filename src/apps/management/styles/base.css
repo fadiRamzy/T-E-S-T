@@ -1282,3 +1282,77 @@
   font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums;
 }
 .scope-mgmt .emp-filter-btn.is-active .emp-count { background: rgba(255, 255, 255, .22); color: #fff; }
+
+/* ============================================================================
+   Compact layout & space utilization + icon background normalization
+   (appended last → wins the cascade over all older duplicated declarations)
+   ========================================================================== */
+/* Icon backgrounds: coordinated tint instead of the old flat gray */
+.scope-mgmt .stat__icon, .scope-mgmt.stat__icon { background: var(--brand-50); color: var(--brand-700); }
+.scope-mgmt .search, .scope-mgmt.search { min-height: 38px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); }
+.scope-mgmt .search svg.ic, .scope-mgmt.search > svg { color: var(--ink-400); background: transparent; }
+/* Tighter page rhythm — less empty vertical space everywhere */
+.scope-mgmt .pagehead, .scope-mgmt.pagehead { gap: 14px; margin-bottom: 16px; }
+.scope-mgmt .stats, .scope-mgmt.stats { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.scope-mgmt .stat, .scope-mgmt.stat { padding: 11px 13px; }
+.scope-mgmt .stat__icon, .scope-mgmt.stat__icon { width: 34px; height: 34px; border-radius: 10px; }
+.scope-mgmt .stat__icon svg.ic { width: 16px; height: 16px; }
+.scope-mgmt .stat__value, .scope-mgmt.stat__value { font-size: 20px; }
+.scope-mgmt .stat__label, .scope-mgmt.stat__label { font-size: 11px; }
+.scope-mgmt .stat__hint, .scope-mgmt.stat__hint { font-size: 10px; }
+.scope-mgmt .toolbar, .scope-mgmt.toolbar { padding: 8px 10px; gap: 6px; }
+.scope-mgmt .toolbar .search, .scope-mgmt .toolbar .select, .scope-mgmt .toolbar .input { min-height: 34px; }
+.scope-mgmt .card__head, .scope-mgmt.card__head { min-height: 0; padding: 12px 16px; }
+.scope-mgmt .card__body, .scope-mgmt.card__body { padding: 14px 16px; }
+/* Employees page: compact summary cards */
+.scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.scope-mgmt .employees-summary .stat { padding: 10px 12px; }
+.scope-mgmt .employees-summary .stat__icon { width: 32px; height: 32px; }
+.scope-mgmt .employees-summary .stat__value { font-size: 19px; }
+
+/* ============================================================================
+   Employee profile — definitively compact
+   ========================================================================== */
+/* Four activity indicators: ONE row, always (flex !important beats every older
+   grid/media declaration); horizontal scroll only when the screen is narrow */
+.scope-mgmt .profile-stats, .scope-mgmt.profile-stats { display: flex !important; flex-wrap: nowrap !important; grid-template-columns: none !important; gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.scope-mgmt .profile-stats .stat { flex: 1 1 0; min-width: 0; padding: 10px 12px; }
+.scope-mgmt .profile-stats .stat__icon, .scope-mgmt .profile-stats .stat__icon { width: 32px; height: 32px; border-radius: 9px; }
+.scope-mgmt .profile-stats .stat__icon svg.ic { width: 15px; height: 15px; }
+.scope-mgmt .profile-stats .stat__value, .scope-mgmt .profile-stats .stat__value { font-size: 19px; }
+.scope-mgmt .profile-stats .stat__label, .scope-mgmt .profile-stats .stat__label { font-size: 10.5px; }
+.scope-mgmt .profile-stats .stat__hint, .scope-mgmt .profile-stats .stat__hint { font-size: 9.5px; }
+/* Tighter profile hero & sections — shorter page, same content */
+.scope-mgmt .profile-hero { margin-bottom: 16px; }
+.scope-mgmt .profile-hero__top { padding: 14px 18px; gap: 12px; }
+.scope-mgmt .profile-hero__avatar { width: 56px; height: 56px; flex-basis: 56px; font-size: 20px; }
+.scope-mgmt .profile-hero__name { font-size: 23px; }
+.scope-mgmt .profile-hero__actions { gap: 6px; }
+.scope-mgmt .profile-facts { padding: 10px 18px 12px; gap: 6px; }
+.scope-mgmt .profile-chip { padding: 4px 10px; }
+.scope-mgmt .profile-section { margin: 14px 0 8px; font-size: 14px; }
+.scope-mgmt .card { margin-bottom: 12px; }
+
+/* ============================================================================
+   Leave/permission monthly summary — COLORS ONLY (structure untouched):
+   one coordinated color per category, readable number badges, distinct totals
+   ========================================================================== */
+.scope-mgmt .leave-summary-wrap, .scope-mgmt.leave-summary-wrap { border: 1px solid var(--line); border-radius: var(--ui-radius); }
+.scope-mgmt .leave-summary-table, .scope-mgmt.leave-summary-table { min-width: 1120px; border-collapse: separate; border-spacing: 0; }
+.scope-mgmt .leave-summary-table th, .scope-mgmt .leave-summary-table td { min-width: 78px; padding: 8px 9px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 13px; }
+.scope-mgmt .leave-summary-table thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-sunken); color: var(--brand-800); font-size: 11px; font-weight: 700; line-height: 1.45; white-space: normal; }
+.scope-mgmt .leave-summary-table tbody tr:nth-child(even) { background: transparent; }
+.scope-mgmt .leave-summary-table tbody tr:hover { background: var(--brand-50); }
+.scope-mgmt .leave-summary-table tbody th.leave-summary-name { min-width: 165px; background: var(--surface-muted); color: var(--brand-800); font-weight: 700; text-align: right; white-space: normal; border-radius: 8px; }
+/* each numeric cell = subtle rounded badge with enough contrast */
+.scope-mgmt .leave-summary-table tbody td { font-weight: 600; border-radius: 8px; }
+.scope-mgmt .leave-summary-leave, .scope-mgmt.leave-summary-leave { color: #1d4e7e; background: #e8f1fa; }
+.scope-mgmt .leave-summary-permission, .scope-mgmt.leave-summary-permission { color: #0b5254; background: var(--teal-50); }
+.scope-mgmt .leave-summary-hours, .scope-mgmt.leave-summary-hours { color: var(--amber-700); background: #fdf3dd; }
+.scope-mgmt .leave-summary-warning, .scope-mgmt.leave-summary-warning { color: var(--amber-700); background: #fbe8bd; font-weight: 700; }
+.scope-mgmt .leave-summary-error, .scope-mgmt.leave-summary-error { color: var(--red-700); background: #fbe3e3; font-weight: 700; }
+.scope-mgmt .leave-summary-remaining, .scope-mgmt.leave-summary-remaining { color: var(--teal-700); background: var(--teal-100); font-weight: 700; }
+.scope-mgmt .leave-summary-neutral, .scope-mgmt.leave-summary-neutral { color: var(--ink-500); background: var(--surface-muted); }
+/* totals column — distinct, coordinated, immediately recognizable */
+.scope-mgmt .leave-summary-total, .scope-mgmt.leave-summary-total { color: var(--brand-800); background: var(--brand-100); font-weight: 800; box-shadow: inset 0 2px 0 var(--brand-500); }
+.scope-mgmt .leave-filter-panel, .scope-mgmt.leave-filter-panel { border: 1px solid var(--brand-100); border-radius: var(--ui-radius); background: var(--brand-50); }

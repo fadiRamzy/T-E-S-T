@@ -9,7 +9,6 @@ import { ReportsPage } from './pages/Reports';
 import { VisitTimingsPage } from './pages/VisitTimings';
 import { UnifiedLeavesPage } from './pages/UnifiedLeaves';
 import { NotesPage } from './pages/Notes';
-import { ObservationsPage } from './pages/Observations';
 import { AttendanceDelaysPage } from './pages/AttendanceDelays';
 
 export function App() {
@@ -54,7 +53,6 @@ function Router({ route }: { route: ReturnType<typeof useRoute> }) {
   if (first === 'visit-times') return <VisitTimingsPage />;
   if (first === 'leave-permissions') return <UnifiedLeavesPage />;
   if (first === 'notes') return <NotesPage />;
-  if (first === 'observations') return <ObservationsPage />;
   if (first === 'attendance-delays') return <AttendanceDelaysPage />;
   if (first === 'minutes') return <MinutesPage />;
   if (first === 'reports') return <ReportsPage />;
