@@ -318,6 +318,13 @@
 .scope-mgmt .picker__option, .scope-mgmt.picker__option { border-radius: 8px; }
 .scope-mgmt .picker__option:hover, .scope-mgmt.picker__option:hover { background: var(--surface-sunken); }
 .scope-mgmt .picker__option.is-selected, .scope-mgmt.picker__option.is-selected { background: var(--brand-50); color: var(--navy-2); }
+/* Compact employee dropdown: the popup carries the `scope-mgmt` class, so the
+   root min-height used to stretch it to the full viewport — pin it to content. */
+.scope-mgmt .picker__pop, .scope-mgmt.picker__pop { min-height: 0; height: auto; max-height: min(340px, calc(100dvh - 24px)); }
+.scope-mgmt .picker__list, .scope-mgmt.picker__list { max-height: 264px; }
+.scope-mgmt .picker__option, .scope-mgmt.picker__option { min-height: 34px; padding: 6px 10px; font-size: 13.5px; line-height: 1.45; }
+.scope-mgmt .picker__option .picker__name, .scope-mgmt.picker__option .picker__name { flex: 0 1 auto; }
+.scope-mgmt .picker__option > svg, .scope-mgmt.picker__option > svg { margin-inline-start: auto; }
 .scope-mgmt .timefield__input, .scope-mgmt.timefield__input { min-height: 42px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: #fff; }
 .scope-mgmt .timefield__preview, .scope-mgmt.timefield__preview { color: var(--muted); font-size: 12.5px; }
 .scope-mgmt .timefield__pop, .scope-mgmt.timefield__pop { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow-lg); }
@@ -370,7 +377,7 @@
 .scope-mgmt .leave-summary-table, .scope-mgmt.leave-summary-table { width: 100%; min-width: 1080px; border-collapse: separate; border-spacing: 0; color: var(--text); font-size: 14px; }
 .scope-mgmt .leave-summary-table th, .scope-mgmt .leave-summary-table td { padding: 11px 14px; border-bottom: 1px solid var(--line-2); text-align: center; vertical-align: middle; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .scope-mgmt .leave-summary-table thead th { position: sticky; top: 0; z-index: 2; background: var(--surface-sunken); color: var(--navy); border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 700; line-height: 1.45; white-space: normal; }
-.scope-mgmt .leave-summary-table thead th:nth-child(5) { background: #e2eaf4; }
+.scope-mgmt .leave-summary-table thead th:nth-child(5) { background: var(--surface-sunken); }
 .scope-mgmt .leave-summary-table tbody tr { transition: background-color .2s var(--ease); }
 .scope-mgmt .leave-summary-table tbody tr:last-child th, .scope-mgmt .leave-summary-table tbody tr:last-child td { border-bottom: 0; }
 .scope-mgmt .leave-summary-table tbody tr:hover th, .scope-mgmt .leave-summary-table tbody tr:hover td { background: #f7fafd; }
@@ -379,11 +386,12 @@
 .scope-mgmt .leave-summary-permission, .scope-mgmt.leave-summary-permission,
 .scope-mgmt .leave-summary-hours, .scope-mgmt.leave-summary-hours { background: transparent; color: var(--text); font-weight: 600; }
 .scope-mgmt .leave-summary-neutral, .scope-mgmt.leave-summary-neutral { background: transparent; color: var(--muted); font-weight: 500; }
-.scope-mgmt .leave-summary-total, .scope-mgmt.leave-summary-total { background: var(--brand-50); color: var(--navy); font-weight: 800; }
-.scope-mgmt .leave-summary-warning, .scope-mgmt.leave-summary-warning { background: var(--amber-100); border-radius: var(--pill); color: var(--warn); font-weight: 700; }
-.scope-mgmt .leave-summary-error, .scope-mgmt.leave-summary-error { background: var(--red-100); border-radius: var(--pill); color: var(--danger); font-weight: 700; }
-.scope-mgmt .leave-summary-remaining, .scope-mgmt.leave-summary-remaining { background: var(--green-100); border-radius: var(--pill); color: var(--ok); font-weight: 700; }
-.scope-mgmt .leave-summary-table tbody tr:hover td.leave-summary-total { background: #e2eaf4; }
+/* Leaves & Permissions summary: plain cells — the only indicator is the red
+   translucent badge (badge--danger) around numbers > 0, same as attendance. */
+.scope-mgmt .leave-summary-total, .scope-mgmt.leave-summary-total,
+.scope-mgmt .leave-summary-warning, .scope-mgmt.leave-summary-warning,
+.scope-mgmt .leave-summary-error, .scope-mgmt.leave-summary-error,
+.scope-mgmt .leave-summary-remaining, .scope-mgmt.leave-summary-remaining { background: transparent; border-radius: 0; box-shadow: none; color: var(--text); font-weight: 600; }
 
 /* ── Profile ────────────────────────────────────────────────────────────── */
 .scope-mgmt .profile-hero, .scope-mgmt.profile-hero { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px; }
