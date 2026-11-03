@@ -39,7 +39,7 @@ jobs:
       # جذر المستودع على نسخة الإنتاج المبنية، لأن ملف index.html المصدر الخاص
       # بـ Vite لا يعمل عند تقديمه مباشرة من github.io (صفحة بيضاء فارغة).
       # نحدّث ملفات الجذر من dist في كل نشر.
-      - name: تحديث ملفات الموقع في جذر المستودع (مصدر Pages: main /)
+      - name: "تحديث ملفات الموقع في جذر المستودع (مصدر Pages: main /)"
         continue-on-error: true
         run: |
           cp dist/index.html index.html
