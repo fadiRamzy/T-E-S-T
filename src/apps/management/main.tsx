@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/base.css';
-import './styles/reference.css';
-import './styles/reference-compat.css';
+import './styles/design.css';
 import { App } from './App';
 import { AppProvider } from './state/store';
 import { registerServiceWorker } from './serviceWorker';

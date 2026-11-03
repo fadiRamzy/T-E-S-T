@@ -12,9 +12,9 @@ import '@fontsource/ibm-plex-sans-arabic/latin-700.css';
 // Each original project's styles, isolated under .scope-mgmt / .scope-eval
 // (see scripts/scope-css.mjs) so their shared class names never collide.
 import './apps/management/styles/base.css';
-import './apps/management/styles/reference.css';
-import './apps/management/styles/reference-compat.css';
+import './apps/management/styles/design.css';
 import './apps/evaluation/styles.css';
+import './apps/evaluation/design.css';
 import './index.css';
 import App from './App';
 
