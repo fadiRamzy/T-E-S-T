@@ -35,3 +35,26 @@
 /* ── UI (requested): room for the top-centered unified gateway button ── */
 .scope-eval .container, .scope-eval.container { padding-top: 64px; }
 @media print {.scope-eval .container, .scope-eval.container { padding-top: 14px; }}
+
+/* ============================================================================
+   UI consistency layer (evaluation site) — ONE authoritative set of metrics
+   for icons, buttons, cards and motion. Appended last on purpose: at equal
+   specificity the later rule wins, so this overrides the older duplicated
+   declarations above and matches the management site's metrics.
+   ========================================================================== */
+.scope-eval { --ui-radius: 16px; --ui-motion: .22s; }
+.scope-eval svg.ic { width: 18px; height: 18px; }
+.scope-eval .btn svg.ic, .scope-eval.btn svg.ic { width: 16px; height: 16px; }
+.scope-eval .btn.sm svg.ic, .scope-eval.btn.sm svg.ic { width: 14px; height: 14px; }
+.scope-eval .iconbtn svg.ic, .scope-eval.iconbtn svg.ic { width: 15px; height: 15px; }
+.scope-eval .btn, .scope-eval.btn {
+  min-height: 38px;
+  border-radius: 10px;
+  transition: background-color var(--ui-motion) var(--ease), border-color var(--ui-motion) var(--ease), color var(--ui-motion) var(--ease), box-shadow var(--ui-motion) var(--ease), transform var(--ui-motion) var(--ease);
+}
+.scope-eval .btn:hover:not(:disabled), .scope-eval.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.scope-eval .iconbtn, .scope-eval.iconbtn { width: 34px; height: 34px; border-radius: 9px; transition: background-color var(--ui-motion) var(--ease), color var(--ui-motion) var(--ease); }
+.scope-eval .card, .scope-eval.card { border-radius: var(--ui-radius); }
+.scope-eval .nav, .scope-eval.nav { transition: background-color var(--ui-motion) var(--ease), color var(--ui-motion) var(--ease); }
+.scope-eval .rowbtn, .scope-eval.rowbtn { transition: background-color var(--ui-motion) var(--ease), color var(--ui-motion) var(--ease); }
+.scope-eval .page > *, .scope-eval.page > * { animation-duration: .25s; animation-delay: 0s !important; }
