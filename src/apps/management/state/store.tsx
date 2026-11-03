@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ensureSettings, isIndexedDbAvailable, readSettings, writeSettings } from '../db/database';
+import { migrateFromLocalMirror, writeLocalMirror } from '../db/backup';
 import {
   listAnnualNotes,
   listAttendanceRecords,
@@ -129,8 +130,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           return;
         }
         await ensureSettings();
+        // safe migration: recover from the local mirror only if IndexedDB is completely empty
+        await migrateFromLocalMirror();
         await load();
+        void writeLocalMirror(); // seed the mirror with the current persistent state
         if (!cancelled) setReady(true);
+        // ask the browser to protect our local storage from eviction
+        try { await navigator.storage?.persist?.(); } catch { /* ignore */ }
       } catch (error) {
         if (!cancelled) {
           setFatalError(error instanceof Error ? error.message : 'تعذّر تهيئة قاعدة البيانات المحلية.');

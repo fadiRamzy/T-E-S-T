@@ -48,7 +48,7 @@
   --shadow-md: 0 6px 18px rgba(13, 27, 42, 0.07);
   --shadow-lg: 0 24px 60px rgba(13, 27, 42, 0.18);
 
-  --font: Calibri, 'Carlito', 'Cairo', 'Segoe UI', Arial, sans-serif;
+  --font: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", "Noto Naskh Arabic", "Traditional Arabic", Tahoma, serif;
   --nav-h: 62px;
 }.scope-mgmt, .scope-mgmt *, .scope-mgmt *::before, .scope-mgmt *::after { box-sizing: border-box; }.scope-mgmt, .scope-mgmt { margin: 0; padding: 0; }.scope-mgmt {
   font-family: var(--font);
@@ -1121,7 +1121,7 @@
   --motion-standard: cubic-bezier(.2, .75, .25, 1);
 }.scope-mgmt, .scope-mgmt, .scope-mgmt { min-height: 100%; }.scope-mgmt { scroll-behavior: smooth; }.scope-mgmt {
   min-width: 320px;
-  font-family: Calibri, Carlito, Cairo, 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
   font-size: 14.5px;
   line-height: 1.62;
   color: var(--ink-800);

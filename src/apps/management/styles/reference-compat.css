@@ -27,7 +27,7 @@
   --side: 208px;
   --gap: 14px;
   --serif: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
-  --font: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", "Noto Naskh Arabic", Tahoma, system-ui, -apple-system, sans-serif;
+  --font: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", "Noto Naskh Arabic", "Traditional Arabic", Tahoma, serif;
   --brand-900: var(--navy);
   --brand-800: var(--navy-2);
   --brand-700: var(--navy-3);

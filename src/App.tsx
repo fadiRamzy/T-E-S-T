@@ -52,7 +52,7 @@ export default function App() {
         <AppProvider>
           <ManagementApp />
         </AppProvider>
-        <PortalHomeChip />
+        <SiteSwitchButton view="mgmt" />
       </>
     );
   }
@@ -60,18 +60,32 @@ export default function App() {
     return (
       <>
         <EvaluationApp />
-        <PortalHomeChip />
+        <SiteSwitchButton view="eval" />
       </>
     );
   }
   return <Portal />;
 }
 
-function PortalHomeChip() {
+/**
+ * Dynamic website-switching button — always shows the NAME of the OTHER website:
+ *  • inside the Risk Follow-up System (موقع المتابعة) → «تقييمات الموظفين» → #/eval/dashboard
+ *  • inside the Employee Evaluations site (تقييمات الموظفين) → «موقع المتابعة» → #/mgmt/employees
+ */
+const SITE_SWITCH_TARGET: Record<'mgmt' | 'eval', { label: string; href: string }> = {
+  mgmt: { label: 'موقع المتابعة', href: '#/mgmt/employees' },
+  eval: { label: 'تقييمات الموظفين', href: '#/eval/dashboard' },
+};
+
+function SiteSwitchButton({ view }: { view: 'mgmt' | 'eval' }) {
+  const target = view === 'mgmt' ? SITE_SWITCH_TARGET.eval : SITE_SWITCH_TARGET.mgmt;
   return (
-    <a className="portal-home-chip" href="#/" aria-label="العودة إلى البوابة الموحدة">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10.5V20h13v-9.5" /><path d="M10 20v-5h4v5" /></svg>
-      <span>البوابة الموحدة</span>
+    <a className="site-switch" href={target.href} aria-label={`الانتقال إلى ${target.label}`}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 4v13" /><path d="m3.5 13.5 3.5 3.5 3.5-3.5" />
+        <path d="M17 20V7" /><path d="m13.5 10.5 3.5-3.5 3.5 3.5" />
+      </svg>
+      <span>{target.label}</span>
     </a>
   );
 }
