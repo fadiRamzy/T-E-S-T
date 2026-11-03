@@ -90,3 +90,63 @@
 /* ── UI (requested): room for the top-centered unified gateway button ── */
 .scope-mgmt .page, .scope-mgmt.page { padding-top: 64px; }
 @media print {.scope-mgmt .page, .scope-mgmt.page { padding-top: 14px; }}
+
+/* ==========================================================================
+   Leave/permission monthly summary — redesigned to match the Late Attendance
+   & Departure summary exactly: same card > toolbar > tablewrap/table rhythm,
+   same borders, row heights, sticky header, hover and typography. Numbers are
+   plain tabular cells; the totals column gets one restrained navy tint; quota
+   states (warning/error/remaining) render as soft pills like the reference
+   Badge. Structure, columns, data and calculations are unchanged.
+   ========================================================================== */
+.scope-mgmt .leave-summary-wrap, .scope-mgmt.leave-summary-wrap { max-width: 100%; max-height: 72vh; overflow: auto; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.scope-mgmt .leave-summary-table, .scope-mgmt.leave-summary-table { width: 100%; min-width: 1080px; border-collapse: separate; border-spacing: 0; color: var(--text); font-size: 14px; }
+.scope-mgmt .leave-summary-table th, .scope-mgmt .leave-summary-table td { padding: 9px 12px; border-bottom: 1px solid var(--line-2); text-align: center; vertical-align: middle; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.scope-mgmt .leave-summary-table thead th { position: sticky; top: 0; z-index: 2; background: #f6f8fc; color: var(--navy); border-bottom: 1px solid var(--line); font-size: 12.5px; font-weight: 700; line-height: 1.45; white-space: normal; }
+.scope-mgmt .leave-summary-table thead th:nth-child(5) { background: #e9eef6; }
+.scope-mgmt .leave-summary-table tbody tr { transition: background-color .25s var(--ease); }
+.scope-mgmt .leave-summary-table tbody tr:last-child th, .scope-mgmt .leave-summary-table tbody tr:last-child td { border-bottom: 0; }
+.scope-mgmt .leave-summary-table tbody tr:hover th, .scope-mgmt .leave-summary-table tbody tr:hover td { background: #fafcfe; }
+.scope-mgmt .leave-summary-table tbody th.leave-summary-name { position: static; min-width: 160px; background: transparent; border-radius: 0; color: var(--navy); font-size: 14px; font-weight: 700; text-align: start; white-space: normal; }
+.scope-mgmt .leave-summary-leave, .scope-mgmt.leave-summary-leave,
+.scope-mgmt .leave-summary-permission, .scope-mgmt.leave-summary-permission,
+.scope-mgmt .leave-summary-hours, .scope-mgmt.leave-summary-hours { background: transparent; border-radius: 0; color: var(--text); font-weight: 600; }
+.scope-mgmt .leave-summary-neutral, .scope-mgmt.leave-summary-neutral { background: transparent; border-radius: 0; color: var(--muted); font-weight: 500; }
+.scope-mgmt .leave-summary-total, .scope-mgmt.leave-summary-total { background: #eef2f8; box-shadow: none; border-radius: 0; color: var(--navy); font-weight: 800; }
+.scope-mgmt .leave-summary-warning, .scope-mgmt.leave-summary-warning { background: #fff7e6; border-radius: var(--pill); color: #6b4300; font-weight: 700; }
+.scope-mgmt .leave-summary-error, .scope-mgmt.leave-summary-error { background: #fdecea; border-radius: var(--pill); color: #8c241c; font-weight: 700; }
+.scope-mgmt .leave-summary-remaining, .scope-mgmt.leave-summary-remaining { background: #e8f6ee; border-radius: var(--pill); color: #135a33; font-weight: 700; }
+.scope-mgmt .leave-summary-table tbody tr:hover td.leave-summary-total { background: #e3eaf4; }
+.scope-mgmt .leave-summary-table tbody tr:hover td.leave-summary-warning { background: #ffefc9; }
+.scope-mgmt .leave-summary-table tbody tr:hover td.leave-summary-error { background: #fadcd8; }
+.scope-mgmt .leave-summary-table tbody tr:hover td.leave-summary-remaining { background: #d9efe2; }
+
+/* ==========================================================================
+   Institutional polish pass (banking reference: JPMorgan Chase / White House /
+   US Embassy): coordinated light surfaces, deep navy accents, flat colors
+   instead of gradients, IBM Plex Sans Arabic for readable Arabic typography,
+   consistent radii, navy focus rings, calm motion.
+   ========================================================================== */
+.scope-mgmt {
+  --font: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+  --radius: 16px;
+}
+.scope-mgmt, .scope-mgmt { background: var(--bg); }
+.scope-mgmt::before { background: var(--navy); }
+.scope-mgmt .app-sidebar, .scope-mgmt.app-sidebar { background: var(--navy); }
+.scope-mgmt .app-sidebar::after, .scope-mgmt.app-sidebar::after { content: none; }
+.scope-mgmt .sidebar__mark, .scope-mgmt.sidebar__mark { background: var(--teal); box-shadow: none; }
+.scope-mgmt .pagehead h1::after, .scope-mgmt.pagehead h1::after { background: var(--navy); width: 46px; }
+.scope-mgmt .stat::before, .scope-mgmt.stat::before { background: var(--navy-2); }
+.scope-mgmt .stat::after, .scope-mgmt.stat::after { content: none; }
+.scope-mgmt .stat__value, .scope-mgmt.stat__value, .scope-mgmt .kpi b, .scope-mgmt.kpi b { font-family: var(--font); font-size: 30px; font-weight: 700; letter-spacing: 0; }
+.scope-mgmt .card, .scope-mgmt.card, .scope-mgmt .stat, .scope-mgmt.stat, .scope-mgmt .tablewrap, .scope-mgmt.tablewrap, .scope-mgmt .leave-summary-wrap, .scope-mgmt.leave-summary-wrap { border-radius: var(--radius); }
+.scope-mgmt .modal, .scope-mgmt.modal { border-radius: 20px; }
+.scope-mgmt .profile-hero__top, .scope-mgmt.profile-hero__top { background: #f6f8fc; }
+.scope-mgmt .profile-hero__avatar, .scope-mgmt.profile-hero__avatar { background: var(--navy); }
+.scope-mgmt .bigbtn.primary, .scope-mgmt.bigbtn.primary { background: var(--navy); }
+.scope-mgmt .bigbtn::after, .scope-mgmt.bigbtn::after { content: none; }
+.scope-mgmt .rank li:nth-child(1) .n, .scope-mgmt.rank li:nth-child(1) .n { background: var(--gold); color: var(--navy); }
+.scope-mgmt :focus-visible { outline: 2px solid var(--navy-2); outline-offset: 2px; }
+.scope-mgmt input:focus, .scope-mgmt select:focus, .scope-mgmt textarea:focus { border-color: var(--navy-2); box-shadow: 0 0 0 4px rgba(15, 42, 74, .12); }
+.scope-mgmt .btn--primary:focus-visible, .scope-mgmt.btn--primary:focus-visible { outline-color: var(--navy-3); }

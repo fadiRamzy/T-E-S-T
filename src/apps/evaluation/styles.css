@@ -58,3 +58,24 @@
 .scope-eval .nav, .scope-eval.nav { transition: background-color var(--ui-motion) var(--ease), color var(--ui-motion) var(--ease); }
 .scope-eval .rowbtn, .scope-eval.rowbtn { transition: background-color var(--ui-motion) var(--ease), color var(--ui-motion) var(--ease); }
 .scope-eval .page > *, .scope-eval.page > * { animation-duration: .25s; animation-delay: 0s !important; }
+
+/* ==========================================================================
+   Institutional polish pass — same direction as the management app:
+   IBM Plex Sans Arabic typography, flat deep-navy accents, solid surfaces
+   instead of gradients, consistent radii and navy focus rings.
+   ========================================================================== */
+.scope-eval {
+  --font: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+  --radius: 18px;
+}
+.scope-eval, .scope-eval { background: var(--bg); }
+.scope-eval .sidebar, .scope-eval.sidebar { background: var(--navy); }
+.scope-eval .brand .logo, .scope-eval.brand .logo { background: var(--teal); box-shadow: none; }
+.scope-eval .pagehead h1::after, .scope-eval.pagehead h1::after { background: var(--navy); width: 46px; }
+.scope-eval .kpi::before, .scope-eval.kpi::before { background: var(--navy-2); }
+.scope-eval .kpi b, .scope-eval.kpi b { font-family: var(--font); letter-spacing: 0; }
+.scope-eval .rank li:nth-child(1) .n, .scope-eval.rank li:nth-child(1) .n { background: var(--gold); color: var(--navy); }
+.scope-eval .bigbtn::after, .scope-eval.bigbtn::after { content: none; }
+.scope-eval .bigbtn.primary, .scope-eval.bigbtn.primary { background: var(--navy); border-color: var(--navy); }
+.scope-eval button:focus-visible, .scope-eval .nav:focus-visible, .scope-eval.nav:focus-visible { outline: 2px solid var(--navy-2); outline-offset: 2px; }
+.scope-eval input:focus, .scope-eval select:focus, .scope-eval textarea:focus { border-color: var(--navy-2); box-shadow: 0 0 0 4px rgba(15, 42, 74, .12); outline: none; }
