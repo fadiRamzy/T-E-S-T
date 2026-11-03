@@ -150,3 +150,161 @@
 .scope-mgmt :focus-visible { outline: 2px solid var(--navy-2); outline-offset: 2px; }
 .scope-mgmt input:focus, .scope-mgmt select:focus, .scope-mgmt textarea:focus { border-color: var(--navy-2); box-shadow: 0 0 0 4px rgba(15, 42, 74, .12); }
 .scope-mgmt .btn--primary:focus-visible, .scope-mgmt.btn--primary:focus-visible { outline-color: var(--navy-3); }
+
+/* ==========================================================================
+   DESIGN SYSTEM v3 — complete overhaul layer (wins the cascade: appended to
+   the last management stylesheet). One coordinated institutional system:
+   navy #0f2a4a accents, white cards on #eef1f7, flat colors, Plex Sans Arabic,
+   connected filter bars, width-filling stat rows, restyled legacy blocks.
+   Presentation only — no markup/logic changes.
+   ========================================================================== */
+
+/* ---- 1. Spacing & page rhythm ---- */
+.scope-mgmt .page, .scope-mgmt.page { padding: 20px 22px 56px; }
+.scope-mgmt .pagehead, .scope-mgmt.pagehead { margin-bottom: 22px; }
+.scope-mgmt .card, .scope-mgmt.card { padding: 20px 22px; margin-bottom: 16px; }
+.scope-mgmt .card__head { padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--line-2); }
+.scope-mgmt .card__head h2 { font-size: 16.5px; }
+.scope-mgmt .card__head p { font-size: 12.5px; }
+
+/* ---- 2. Stats fill the available width (no oversized 2-col cards) ---- */
+.scope-mgmt .stats, .scope-mgmt.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.scope-mgmt .stat, .scope-mgmt.stat { min-height: 0; padding: 18px 20px; }
+.scope-mgmt .stat__icon, .scope-mgmt.stat__icon { inset-block-start: 16px; inset-inline-end: 18px; width: 42px; height: 42px; }
+.scope-mgmt .stat__label, .scope-mgmt.stat__label { padding-inline-end: 50px; font-size: 13px; }
+.scope-mgmt .stat__value, .scope-mgmt.stat__value { margin-top: 4px; font-size: 30px; }
+.scope-mgmt .stat__hint, .scope-mgmt.stat__hint { font-size: 11.5px; }
+.scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.scope-mgmt .employees-summary .stat, .scope-mgmt.employees-summary .stat { min-height: 92px; padding: 14px 16px; }
+
+/* ---- 3. Connected, consistent filter bars everywhere ---- */
+.scope-mgmt .toolbar, .scope-mgmt.toolbar, .scope-mgmt .filters, .scope-mgmt.filters {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 8px 10px; margin-bottom: 14px;
+  background: #f8fafc; border: 1px solid var(--line); border-radius: 14px;
+}
+.scope-mgmt .toolbar .search, .scope-mgmt.toolbar .search, .scope-mgmt .filters .search, .scope-mgmt.filters .search { flex: 1 1 230px; max-width: 360px; }
+.scope-mgmt .toolbar .select, .scope-mgmt.toolbar .select, .scope-mgmt .toolbar .input, .scope-mgmt.toolbar .input,
+.scope-mgmt .filters select, .scope-mgmt.filters select { width: auto; min-width: 132px; min-height: 38px; }
+.scope-mgmt .toolbar__spacer, .scope-mgmt.toolbar__spacer { flex: 1; text-align: end; color: var(--muted); font-size: 12.5px; font-weight: 600; }
+.scope-mgmt .checkbox, .scope-mgmt.checkbox, .scope-mgmt .checkbox label, .scope-mgmt.checkbox label { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; font-weight: 600; white-space: nowrap; }
+.scope-mgmt .checkbox input { width: auto; accent-color: var(--navy); }
+.scope-mgmt input, .scope-mgmt select, .scope-mgmt textarea { min-height: 40px; }
+.scope-mgmt .toolbar input, .scope-mgmt .toolbar select, .scope-mgmt .filters input, .scope-mgmt .filters select { min-height: 38px; }
+.scope-mgmt .search input, .scope-mgmt.search input { min-height: 38px; }
+
+/* ---- 4. Tables: full width, calm sticky header, readable numerics ---- */
+.scope-mgmt .tablewrap, .scope-mgmt.tablewrap { border-radius: var(--radius); }
+.scope-mgmt .table, .scope-mgmt.table { table-layout: auto; }
+.scope-mgmt .table td.num, .scope-mgmt.table td.num, .scope-mgmt .table th.num, .scope-mgmt.table th.num { text-align: center; }
+.scope-mgmt td.wrap, .scope-mgmt .wrap { white-space: normal; overflow-wrap: anywhere; }
+.scope-mgmt td.nowrap, .scope-mgmt .nowrap { white-space: nowrap; }
+.scope-mgmt .table__actions, .scope-mgmt.table__actions { gap: 4px; justify-content: flex-end; }
+.scope-mgmt .iconbtn, .scope-mgmt.iconbtn { width: 34px; height: 34px; }
+
+/* ---- 5. Legacy base.css-only blocks restyled to the navy system ---- */
+.scope-mgmt .unified-records-stack, .scope-mgmt.unified-records-stack { gap: 16px; margin-top: 16px; }
+.scope-mgmt .unified-section-heading, .scope-mgmt.unified-section-heading {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  padding: 16px 20px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--card); box-shadow: var(--shadow);
+}
+.scope-mgmt .unified-section-heading h2 { margin: 2px 0 0; color: var(--navy); font-size: 17px; }
+.scope-mgmt .unified-section-heading .eyebrow, .scope-mgmt.unified-section-heading .eyebrow { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0; }
+
+.scope-mgmt .backup-actions, .scope-mgmt.backup-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.scope-mgmt .backup-action-card, .scope-mgmt.backup-action-card {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 8px 16px;
+  min-height: 0; padding: 22px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--card); box-shadow: var(--shadow); transition: box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+.scope-mgmt .backup-action-card:hover, .scope-mgmt.backup-action-card:hover { border-color: var(--line-strong); box-shadow: var(--shadow-lift); transform: none; }
+.scope-mgmt .backup-action-card h2, .scope-mgmt.backup-action-card h2 { margin: 0; color: var(--navy); font-size: 16.5px; }
+.scope-mgmt .backup-action-card p, .scope-mgmt.backup-action-card p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.scope-mgmt .backup-action-card .btn, .scope-mgmt.backup-action-card .btn { grid-column: 2; justify-self: start; margin-top: 6px; }
+.scope-mgmt .backup-action-card__icon, .scope-mgmt.backup-action-card__icon { width: 46px; height: 46px; grid-row: span 2; border-radius: 12px; display: grid; place-items: center; background: var(--teal-soft); color: var(--teal); font-size: 24px; font-weight: 600; }
+.scope-mgmt .backup-action-card__icon--upload, .scope-mgmt.backup-action-card__icon--upload { background: #eef2f8; color: var(--navy-2); }
+
+.scope-mgmt .profile-hero, .scope-mgmt.profile-hero { border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.scope-mgmt .profile-hero__top { padding: 20px 22px; gap: 16px; border-bottom: 1px solid var(--line-2); }
+.scope-mgmt .profile-hero__eyebrow, .scope-mgmt.profile-hero__eyebrow { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.scope-mgmt .profile-hero__name, .scope-mgmt.profile-hero__name { color: var(--navy); font-size: 26px; font-weight: 800; }
+.scope-mgmt .profile-hero__role, .scope-mgmt.profile-hero__role { color: var(--muted); font-size: 13.5px; }
+.scope-mgmt .profile-hero__dot, .scope-mgmt.profile-hero__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); }
+.scope-mgmt .profile-facts, .scope-mgmt.profile-facts { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 22px 14px; }
+.scope-mgmt .profile-chip, .scope-mgmt.profile-chip { display: inline-flex; align-items: baseline; gap: 6px; padding: 5px 12px; border: 1px solid var(--line); border-radius: var(--pill); background: #fff; }
+.scope-mgmt .profile-chip strong, .scope-mgmt.profile-chip strong { color: var(--navy); font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+.scope-mgmt .profile-chip em, .scope-mgmt.profile-chip em { color: var(--muted); font-size: 11.5px; font-weight: 600; font-style: normal; }
+.scope-mgmt .profile-section, .scope-mgmt.profile-section { margin: 26px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); color: var(--navy); font-size: 16px; font-weight: 700; }
+.scope-mgmt .profile-stats, .scope-mgmt.profile-stats { margin-bottom: 6px; }
+
+.scope-mgmt .emp-filter-row, .scope-mgmt.emp-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.scope-mgmt .emp-filter-btn, .scope-mgmt.emp-filter-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
+  border: 1px solid var(--line); border-radius: var(--pill); background: #fff; color: var(--navy);
+  font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+}
+.scope-mgmt .emp-filter-btn:hover { border-color: var(--line-strong); background: #f8fafc; transform: none; }
+.scope-mgmt .emp-filter-btn.is-active, .scope-mgmt.emp-filter-btn.is-active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.scope-mgmt .emp-count, .scope-mgmt.emp-count { padding: 1px 9px; border-radius: var(--pill); background: var(--line-2); color: var(--muted); font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.scope-mgmt .emp-filter-btn.is-active .emp-count { background: rgba(255, 255, 255, .22); color: #fff; }
+
+.scope-mgmt .visit-summary, .scope-mgmt.visit-summary { display: grid; gap: 12px; padding: 2px 0 0; }
+.scope-mgmt .visit-summary__group, .scope-mgmt.visit-summary__group { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: #f8fafd; }
+.scope-mgmt .visit-summary__head, .scope-mgmt.visit-summary__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.scope-mgmt .visit-summary__head h3, .scope-mgmt.visit-summary__head h3 { margin: 0; color: var(--navy); font-size: 14px; font-weight: 700; }
+
+.scope-mgmt .employee-note-list, .scope-mgmt.employee-note-list { display: grid; gap: 10px; }
+.scope-mgmt .employee-note-item, .scope-mgmt.employee-note-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 13px 15px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--card); }
+.scope-mgmt .employee-note-content { font-size: 14px; line-height: 1.6; color: var(--text); white-space: pre-wrap; overflow-wrap: anywhere; }
+.scope-mgmt .employee-note-owner, .scope-mgmt.employee-note-owner { display: block; margin-top: 4px; color: var(--muted); font-size: 11.5px; }
+.scope-mgmt .employee-note-actions, .scope-mgmt.employee-note-actions { display: flex; gap: 4px; flex: none; }
+.scope-mgmt .employee-note-form textarea, .scope-mgmt .employee-note-form textarea { min-height: 90px; }
+
+.scope-mgmt .deflist, .scope-mgmt.deflist { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px 20px; margin: 0; }
+.scope-mgmt .deflist dt, .scope-mgmt.deflist dt { color: var(--muted); font-size: 12px; font-weight: 600; }
+.scope-mgmt .deflist dd, .scope-mgmt.deflist dd { margin: 0; color: var(--navy); font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.scope-mgmt .note-block, .scope-mgmt.note-block { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line-strong); }
+.scope-mgmt .callout--neutral, .scope-mgmt.callout--neutral { color: var(--muted); background: var(--line-2); border-color: var(--line); }
+.scope-mgmt .span2, .scope-mgmt.span2 { grid-column: 1 / -1; }
+.scope-mgmt .collapsed-note, .scope-mgmt.collapsed-note { padding: 18px; color: var(--muted); text-align: center; }
+
+.scope-mgmt .app-topbar, .scope-mgmt.app-topbar { background: var(--card); border-bottom: 1px solid var(--line); color: var(--navy); }
+.scope-mgmt .app-topbar__title, .scope-mgmt.app-topbar__title { color: var(--navy); font-weight: 700; }
+.scope-mgmt .app-topbar__context, .scope-mgmt.app-topbar__context { color: var(--muted); }
+.scope-mgmt .app-tool, .scope-mgmt.app-tool { color: var(--muted); }
+.scope-mgmt .app-tool:hover, .scope-mgmt.app-tool:hover { color: var(--navy); background: var(--line-2); }
+.scope-mgmt .sidebar__backup, .scope-mgmt.sidebar__backup { color: rgba(255,255,255,.8); }
+.scope-mgmt .sidebar__backup:hover, .scope-mgmt.sidebar__backup:hover { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.18); }
+
+.scope-mgmt .picker__control, .scope-mgmt.picker__control { min-height: 40px; border: 1px solid #cfd8e3; border-radius: var(--radius-sm); background: #fff; }
+.scope-mgmt .picker__pop, .scope-mgmt.picker__pop { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow-lift); }
+.scope-mgmt .picker__option, .scope-mgmt.picker__option { border-radius: 10px; }
+.scope-mgmt .picker__option:hover, .scope-mgmt.picker__option:hover { background: #f8fafc; }
+.scope-mgmt .timefield__pop, .scope-mgmt.timefield__pop { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow-lift); }
+.scope-mgmt .timefield__input, .scope-mgmt.timefield__input { min-height: 40px; border: 1px solid #cfd8e3; border-radius: var(--radius-sm); background: #fff; }
+
+/* ---- 6. Small consistent touches ---- */
+.scope-mgmt .badge, .scope-mgmt.badge, .scope-mgmt .pill, .scope-mgmt.pill { font-size: 12px; }
+.scope-mgmt .btn, .scope-mgmt.btn { font-size: 14px; }
+.scope-mgmt .btn--sm, .scope-mgmt.btn--sm { min-height: 32px; font-size: 13px; }
+.scope-mgmt .empty, .scope-mgmt.empty { padding: 42px 16px; }
+.scope-mgmt .listcard__controls, .scope-mgmt.listcard__controls { margin-bottom: 4px; }
+.scope-mgmt .modal__head h2, .scope-mgmt.modal__head h2 { font-size: 18px; }
+
+/* ---- 7. v3 responsive guards (applied after all older media queries) ---- */
+@media (max-width: 900px) {
+  .scope-mgmt .page, .scope-mgmt.page { padding: 18px 14px 48px; }
+  .scope-mgmt .stats, .scope-mgmt.stats { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .scope-mgmt .backup-actions, .scope-mgmt.backup-actions { grid-template-columns: 1fr; }
+  .scope-mgmt .toolbar, .scope-mgmt.toolbar, .scope-mgmt .filters, .scope-mgmt.filters { gap: 8px; }
+  .scope-mgmt .toolbar .search, .scope-mgmt .filters .search { flex: 1 1 100%; max-width: none; }
+  .scope-mgmt .toolbar .select, .scope-mgmt .toolbar .input, .scope-mgmt .filters select { flex: 1 1 45%; }
+}
+@media (max-width: 560px) {
+  .scope-mgmt .stats, .scope-mgmt.stats, .scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: 1fr 1fr; }
+  .scope-mgmt .pagehead, .scope-mgmt.pagehead { align-items: flex-start; }
+  .scope-mgmt .pagehead__actions, .scope-mgmt.pagehead__actions { width: 100%; }
+  .scope-mgmt .pagehead__actions .btn, .scope-mgmt.pagehead__actions .btn { flex: 1 1 auto; }
+}

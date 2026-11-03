@@ -79,3 +79,34 @@
 .scope-eval .bigbtn.primary, .scope-eval.bigbtn.primary { background: var(--navy); border-color: var(--navy); }
 .scope-eval button:focus-visible, .scope-eval .nav:focus-visible, .scope-eval.nav:focus-visible { outline: 2px solid var(--navy-2); outline-offset: 2px; }
 .scope-eval input:focus, .scope-eval select:focus, .scope-eval textarea:focus { border-color: var(--navy-2); box-shadow: 0 0 0 4px rgba(15, 42, 74, .12); outline: none; }
+
+/* ==========================================================================
+   DESIGN SYSTEM v3 — evaluation app aligned with the management app:
+   same navy/teal tokens, connected filter bars, 40px controls, calm cards.
+   ========================================================================== */
+.scope-eval .pagehead, .scope-eval.pagehead { margin-bottom: 22px; }
+.scope-eval .pagehead h1::after { width: 46px; }
+.scope-eval .card, .scope-eval.card { padding: 20px 22px; margin-bottom: 16px; }
+.scope-eval .filters, .scope-eval.filters {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 8px 10px; margin-bottom: 14px;
+  background: #f8fafc; border: 1px solid var(--line); border-radius: 14px;
+}
+.scope-eval .filters .search, .scope-eval.filters .search { flex: 1 1 230px; max-width: 360px; }
+.scope-eval .filters select, .scope-eval.filters select { width: auto; min-width: 132px; min-height: 38px; border-radius: var(--pill); }
+.scope-eval input, .scope-eval select, .scope-eval textarea { min-height: 40px; }
+.scope-eval .filters input, .scope-eval .filters select { min-height: 38px; }
+.scope-eval .kpis, .scope-eval.kpis { gap: 14px; margin-bottom: 18px; }
+.scope-eval .kpi, .scope-eval.kpi { padding: 18px 20px; border-radius: var(--radius); }
+.scope-eval .kpi b, .scope-eval.kpi b { font-size: 30px; margin-top: 4px; }
+.scope-eval .kpi-ic, .scope-eval.kpi-ic { width: 42px; height: 42px; }
+.scope-eval .tablewrap, .scope-eval.tablewrap { border-radius: var(--radius); }
+.scope-eval .banner, .scope-eval.banner { margin-bottom: 14px; }
+.scope-eval .btn, .scope-eval.btn { font-size: 14px; }
+.scope-eval .btn.sm, .scope-eval.btn.sm { min-height: 32px; }
+.scope-eval .tab, .scope-eval.tab { font-size: 13.5px; }
+@media (max-width: 900px) {
+  .scope-eval .filters .search { flex: 1 1 100%; max-width: none; }
+  .scope-eval .filters select { flex: 1 1 45%; }
+  .scope-eval .kpis, .scope-eval.kpis { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+}
