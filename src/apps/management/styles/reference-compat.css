@@ -81,3 +81,12 @@
 }
 @media print {.scope-mgmt .app-sidebar, .scope-mgmt.app-sidebar, .scope-mgmt .sidebar__nav, .scope-mgmt.sidebar__nav, .scope-mgmt .sidebar__quick-tools, .scope-mgmt.sidebar__quick-tools, .scope-mgmt .sidebar__collapse, .scope-mgmt.sidebar__collapse, .scope-mgmt .app-topbar__menu, .scope-mgmt.app-topbar__menu, .scope-mgmt .toast-stack, .scope-mgmt.toast-stack, .scope-mgmt .toolbar, .scope-mgmt.toolbar, .scope-mgmt .btn, .scope-mgmt.btn, .scope-mgmt .iconbtn, .scope-mgmt.iconbtn { display: none !important; }.scope-mgmt .app-shell, .scope-mgmt.app-shell, .scope-mgmt .app-frame, .scope-mgmt.app-frame, .scope-mgmt .page, .scope-mgmt.page { display: block; width: 100%; min-height: 0; max-width: none; margin: 0; padding: 0; }.scope-mgmt .tablewrap, .scope-mgmt.tablewrap { max-height: none; overflow: visible; box-shadow: none; }.scope-mgmt { background: #fff !important; }
 }
+/* ── UI (requested): employees summary → three compact cards in one row ── */
+.scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 4px 0 18px; }
+.scope-mgmt .employees-summary .stat, .scope-mgmt.employees-summary .stat { display: grid; grid-template-columns: auto 1fr; grid-template-areas: 'icon label' 'icon value' 'icon hint'; align-items: center; column-gap: 10px; row-gap: 1px; min-height: 84px; padding: 12px 14px; border-radius: 14px; }
+.scope-mgmt .employees-summary .stat__value, .scope-mgmt.employees-summary .stat__value { font-size: 18px; }
+@media (max-width: 720px) {.scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); }}
+@media (max-width: 460px) {.scope-mgmt .employees-summary, .scope-mgmt.employees-summary { grid-template-columns: 1fr; }}
+/* ── UI (requested): room for the top-centered unified gateway button ── */
+.scope-mgmt .page, .scope-mgmt.page { padding-top: 64px; }
+@media print {.scope-mgmt .page, .scope-mgmt.page { padding-top: 14px; }}

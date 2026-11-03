@@ -79,57 +79,11 @@ function PortalHomeChip() {
 function Portal() {
   return (
     <div className="portal">
-      <div className="portal-glow portal-glow--a" aria-hidden="true" />
-      <div className="portal-glow portal-glow--b" aria-hidden="true" />
-      <header className="portal-head">
-        <span className="portal-logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M4 17l5-6 4 3 7-9" /></svg>
-        </span>
-        <div>
-          <h1>منظومة إدارة المخاطر الموحدة</h1>
-          <p>نظامان متكاملان في تطبيق واحد — اختر النظام للبدء، وبيانات كل نظام محفوظة محليًا على هذا الجهاز كما في النسخ الأصلية.</p>
-        </div>
-      </header>
-
-      <main className="portal-grid">
-        <article className="portal-card">
-          <span className="portal-card__icon portal-card__icon--mgmt" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5" /><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M17.5 15.3c2 .6 3.5 2.2 4 4.7" /></svg>
-          </span>
-          <h2>نظام إدارة المخاطر</h2>
-          <p className="portal-card__sub">الموظفون والمتابعة اليومية</p>
-          <ul>
-            <li>ملفات الموظفين والملاحظات السنوية والتقييمات الشهرية</li>
-            <li>المحاضر اليومية وتوقيت الزيارات الميدانية</li>
-            <li>الإجازات والأذونات وتأخيرات الحضور والانصراف</li>
-            <li>التقارير والنسخ الاحتياطي وتقارير PDF عربية</li>
-          </ul>
-          <a className="portal-enter" href="#/mgmt/employees">دخول النظام
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-7-7 7 7 7" /></svg>
-          </a>
-        </article>
-
-        <article className="portal-card">
-          <span className="portal-card__icon portal-card__icon--eval" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M4 20V10m5.5 10V4M15 20v-8m5 8V7" /></svg>
-          </span>
-          <h2>تقييم مسئولي المخاطر</h2>
-          <p className="portal-card__sub">التقييم الشهري وملفات Excel</p>
-          <ul>
-            <li>لوحة مؤشرات وترتيب المسئولين حسب الأداء</li>
-            <li>إدارة الموظفين والقطاعات والمحافظات</li>
-            <li>التقييم الشهري وحساب الدرجات آليًا</li>
-            <li>استيراد وتصدير ملفات Excel بنفس القوالب الأصلية</li>
-          </ul>
-          <a className="portal-enter" href="#/eval/dashboard">دخول النظام
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-7-7 7 7 7" /></svg>
-          </a>
-        </article>
-      </main>
-
-      <footer className="portal-foot">
-        <span>قاعدتا بيانات محليتان منفصلتان كما في المشروعين الأصليين — لا تُرسل أي بيانات خارج هذا الجهاز.</span>
-      </footer>
+      <h1 className="portal-title">منظومة إدارة المخاطر الموحدة</h1>
+      <div className="portal-actions">
+        <a className="portal-btn portal-btn--mgmt" href="#/mgmt/employees">نظام المتابعة</a>
+        <a className="portal-btn portal-btn--eval" href="#/eval/dashboard">نظام التقييمات</a>
+      </div>
     </div>
   );
 }

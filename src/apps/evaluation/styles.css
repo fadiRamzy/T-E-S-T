@@ -32,3 +32,6 @@
 }
 @media print {.scope-eval .sidebar, .scope-eval.sidebar, .scope-eval .navbar, .scope-eval.navbar, .scope-eval .filters, .scope-eval.filters, .scope-eval .pager, .scope-eval.pager, .scope-eval .toasts, .scope-eval.toasts, .scope-eval .actions, .scope-eval.actions, .scope-eval .rowbtn, .scope-eval.rowbtn, .scope-eval .btn, .scope-eval.btn { display: none !important; }.scope-eval .tablewrap, .scope-eval.tablewrap { max-height: none; overflow: visible; box-shadow: none; }.scope-eval { background: #fff; }
 }
+/* ── UI (requested): room for the top-centered unified gateway button ── */
+.scope-eval .container, .scope-eval.container { padding-top: 64px; }
+@media print {.scope-eval .container, .scope-eval.container { padding-top: 14px; }}
