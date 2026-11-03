@@ -12,7 +12,7 @@ export function NotesPage() {
         title="الملاحظات والمتابعة"
         description="أضف ملاحظة مرتبطة بموظف، أو سجّل متابعة منظمة مع إجراءها وحالتها."
       />
-      <EmployeeNotesManager employees={data.employees} notes={data.employeeNotes} />
+      <EmployeeNotesManager employees={data.employees} notes={data.employeeNotes} collapsibleNotes />
       <div className="unified-records-stack">
         <ObservationsPage embedded />
       </div>

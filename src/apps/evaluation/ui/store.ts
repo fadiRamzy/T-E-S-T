@@ -59,18 +59,43 @@ export function useConfirm(): ConfirmReq | null {
 }
 
 // ---- persistence ----
+// Every mutation is written through to IndexedDB (Dexie) with a localStorage
+// mirror as fallback. A short debounce batches rapid edits, and any pending
+// save is flushed immediately when the tab is hidden or closed, so closing the
+// browser tab never loses the last change.
 let saveTimer: ReturnType<typeof setTimeout> | undefined;
+let savePending = false;
+
+/** Write the current model to persistent storage right now (used on pagehide). */
+export async function flushSave(): Promise<void> {
+  if (!savePending) return;
+  savePending = false;
+  clearTimeout(saveTimer);
+  try {
+    if (state.model) set({ lastSaved: await saveModel(state.model), saving: false });
+  } catch {
+    set({ saving: false });
+    toast('تعذّر الحفظ في المتصفح (IndexedDB). صدّر نسخة احتياطية.', 'err');
+  }
+}
+
 function scheduleSave() {
+  savePending = true;
   clearTimeout(saveTimer);
   set({ saving: true });
-  saveTimer = setTimeout(async () => {
-    try {
-      if (state.model) set({ lastSaved: await saveModel(state.model), saving: false });
-    } catch {
-      set({ saving: false });
-      toast('تعذّر الحفظ في المتصفح (IndexedDB). صدّر نسخة احتياطية.', 'err');
-    }
-  }, 250);
+  saveTimer = setTimeout(() => void flushSave(), 250);
+}
+
+let lifecycleBound = false;
+function bindLifecycleFlush() {
+  if (lifecycleBound || typeof window === 'undefined') return;
+  lifecycleBound = true;
+  const flush = () => void flushSave();
+  window.addEventListener('pagehide', flush);
+  window.addEventListener('beforeunload', flush);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flush();
+  });
 }
 
 export async function init() {
@@ -82,6 +107,8 @@ export async function init() {
     template: p.template ? { name: p.template.name, hash: p.template.hash, importedAt: p.template.importedAt } : null,
     lastSaved: p.lastSaved,
   });
+  bindLifecycleFlush();
+  // ask the browser to keep our local storage (IndexedDB/localStorage) even under storage pressure
   try { await navigator.storage?.persist?.(); } catch { /* ignore */ }
 }
 

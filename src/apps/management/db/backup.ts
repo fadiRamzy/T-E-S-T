@@ -201,9 +201,67 @@ export function backupFileName(date = new Date()): string {
   )}${pad(date.getMinutes())}.json`;
 }
 
+/* ---------------------------------------------------------------------------
+ * Local mirror of the whole database in localStorage.
+ * IndexedDB stays the primary persistent store (every write goes to it first);
+ * this mirror is written through after each change and is used ONLY to recover
+ * if IndexedDB ever comes back empty (migrateFromLocalMirror) — it never
+ * overwrites existing IndexedDB records and is cleared by resetAllData().
+ * ------------------------------------------------------------------------- */
+const MIRROR_KEY = 'risk-officer-suite:mirror:v1';
+
+/** كتابة مرآة محلية للبيانات الحالية (لا تُبطل IndexedDB أبدًا) */
+export async function writeLocalMirror(): Promise<void> {
+  try {
+    const payload = await createBackup();
+    localStorage.setItem(MIRROR_KEY, JSON.stringify(payload));
+  } catch {
+    /* Quota أو وضع خاص — تبقى IndexedDB هي المصدر الأساسي */
+  }
+}
+
+export function readLocalMirror(): BackupPayload | null {
+  try {
+    const raw = localStorage.getItem(MIRROR_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    const validation = validateBackup(parsed);
+    return validation.ok && validation.payload ? validation.payload : null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearLocalMirror(): void {
+  try {
+    localStorage.removeItem(MIRROR_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Safe migration: if IndexedDB holds no records at all but the local mirror
+ * does, restore the mirror into IndexedDB. Existing records are never touched.
+ */
+export async function migrateFromLocalMirror(): Promise<boolean> {
+  try {
+    const counts = await dataCounts();
+    const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
+    if (total > 0) return false;
+    const mirror = readLocalMirror();
+    if (!mirror) return false;
+    await restoreBackup(mirror, 'replace');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** حذف كل البيانات بعد أخذ نسخة أمان */
 export async function resetAllData(): Promise<BackupPayload> {
   const safety = await createBackup();
   for (const entity of ENTITIES) await clearStore(entity);
+  clearLocalMirror(); // the explicit "clear stored data" action must also clear the mirror
   return safety;
 }

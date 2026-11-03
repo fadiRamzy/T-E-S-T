@@ -2,13 +2,26 @@
       .scope-mgmt / .scope-eval and are loaded separately) ─────────────── */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+/* Global font: Times New Roman everywhere. Arabic glyphs are not covered by
+   Times New Roman, so the browser falls back per-character to the Arabic-capable
+   fonts listed after it — RTL Arabic text stays readable. */
+html {
+  font-family: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", "Noto Naskh Arabic", "Traditional Arabic", Tahoma, serif;
+}
 body {
-  font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif;
+  font-family: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", "Noto Naskh Arabic", "Traditional Arabic", Tahoma, serif;
   background: #eef1f7;
   color: #17233a;
   -webkit-text-size-adjust: 100%;
 }
 .scope-mgmt, .scope-eval { min-height: 100vh; }
+
+/* Clearance for the floating site-switch button so it never overlaps page
+   content (both apps reserve the same 64px strip at the top center). */
+@media screen {
+  .scope-mgmt .page { padding-top: 64px; }
+  .scope-eval .container { padding-top: 64px; }
+}
 
 /* Landing page — clean white, title + exactly two buttons */
 .portal {
@@ -55,7 +68,7 @@ body {
   transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
 }
 .portal-btn:hover { transform: translateY(-3px); filter: brightness(1.07); }
-.portal-btn:focus-visible, .portal-home-chip:focus-visible { outline: 3px solid #d9a441; outline-offset: 3px; }
+.portal-btn:focus-visible, .site-switch:focus-visible { outline: 3px solid #d9a441; outline-offset: 3px; }
 .portal-btn--mgmt { background: linear-gradient(135deg, #1d3f6e, #0f2a4a); box-shadow: 0 16px 34px -14px rgba(15, 42, 74, .5); }
 .portal-btn--eval { background: linear-gradient(135deg, #1ba3a5, #0f8b8d); box-shadow: 0 16px 34px -14px rgba(15, 139, 141, .5); }
 @media (max-width: 560px) {
@@ -63,19 +76,20 @@ body {
   .portal-btn { width: 100%; }
 }
 
-/* Unified gateway button — floating, horizontally centered near the top.
-   Content roots get extra top padding (in the scoped app stylesheets) so it
+/* Dynamic website-switching button — floating, precisely centered horizontally
+   at the top of both websites. Calm teal from the existing palette (no dark or
+   aggressive colors). Content roots reserve a 64px top strip (see above) so it
    never overlaps sidebars, headings, or content. */
-.portal-home-chip {
+.site-switch {
   position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
   z-index: 9999;
   display: inline-flex; align-items: center; gap: 8px;
-  background: #0f2a4a; color: #fff; text-decoration: none;
+  background: linear-gradient(135deg, #1ba3a5, #0f8b8d); color: #fff; text-decoration: none;
   font-size: 13.5px; font-weight: 700; padding: 10px 18px; border-radius: 999px;
-  border: 1px solid rgba(217, 164, 65, .55);
-  box-shadow: 0 14px 30px -12px rgba(8, 22, 39, .5);
-  opacity: .94; transition: opacity .2s, transform .2s;
+  border: 1px solid rgba(255, 255, 255, .45);
+  box-shadow: 0 12px 26px -12px rgba(15, 139, 141, .55);
+  transition: filter .2s, transform .2s;
 }
-.portal-home-chip:hover { opacity: 1; transform: translateX(-50%) translateY(-2px); }
-.portal-home-chip svg { width: 17px; height: 17px; stroke: #d9a441; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-@media print { .portal-home-chip { display: none; } }
+.site-switch:hover { filter: brightness(1.06); transform: translateX(-50%) translateY(-2px); }
+.site-switch svg { width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@media print { .site-switch { display: none; } }
