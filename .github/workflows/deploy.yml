@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -33,6 +33,24 @@ jobs:
 
       - name: بناء نسخة الإنتاج
         run: npm run build
+
+      # GitHub Pages لهذا المستودع مضبوط على "Deploy from a branch: main /"
+      # (build_type=legacy)، فيُقدَّم محتوى جذر main مباشرة. لذلك يجب أن يحتوي
+      # جذر المستودع على نسخة الإنتاج المبنية، لأن ملف index.html المصدر الخاص
+      # بـ Vite لا يعمل عند تقديمه مباشرة من github.io (صفحة بيضاء فارغة).
+      # نحدّث ملفات الجذر من dist في كل نشر.
+      - name: تحديث ملفات الموقع في جذر المستودع (مصدر Pages: main /)
+        continue-on-error: true
+        run: |
+          cp dist/index.html index.html
+          cp dist/favicon.svg favicon.svg
+          cp dist/manifest.webmanifest manifest.webmanifest
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html favicon.svg manifest.webmanifest .nojekyll
+          git commit -m "نشر نسخة الإنتاج إلى جذر المستودع [skip ci]" || exit 0
+          git push origin HEAD:main || exit 0
 
       - name: رفع مخرجات البناء
         uses: actions/upload-pages-artifact@v3
