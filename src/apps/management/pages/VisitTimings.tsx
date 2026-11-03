@@ -24,6 +24,7 @@ import { MONTHS_AR, type VisitTiming } from '../db/schema';
 import { EmployeePicker } from '../components/EmployeePicker';
 import { visitTiming } from '../lib/calc';
 import { fmtDate, fmtDurationWords, fmtTime } from '../lib/format';
+import { cn } from '../lib/utils';
 
 interface Draft {
   id?: string;
@@ -186,6 +187,36 @@ export function VisitTimingsPage() {
           />
         </Card>
       ) : (
+        <>
+        {/* أزرار تصفية الموظفين — صف واحد أفقي (scroll أفقي عند زيادة الموظفين) */}
+        <div
+          className="emp-filter-row"
+          role="group"
+          aria-label="تصفية الزيارات حسب الموظف"
+          data-testid="visit-employee-counts"
+        >
+          <button
+            type="button"
+            className={cn('emp-filter-btn', listEmployee === 'all' && 'is-active')}
+            aria-pressed={listEmployee === 'all'}
+            onClick={() => setListEmployee('all')}
+          >
+            <span>كل الموظفين</span>
+            <span className="emp-count">{rows.length}</span>
+          </button>
+          {perEmployee.map((item) => (
+            <button
+              key={item.employeeId || 'none'}
+              type="button"
+              className={cn('emp-filter-btn', listEmployee === item.employeeId && 'is-active')}
+              aria-pressed={listEmployee === item.employeeId}
+              onClick={() => setListEmployee(item.employeeId)}
+            >
+              <span>{item.name}</span>
+              <span className="emp-count">{item.count}</span>
+            </button>
+          ))}
+        </div>
         <ListCard
           id="visits-records"
           padded={false}
@@ -198,14 +229,6 @@ export function VisitTimingsPage() {
             controls={
               <Toolbar>
             <SearchInput value={query} onChange={setQuery} placeholder="بحث بالموظف أو الفرع أو العميل…" />
-            <Select value={listEmployee} onChange={(e) => setListEmployee(e.target.value)} aria-label="الموظف في الزيارات">
-              <option value="all">كل الموظفين</option>
-              {data.employees.map((row) => (
-                <option key={row.id} value={row.id}>
-                  {row.name}
-                </option>
-              ))}
-            </Select>
             <Select value={listMonth} onChange={(e) => setListMonth(e.target.value)} aria-label="شهر الزيارة">
               <option value="all">كل الشهور</option>
               {MONTHS_AR.map((label, index) => (
@@ -242,17 +265,6 @@ export function VisitTimingsPage() {
 
           {rows.length ? (
             <>
-              <div className="counts" data-testid="visit-employee-counts">
-                <span className="counts__label">الزيارات حسب الموظف</span>
-                <ul className="counts__list">
-                  {perEmployee.map((item) => (
-                    <li key={item.employeeId || 'none'} className="counts__item">
-                      <span>{item.name}</span>
-                      <strong>{item.count}</strong>
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <TableWrap>
                 <Table>
                   <thead>
@@ -321,6 +333,7 @@ export function VisitTimingsPage() {
             />
           )}
         </ListCard>
+        </>
       )}
 
       <Modal

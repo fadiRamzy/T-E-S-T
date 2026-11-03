@@ -9,19 +9,22 @@ export function EmployeeNotesManager({
   notes,
   employeeId,
   collapsibleNotes = false,
+  defaultHidden = false,
 }: {
   employees: Employee[];
   notes: EmployeeNote[];
   /** Set in a profile; omitted in the general employees section. */
   employeeId?: string;
   collapsibleNotes?: boolean;
+  /** Start with the notes list hidden (used on the dedicated notes page). Hiding never touches saved records. */
+  defaultHidden?: boolean;
 }) {
   const { runAction } = useApp();
   const [selectedEmployee, setSelectedEmployee] = useState(employeeId ?? employees[0]?.id ?? '');
   const [text, setText] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [notesCollapsed, setNotesCollapsed] = useState(false);
+  const [notesCollapsed, setNotesCollapsed] = useState(defaultHidden);
   const profileMode = Boolean(employeeId);
 
   useEffect(() => {

@@ -21,7 +21,8 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'الرئيسية',
     items: [
       { path: '/employees', label: 'الموظفون', icon: 'employees' },
-      { path: '/notes', label: 'الملاحظات والمتابعة', icon: 'observations' },
+      { path: '/notes', label: 'الملاحظات والمتابعة', icon: 'edit' },
+      { path: '/observations', label: 'سجل المتابعة', icon: 'flag' },
     ],
   },
   {

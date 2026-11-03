@@ -1,13 +1,14 @@
 /**
  * Tests for the two UI modifications:
  *  1. Dynamic website-switching button (replaces the old «البوابة الموحدة»):
- *     - in the follow-up site it shows «تقييمات Employees» → #/eval/dashboard
+ *     - in the follow-up site it shows «تقييمات الموظفين» → #/eval/dashboard
  *     - in the evaluations site it shows «موقع المتابعة» → #/mgmt/employees
- *  2. Collapsible notes list in «الملاحظات والمتابعة» (visible by default,
- *     toggle switches between «إخفاء الملاحظات» / «إظهار الملاحظات»).
+ *  2. «الملاحظات والمتابعة» page is notes-only; the notes list is HIDDEN by
+ *     default and toggles via «إظهار الملاحظات»/«إخفاء الملاحظات» without
+ *     touching saved records.
  */
 import 'fake-indexeddb/auto';
-import { expect, test } from 'vitest';
+import { afterEach, expect, test } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../src/App';
 
@@ -17,9 +18,11 @@ const setHash = (hash: string) => {
   window.location.hash = hash;
 };
 
+afterEach(() => cleanup());
+
 test('dynamic website-switching button labels and navigation in both directions', async () => {
   setHash('#/mgmt/employees');
-  const { container } = render(<App />);
+  render(<App />);
 
   // the old «البوابة الموحدة» label is gone completely
   expect(document.body.textContent ?? '').not.toContain('البوابة الموحدة');
@@ -33,8 +36,9 @@ test('dynamic website-switching button labels and navigation in both directions'
 
   // click → Employee Evaluations website
   fireEvent.click(toEval!);
-  await waitFor(() => expect(window.location.hash).toBe('#/eval/dashboard'), { timeout: 10000 });
   await waitFor(() => expect(document.querySelector('.shell.scope-eval')).toBeTruthy(), { timeout: 10000 });
+  // the eval app auto-redirects to its files page when empty — wait for it to settle
+  await waitFor(() => expect(window.location.hash).toBe('#/eval/files'), { timeout: 10000 });
 
   // inside the Employee Evaluations site → button offers the follow-up site
   const toMgmt = (await screen.findByText('موقع المتابعة')).closest('a');
@@ -45,17 +49,14 @@ test('dynamic website-switching button labels and navigation in both directions'
   // click → back to the Risk Follow-up System
   fireEvent.click(toMgmt!);
   await waitFor(() => expect(window.location.hash).toBe('#/mgmt/employees'), { timeout: 10000 });
+  await waitFor(() => expect(document.querySelector('.scope-mgmt .app-shell')).toBeTruthy(), { timeout: 10000 });
   await screen.findByText('تقييمات الموظفين');
-
-  expect(container.querySelector('.portal')).toBeNull(); // never back at the portal landing
-  cleanup();
 }, 60000);
 
-test('collapsible notes list in «الملاحظات والمتابعة» — visible by default, toggles without touching data', async () => {
+test('«الملاحظات والمتابعة» page is notes-only; notes HIDDEN by default, toggle works without touching data', async () => {
   setHash('#/mgmt/notes');
   render(<App />);
 
-  await waitFor(() => expect(document.querySelector('.scope-mgmt .app-shell')).toBeTruthy(), { timeout: 10000 });
   // wait until the local data provider is ready and the page rendered
   await waitFor(
     () => expect(document.querySelector('.employee-note-toggle button')).toBeTruthy(),
@@ -66,26 +67,28 @@ test('collapsible notes list in «الملاحظات والمتابعة» — vi
   const list = document.getElementById('employee-notes-list') as HTMLElement;
   expect(list).toBeTruthy();
 
-  // visible by default, label offers hiding
-  expect(toggle.textContent).toContain('إخفاء الملاحظات');
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  expect(list.hidden).toBe(false);
+  // page content contains ONLY employee notes — no follow-up/observations section anymore
+  // (the sidebar nav entry «سجل المتابعة» is expected — it leads to the dedicated page)
+  const pageText = document.querySelector('.scope-mgmt .page')?.textContent ?? '';
+  expect(pageText).toContain('ملاحظات الموظفين');
+  expect(pageText).not.toContain('سجل المتابعة');
+  expect(pageText).not.toContain('الملاحظات المسجلة');
+  expect(document.querySelector('.unified-records-stack')).toBeNull();
 
-  // hide
-  fireEvent.click(toggle);
+  // employee picker + note form stay visible; the notes LIST is hidden by default
+  expect(document.querySelector('.employee-note-form')).toBeTruthy();
+  expect(list.hidden).toBe(true);
   expect(toggle.textContent).toContain('إظهار الملاحظات');
   expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  expect(list.hidden).toBe(true);
 
-  // show again
+  // show
   fireEvent.click(toggle);
+  await waitFor(() => expect(list.hidden).toBe(false));
   expect(toggle.textContent).toContain('إخفاء الملاحظات');
-  expect(list.hidden).toBe(false);
+  expect(toggle.getAttribute('aria-expanded')).toBe('true');
 
-  // section header + form remain accessible while hidden
+  // hide again — records are never deleted by hiding
   fireEvent.click(toggle);
-  expect(document.querySelector('.employee-note-form')).toBeTruthy();
-  expect(document.body.textContent ?? '').toContain('ملاحظات الموظفين');
-
-  cleanup();
+  await waitFor(() => expect(list.hidden).toBe(true));
+  expect(toggle.textContent).toContain('إظهار الملاحظات');
 }, 60000);

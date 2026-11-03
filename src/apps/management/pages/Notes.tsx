@@ -1,8 +1,12 @@
 import { useApp } from '../state/store';
 import { PageHeader } from '../components/ui';
 import { EmployeeNotesManager } from '../components/EmployeeNotes';
-import { ObservationsPage } from './Observations';
 
+/**
+ * صفحة «الملاحظات والمتابعة» — مخصصة بالكامل لـ«ملاحظات الموظفين»:
+ * اختيار موظف + كتابة ملاحظة + حفظها + عرض الملاحظات المحفوظة (مع إخفاء/إظهار).
+ * (سجل المتابعة المنظم له صفحة مستقلة الآن في #/mgmt/observations.)
+ */
 export function NotesPage() {
   const { data } = useApp();
   return (
@@ -10,12 +14,9 @@ export function NotesPage() {
       <PageHeader
         eyebrow="الموظفون والمتابعة"
         title="الملاحظات والمتابعة"
-        description="أضف ملاحظة مرتبطة بموظف، أو سجّل متابعة منظمة مع إجراءها وحالتها."
+        description="أضف ملاحظة مرتبطة بموظف، أو اعرض الملاحظات المحفوظة له سابقًا."
       />
-      <EmployeeNotesManager employees={data.employees} notes={data.employeeNotes} collapsibleNotes />
-      <div className="unified-records-stack">
-        <ObservationsPage embedded />
-      </div>
+      <EmployeeNotesManager employees={data.employees} notes={data.employeeNotes} collapsibleNotes defaultHidden />
     </>
   );
 }

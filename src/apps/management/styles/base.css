@@ -1153,3 +1153,132 @@
 }
 @media print {.scope-mgmt { background: #fff !important; color: #111 !important; }.scope-mgmt .app-sidebar, .scope-mgmt.app-sidebar, .scope-mgmt .app-topbar, .scope-mgmt.app-topbar, .scope-mgmt .appfoot, .scope-mgmt.appfoot, .scope-mgmt .toast-stack, .scope-mgmt.toast-stack, .scope-mgmt .print-hide, .scope-mgmt.print-hide { display: none !important; }.scope-mgmt .app-shell, .scope-mgmt.app-shell, .scope-mgmt .app-frame, .scope-mgmt.app-frame, .scope-mgmt .page, .scope-mgmt.page { display: block; width: 100%; max-width: none; min-height: 0; padding: 0; margin: 0; }.scope-mgmt .card, .scope-mgmt.card, .scope-mgmt .stat, .scope-mgmt.stat, .scope-mgmt .profile-hero, .scope-mgmt.profile-hero, .scope-mgmt .modal, .scope-mgmt.modal { background: #fff !important; border-color: #ddd !important; box-shadow: none !important; }.scope-mgmt .page > *, .scope-mgmt.page > * { animation: none !important; }
 }
+
+/* ============================================================================
+   UI consistency layer — ONE authoritative set of metrics for icons, buttons,
+   cards, stats and motion. Appended last on purpose: at equal specificity the
+   later rule wins, so this overrides the older duplicated declarations above
+   (the recurring source of visual inconsistency between pages).
+   ========================================================================== */
+.scope-mgmt {
+  --ui-radius: 12px;
+  --ui-motion: .22s;
+  --ui-ease: cubic-bezier(.2, .7, .2, 1);
+}
+/* Icons — one size everywhere */
+.scope-mgmt svg.ic { width: 18px; height: 18px; }
+.scope-mgmt .btn svg.ic, .scope-mgmt.btn svg.ic { width: 16px; height: 16px; }
+.scope-mgmt .btn.sm svg.ic, .scope-mgmt .btn--sm svg.ic { width: 14px; height: 14px; }
+.scope-mgmt .iconbtn svg.ic, .scope-mgmt.iconbtn svg.ic { width: 15px; height: 15px; }
+.scope-mgmt .stat__icon svg.ic, .scope-mgmt.stat__icon svg.ic { width: 17px; height: 17px; }
+/* Buttons — one height, radius, weight and motion */
+.scope-mgmt .btn, .scope-mgmt.btn {
+  min-height: 38px;
+  border-radius: 10px;
+  font-size: 13px;
+  transition: background-color var(--ui-motion) var(--ui-ease), border-color var(--ui-motion) var(--ui-ease), color var(--ui-motion) var(--ui-ease), box-shadow var(--ui-motion) var(--ui-ease), transform var(--ui-motion) var(--ui-ease);
+}
+.scope-mgmt .btn:hover:not(:disabled), .scope-mgmt.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -14px rgba(13, 27, 42, .45);
+}
+.scope-mgmt .iconbtn, .scope-mgmt.iconbtn {
+  width: 34px; height: 34px; border-radius: 9px;
+  transition: background-color var(--ui-motion) var(--ui-ease), color var(--ui-motion) var(--ui-ease), transform var(--ui-motion) var(--ui-ease);
+}
+/* Cards & summary stats — one radius and rhythm */
+.scope-mgmt .card, .scope-mgmt.card { border-radius: var(--ui-radius); }
+.scope-mgmt .stat, .scope-mgmt.stat { border-radius: var(--ui-radius); min-height: 0; transition: box-shadow var(--ui-motion) var(--ui-ease), transform var(--ui-motion) var(--ui-ease); }
+.scope-mgmt .stats, .scope-mgmt.stats { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.scope-mgmt .stat__icon, .scope-mgmt.stat__icon { width: 40px; height: 40px; border-radius: 12px; }
+/* Motion — one calm entrance, no staggered delays */
+.scope-mgmt .page > *, .scope-mgmt.page > * { animation-duration: .25s; animation-delay: 0s !important; }
+
+/* ============================================================================
+   Employee profile — modern identity-card look (visual only; markup unchanged)
+   ========================================================================== */
+.scope-mgmt .profile-hero {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+.scope-mgmt .profile-hero__top {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 22px;
+  background: linear-gradient(115deg, var(--brand-50) 0%, #fff 60%);
+}
+.scope-mgmt .profile-hero__avatar {
+  width: 64px; height: 64px; flex: 0 0 64px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 24px; font-weight: 800; color: #fff;
+  background: linear-gradient(145deg, var(--brand-500), var(--brand-700));
+  box-shadow: 0 10px 24px -8px rgba(20, 71, 111, .45), inset 0 1px rgba(255, 255, 255, .25);
+}
+.scope-mgmt .profile-hero__name { font-size: 26px; }
+.scope-mgmt .profile-hero__actions { margin-inline-start: auto; }
+.scope-mgmt .profile-facts {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 14px 22px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+.scope-mgmt .profile-chip {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface);
+}
+.scope-mgmt .profile-section { margin: 22px 0 10px; font-size: 15px; font-weight: 800; color: var(--brand-800); }
+/* Activity summary — all four indicators in ONE compact horizontal row */
+.scope-mgmt .profile-stats { display: flex; flex-wrap: nowrap; gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.scope-mgmt .profile-stats .stat { flex: 1 1 0; min-width: 150px; padding: 12px 14px; }
+.scope-mgmt .profile-stats .stat__icon, .scope-mgmt .profile-stats .stat__icon { width: 36px; height: 36px; border-radius: 10px; }
+.scope-mgmt .profile-stats .stat__icon svg.ic { width: 16px; height: 16px; }
+.scope-mgmt .profile-stats .stat__value, .scope-mgmt .profile-stats .stat__value { font-size: 21px; }
+.scope-mgmt .profile-stats .stat__label, .scope-mgmt .profile-stats .stat__label { font-size: 11px; }
+.scope-mgmt .profile-stats .stat__hint, .scope-mgmt .profile-stats .stat__hint { font-size: 10px; }
+
+/* ============================================================================
+   Visit timings — employee filter buttons: always ONE horizontal row
+   (horizontal scroll when there are many employees; never wraps)
+   ========================================================================== */
+.scope-mgmt .emp-filter-row {
+  display: flex; flex-wrap: nowrap; gap: 8px;
+  overflow-x: auto;
+  padding: 2px 2px 10px;
+  margin: -6px 0 12px;
+  scrollbar-width: thin;
+}
+.scope-mgmt .emp-filter-btn {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 38px;
+  padding: 6px 8px 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink-700);
+  font-size: 12.5px; font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--ui-motion) var(--ui-ease), border-color var(--ui-motion) var(--ui-ease), color var(--ui-motion) var(--ui-ease), box-shadow var(--ui-motion) var(--ui-ease), transform var(--ui-motion) var(--ui-ease);
+}
+.scope-mgmt .emp-filter-btn:hover { border-color: var(--brand-500); color: var(--brand-700); transform: translateY(-1px); }
+.scope-mgmt .emp-filter-btn:focus-visible { outline: 2px solid var(--brand-600); outline-offset: 2px; }
+.scope-mgmt .emp-filter-btn.is-active {
+  background: var(--brand-700);
+  border-color: var(--brand-700);
+  color: #fff;
+  box-shadow: 0 10px 20px -12px rgba(20, 71, 111, .6);
+}
+.scope-mgmt .emp-filter-btn .emp-count {
+  display: inline-grid; place-items: center;
+  min-width: 22px; height: 22px; padding: 0 7px;
+  border-radius: 999px;
+  background: var(--brand-50); color: var(--brand-700);
+  font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.scope-mgmt .emp-filter-btn.is-active .emp-count { background: rgba(255, 255, 255, .22); color: #fff; }
