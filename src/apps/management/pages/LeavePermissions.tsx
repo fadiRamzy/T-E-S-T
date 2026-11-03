@@ -135,23 +135,20 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
       )}
 
       <Card title="ملخص الشهر والفلاتر" subtitle="الحد الشهري للأذونات: 4 طلبات وبحد أقصى 4 ساعات لكل موظف">
-        <div className="leave-filter-panel">
-          <div className="leave-filter-panel__label">تصفية الملخص والسجلات</div>
-          <Toolbar>
-            <Select aria-label="الموظف في ملخص الطلبات" value={employeeFilter} onChange={(event) => setEmployeeFilter(event.target.value)}>
-              <option value="all">كل الموظفين</option>
-              {data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}
-            </Select>
-            <Select aria-label="الشهر" value={monthFilter} onChange={(event) => setMonthFilter(event.target.value)}>
-              <option value="all">كل الشهور</option>
-              {MONTHS_AR.map((month, index) => <option key={month} value={String(index + 1).padStart(2, '0')}>{month}</option>)}
-            </Select>
-            <Select aria-label="السنة" value={yearFilter} onChange={(event) => setYearFilter(event.target.value)}>
-              <option value="all">كل السنوات</option>
-              {yearOptions.map((year) => <option key={year} value={year}>{year}</option>)}
-            </Select>
-          </Toolbar>
-        </div>
+        <Toolbar>
+          <Select aria-label="الموظف في ملخص الطلبات" value={employeeFilter} onChange={(event) => setEmployeeFilter(event.target.value)}>
+            <option value="all">كل الموظفين</option>
+            {data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}
+          </Select>
+          <Select aria-label="الشهر" value={monthFilter} onChange={(event) => setMonthFilter(event.target.value)}>
+            <option value="all">كل الشهور</option>
+            {MONTHS_AR.map((month, index) => <option key={month} value={String(index + 1).padStart(2, '0')}>{month}</option>)}
+          </Select>
+          <Select aria-label="السنة" value={yearFilter} onChange={(event) => setYearFilter(event.target.value)}>
+            <option value="all">كل السنوات</option>
+            {yearOptions.map((year) => <option key={year} value={year}>{year}</option>)}
+          </Select>
+        </Toolbar>
         {summaries.length ? (
           <TableWrap className="leave-summary-wrap"><Table className="leave-summary-table">
             <thead><tr>

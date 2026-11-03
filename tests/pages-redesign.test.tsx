@@ -167,3 +167,17 @@ test('leave/permission monthly summary table: structure identical (11 columns), 
   // 11 body cells per row (name + 10 numbers)
   expect(row.querySelectorAll('th, td').length).toBe(11);
 }, 60000);
+
+test('leave summary uses the standard toolbar filter layout (matches attendance summary), no legacy filter panel', async () => {
+  setHash('#/mgmt/leave-permissions');
+  render(<App />);
+  await waitFor(() => expect(document.querySelector('.leave-summary-table')).toBeTruthy(), { timeout: 10000 });
+  // legacy filter panel wrapper is gone; the 3 filters sit in a plain Toolbar inside the summary card
+  expect(document.querySelector('.leave-filter-panel')).toBeNull();
+  const wrap = document.querySelector('.leave-summary-wrap') as HTMLElement;
+  const card = wrap.closest('.card') as HTMLElement;
+  expect(card).toBeTruthy();
+  expect(card.querySelectorAll('.toolbar select').length).toBe(3);
+  // table structure still intact
+  expect(document.querySelectorAll('.leave-summary-table thead th').length).toBe(11);
+}, 60000);

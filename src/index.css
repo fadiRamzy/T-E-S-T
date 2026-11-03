@@ -93,3 +93,15 @@ body {
 .site-switch:hover { filter: brightness(1.06); transform: translateX(-50%) translateY(-2px); }
 .site-switch svg { width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 @media print { .site-switch { display: none; } }
+
+/* ── Institutional polish: IBM Plex Sans Arabic for readable Arabic text,
+      flat navy accents on light surfaces (no gradients) ── */
+html, body {
+  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+}
+.portal { background: #f7f9fc; }
+.portal-title::after { background: #0f2a4a; }
+.portal-btn--mgmt { background: #0f2a4a; box-shadow: 0 14px 30px -14px rgba(15, 42, 74, .45); }
+.portal-btn--eval { background: #0f8b8d; box-shadow: 0 14px 30px -14px rgba(15, 139, 141, .45); }
+.portal-btn:focus-visible, .site-switch:focus-visible { outline-color: #0f2a4a; }
+.site-switch { background: #0f2a4a; border-color: rgba(255, 255, 255, .25); box-shadow: 0 12px 26px -12px rgba(15, 42, 74, .55); }
