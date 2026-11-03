@@ -11,7 +11,7 @@ import { afterEach, beforeAll, expect, test } from 'vitest';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import App from '../src/App';
 import { ensureSettings, openDatabase } from '../src/apps/management/db/database';
-import { saveEmployee, saveEmployeeNote, saveVisitTiming } from '../src/apps/management/db/repo';
+import { saveEmployee, saveEmployeeNote, saveLeavePermission, saveVisitTiming } from '../src/apps/management/db/repo';
 
 
 
@@ -121,4 +121,49 @@ test('notes page: saved note survives hide/show (hiding never deletes records)',
   fireEvent.click(toggle); // re-show — record still there
   expect(list.textContent).toContain('ملاحظة اختبار محفوظة');
   expect(e1.id).toBeTruthy();
+}, 60000);
+
+test('navigation has no separate follow-up register; employees page summary renders compactly', async () => {
+  setHash('#/mgmt/employees');
+  render(<App />);
+  await waitFor(() => expect(document.querySelector('.employees-summary')).toBeTruthy(), { timeout: 10000 });
+  // summary cards present (layout compaction is CSS; structure verified here)
+  expect(document.querySelectorAll('.employees-summary .stat').length).toBe(3);
+  expect(document.querySelector('.employees-summary')?.textContent).toContain('إجمالي الموظفين');
+  // no «سجل المتابعة» nav item / route link anywhere
+  expect(document.querySelector('a[href="#/mgmt/observations"]')).toBeNull();
+  const navText = document.querySelector('.sidebar__nav')?.textContent ?? '';
+  expect(navText).not.toContain('سجل المتابعة');
+  expect(navText).toContain('الملاحظات والمتابعة');
+}, 60000);
+
+test('leave/permission monthly summary table: structure identical (11 columns), totals cell present, values readable', async () => {
+  const today = new Date();
+  const iso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  await saveLeavePermission({ employeeId: e1.id, requestType: 'leave', category: 'إجازة اعتيادي', date: iso, durationHours: null, notes: '' });
+  await saveLeavePermission({ employeeId: e1.id, requestType: 'permission', category: 'إذن انصرف', date: iso, durationHours: 2, notes: '' });
+
+  setHash('#/mgmt/leave-permissions');
+  render(<App />);
+  await waitFor(() => expect(document.querySelector('.leave-summary-table')).toBeTruthy(), { timeout: 10000 });
+
+  const table = document.querySelector('.leave-summary-table') as HTMLElement;
+  // exact existing structure: header row + 11 columns, unchanged
+  const headers = Array.from(table.querySelectorAll('thead th')).map((th) => th.textContent?.trim());
+  expect(headers).toEqual([
+    'الموظف', 'اعتيادي', 'عارضة', 'بخصم', 'إجمالي الإجازات',
+    'إذن انصراف', 'إذن حضور', 'إجمالي الأذونات', 'ساعات مستخدمة',
+    'أذونات متبقية للشهر', 'ساعات متبقية للشهر',
+  ]);
+  const row = table.querySelector('tbody tr') as HTMLElement;
+  expect(row).toBeTruthy();
+  // totals cell keeps its dedicated class and shows the computed total (1 leave)
+  const totalCell = row.querySelector('.leave-summary-total') as HTMLElement;
+  expect(totalCell).toBeTruthy();
+  expect(totalCell.textContent?.trim()).toBe('1');
+  // permission hours cell shows 2 — value still present and readable
+  const hoursCell = row.querySelector('.leave-summary-hours') as HTMLElement;
+  expect(hoursCell.textContent?.trim()).toBe('2');
+  // 11 body cells per row (name + 10 numbers)
+  expect(row.querySelectorAll('th, td').length).toBe(11);
 }, 60000);
