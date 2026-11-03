@@ -85,7 +85,7 @@ export function App() {
             </>
           )}
           {!ready ? <Empty>جارٍ التحميل…</Empty> : (
-            <div key={effective} className="page">
+            <div key={effective} className={effective === 'monthly' ? 'page page--monthly' : 'page'}>
               {effective === 'dashboard' && model && <DashboardPage model={model} />}
               {effective === 'employees' && model && <EmployeesPage model={model} />}
               {effective === 'monthly' && model && <MonthlyPage model={model} />}

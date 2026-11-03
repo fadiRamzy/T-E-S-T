@@ -76,6 +76,10 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
   );
   const employeeName = (id: string) => data.employees.find((row) => row.id === id)?.name ?? '—';
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
+  /** خلية رقمية عادية — الشارة الحمراء الشفافة (نفس شارة تأخيرات الحضور) تظهر فقط حول القيمة عندما تكون أكبر من صفر */
+  const numCell = (value: number, cls: string) => (
+    <td className={cls}>{value > 0 ? <Badge tone="danger">{fmtNumber(value)}</Badge> : fmtNumber(value)}</td>
+  );
 
   const submit = async () => {
     if (!draft) return;
@@ -164,16 +168,16 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
               const quotaTone = exceeded ? 'error' : approaching || summary.remainingHours === 0 ? 'warning' : 'remaining';
               return <tr key={summary.employee.id}>
                 <th scope="row" className="leave-summary-name">{summary.employee.name}</th>
-                <td className="leave-summary-leave">{fmtNumber(summary.regularLeaves)}</td>
-                <td className="leave-summary-leave">{fmtNumber(summary.casualLeaves)}</td>
-                <td className="leave-summary-leave">{fmtNumber(summary.deductedLeaves)}</td>
-                <td className="leave-summary-total">{fmtNumber(summary.totalLeaves)}</td>
-                <td className="leave-summary-permission">{fmtNumber(summary.departurePermissions)}</td>
-                <td className="leave-summary-permission">{fmtNumber(summary.attendancePermissions)}</td>
-                <td className={`leave-summary-${approaching ? 'warning' : 'permission'}`}>{fmtNumber(summary.totalPermissions)}</td>
-                <td className={`leave-summary-${approaching ? 'warning' : 'hours'}`}>{fmtNumber(summary.permissionHours)}</td>
-                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? fmtNumber(summary.remainingEntries) : '—'}</td>
-                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? fmtNumber(summary.remainingHours) : '—'}</td>
+                {numCell(summary.regularLeaves, 'leave-summary-leave')}
+                {numCell(summary.casualLeaves, 'leave-summary-leave')}
+                {numCell(summary.deductedLeaves, 'leave-summary-leave')}
+                {numCell(summary.totalLeaves, 'leave-summary-total')}
+                {numCell(summary.departurePermissions, 'leave-summary-permission')}
+                {numCell(summary.attendancePermissions, 'leave-summary-permission')}
+                {numCell(summary.totalPermissions, `leave-summary-${approaching ? 'warning' : 'permission'}`)}
+                {numCell(summary.permissionHours, `leave-summary-${approaching ? 'warning' : 'hours'}`)}
+                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? (summary.remainingEntries > 0 ? <Badge tone="danger">{fmtNumber(summary.remainingEntries)}</Badge> : fmtNumber(summary.remainingEntries)) : '—'}</td>
+                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? (summary.remainingHours > 0 ? <Badge tone="danger">{fmtNumber(summary.remainingHours)}</Badge> : fmtNumber(summary.remainingHours)) : '—'}</td>
               </tr>;
             })}</tbody>
           </Table></TableWrap>

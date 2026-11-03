@@ -216,7 +216,6 @@ export function EmployeePicker({
                       onClick={() => choose(option)}
                     >
                       <span className="picker__name">{option.name}</span>
-                      {option.meta ? <span className="picker__meta">{option.meta}</span> : null}
                       {option.id === value ? <Icon name="check" size={14} /> : null}
                     </li>
                   ))
