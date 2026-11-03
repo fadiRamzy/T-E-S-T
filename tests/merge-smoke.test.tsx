@@ -26,9 +26,18 @@ test('unified app: portal, management app, evaluation app, legacy routes', async
   setHash('');
   const { container } = render(<App />);
 
-  // 1. Portal
+  // 1. Portal — title + exactly two buttons (no other links, no descriptions)
   expect(await screen.findByText('منظومة إدارة المخاطر الموحدة')).toBeTruthy();
   expect(document.querySelector('.portal')).toBeTruthy();
+  const portalLinks = container.querySelectorAll('.portal a');
+  expect(portalLinks.length).toBe(2);
+  const buttons = container.querySelectorAll('.portal-btn');
+  expect(buttons.length).toBe(2);
+  expect(buttons[0].textContent).toBe('نظام المتابعة');
+  expect(buttons[1].textContent).toBe('نظام التقييمات');
+  expect(buttons[0].getAttribute('href')).toBe('#/mgmt/employees');
+  expect(buttons[1].getAttribute('href')).toBe('#/eval/dashboard');
+  expect(container.querySelector('.portal ul, .portal p')).toBeNull();
 
   // 2. Management app
   setHash('#/mgmt/employees');
