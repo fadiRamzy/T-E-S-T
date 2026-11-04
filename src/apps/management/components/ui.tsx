@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { Button as GlisseButton } from 'glisse';
 import { Icon, type IconName } from './Icon';
 import { cn } from '../lib/utils';
 import { fmtTime, joinTime12, parseTimeText, splitTime12 } from '../lib/format';
@@ -16,10 +17,16 @@ export function Button({
   ...rest
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant; size?: 'sm' | 'md'; icon?: IconName }) {
   return (
-    <button type="button" className={cn('btn', `btn--${variant}`, `btn--${size}`, className)} {...rest}>
-      {icon ? <Icon name={icon} size={size === 'sm' ? 13 : 15} /> : null}
+    <GlisseButton
+      type="button"
+      className={cn('btn', `btn--${variant}`, `btn--${size}`, className)}
+      variant={variant === 'primary' ? 'filled' : 'glass'}
+      destructive={variant === 'danger' ? true : undefined}
+      icon={icon ? <Icon name={icon} size={size === 'sm' ? 13 : 15} /> : undefined}
+      {...rest}
+    >
       {children ? <span>{children}</span> : null}
-    </button>
+    </GlisseButton>
   );
 }
 
