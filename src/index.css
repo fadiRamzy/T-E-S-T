@@ -1,0 +1,112 @@
+/* ==========================================================================
+   DESIGN SYSTEM v4 — «Atlas Institutional» (unified portal)
+   Global shell + landing page. App visuals live under .scope-mgmt /
+   .scope-eval (design.css layers); this file owns the portal, the global
+   font/background, and the floating site-switch clearance rules.
+   ========================================================================== */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html {
+  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+}
+body {
+  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+  background: #f4f6fa;
+  color: #1e3247;
+  -webkit-text-size-adjust: 100%;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 9998;
+  background: #0a2540;
+}
+.scope-mgmt, .scope-eval { min-height: 100vh; }
+
+/* Clearance for the floating site-switch button so it never overlaps page
+   content (both apps reserve the same 64px strip at the top center). */
+@media screen {
+  .scope-mgmt .page { padding-top: 64px; }
+  .scope-eval .container { padding-top: 64px; }
+}
+
+/* ── Landing page — institutional: light canvas, navy wordmark rule,
+      exactly two solid action buttons ── */
+.portal {
+  min-height: 100vh;
+  background: #f4f6fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 46px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.portal-title {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800;
+  color: #0a2540;
+  line-height: 1.4;
+}
+.portal-title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin: 16px auto 0;
+  border-radius: 4px;
+  background: #a8842c;
+}
+.portal-actions {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.portal-btn {
+  display: inline-block;
+  min-width: 240px;
+  padding: 18px 48px;
+  border-radius: 12px;
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  transition: transform .2s cubic-bezier(.2, .7, .2, 1), box-shadow .25s cubic-bezier(.2, .7, .2, 1), background-color .2s;
+}
+.portal-btn:hover { transform: translateY(-3px); }
+.portal-btn:active { transform: translateY(-1px); }
+.portal-btn:focus-visible, .site-switch:focus-visible { outline: 3px solid #1b4a73; outline-offset: 3px; }
+.portal-btn--mgmt { background: #0a2540; box-shadow: 0 14px 30px -14px rgba(8, 31, 56, .5); }
+.portal-btn--mgmt:hover { background: #10365c; }
+.portal-btn--eval { background: #fff; color: #0a2540; border: 1px solid #cbd6e4; box-shadow: 0 1px 2px rgba(16, 42, 67, .06); }
+.portal-btn--eval:hover { background: #edf1f7; border-color: #b9c7d6; box-shadow: 0 10px 24px -12px rgba(16, 42, 67, .25); }
+@media (max-width: 560px) {
+  .portal-actions { flex-direction: column; width: 100%; max-width: 340px; }
+  .portal-btn { width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .portal-title { animation: portal-rise .5s cubic-bezier(.2, .7, .2, 1) both; }
+  .portal-actions { animation: portal-rise .5s .12s cubic-bezier(.2, .7, .2, 1) both; }
+  @keyframes portal-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+}
+
+/* ── Dynamic website-switching button — floating, precisely centered
+      horizontally at the top of both websites ── */
+.site-switch {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 9999;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #0a2540; color: #fff; text-decoration: none;
+  font-size: 13.5px; font-weight: 700; padding: 10px 18px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  box-shadow: 0 12px 26px -12px rgba(8, 31, 56, .55);
+  transition: background-color .2s, transform .2s cubic-bezier(.2, .7, .2, 1);
+}
+.site-switch:hover { background: #10365c; transform: translateX(-50%) translateY(-2px); }
+.site-switch svg { width: 17px; height: 17px; stroke: #e8c87a; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@media print { .site-switch { display: none; } body::before { display: none; } }
