@@ -16,11 +16,19 @@ import './apps/management/styles/design.css';
 import './apps/evaluation/styles.css';
 import './apps/evaluation/design.css';
 import './index.css';
+// Glisse (Apple Liquid Glass) design system: real tokens + component styles,
+// then our theme layer which maps both apps onto it (light + dark).
+import 'glisse/styles.css';
+import './theme.css';
 import App from './App';
+import { initTheme } from './theme';
+import { initGlassLens } from './glass';
 
 // Both original projects are Arabic RTL apps.
 document.documentElement.lang = 'ar';
 document.documentElement.dir = 'rtl';
+initTheme();
+initGlassLens();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

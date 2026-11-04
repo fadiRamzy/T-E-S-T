@@ -3,6 +3,8 @@ import { useApp } from '../state/store';
 import { useRoute } from '../state/router';
 import { Icon, type IconName } from './Icon';
 import { CollapseProvider, type CollapseSignal } from './ui';
+import { Switch } from 'glisse';
+import { applyTheme, useTheme } from '../../../theme';
 import { cn } from '../lib/utils';
 
 interface NavItem {
@@ -47,6 +49,7 @@ const NAV_GROUPS: NavGroup[] = [
 export function Layout({ children }: { children: React.ReactNode }) {
   const { settings, ready } = useApp();
   const route = useRoute();
+  const theme = useTheme();
   const [collapse, setCollapse] = useState<CollapseSignal>({ version: 0, collapsed: false });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -140,6 +143,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="sidebar__footer">
+            <div className="sidebar__theme" title={theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح'}>
+              <Switch
+                checked={theme === 'dark'}
+                onCheckedChange={(v) => applyTheme(v ? 'dark' : 'light')}
+                aria-label="تبديل الوضع الداكن"
+              />
+              <span className="sidebar__theme-label">داكن</span>
+            </div>
             <div className="sidebar__status">
               <span className="sidebar__status-indicator" />
               <span className="sidebar__status-copy"><strong>{ready ? 'البيانات جاهزة' : 'جارٍ فتح البيانات'}</strong><small>محفوظة على هذا الجهاز</small></span>

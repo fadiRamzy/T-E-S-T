@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Switch } from 'glisse';
+import { applyTheme, useTheme } from './theme';
 import { App as ManagementApp } from './apps/management/App';
 import { AppProvider } from './apps/management/state/store';
 import { App as EvaluationApp } from './apps/evaluation/ui/App';
@@ -91,8 +93,13 @@ function SiteSwitchButton({ view }: { view: 'mgmt' | 'eval' }) {
 }
 
 function Portal() {
+  const theme = useTheme();
   return (
     <div className="portal">
+      <div className="portal-theme" title={theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح'}>
+        <span className="portal-theme-label">داكن</span>
+        <Switch checked={theme === 'dark'} onCheckedChange={(v) => applyTheme(v ? 'dark' : 'light')} aria-label="تبديل الوضع الداكن" />
+      </div>
       <h1 className="portal-title">منظومة إدارة المخاطر الموحدة</h1>
       <div className="portal-actions">
         <a className="portal-btn portal-btn--mgmt" href="#/mgmt/employees">نظام المتابعة</a>

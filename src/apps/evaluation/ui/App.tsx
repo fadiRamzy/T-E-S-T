@@ -7,6 +7,8 @@ import { ConfirmHost, Empty, ToastHost } from './kit';
 import { EGYPT_GOVERNORATES } from '../domain/constants';
 import { Icon, type IconName } from './icons';
 import { init, redo, undo, useStore } from './store';
+import { Switch } from 'glisse';
+import { applyTheme, useTheme } from '../../../theme';
 
 const PAGES: Array<{ id: string; label: string; icon: IconName }> = [
   { id: 'dashboard', label: 'لوحة المؤشرات', icon: 'dashboard' },
@@ -47,6 +49,7 @@ export function App() {
   }, []);
 
   const effective: PageId = !model ? 'files' : page;
+  const theme = useTheme();
 
   return (
     <div className="shell scope-eval">
@@ -66,6 +69,9 @@ export function App() {
           })}
         </nav>
         <div className="side-foot">
+          <span className="theme-slot" title={theme === 'dark' ? 'الوضع الداكن' : 'الوضع الفاتح'}>
+            <Switch checked={theme === 'dark'} onCheckedChange={(v) => applyTheme(v ? 'dark' : 'light')} aria-label="تبديل الوضع الداكن" />
+          </span>
           <span className="status" aria-live="polite" data-testid="save-status">
             <span className={`dot ${saving ? 'saving' : ''}`} />
             <span className="txt">{saving ? 'جارٍ الحفظ…' : lastSaved ? `محفوظ ${new Date(lastSaved).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}` : 'غير محفوظ'}{changes > 0 ? ` · ${changes} غير مُصدَّر` : ''}</span>
