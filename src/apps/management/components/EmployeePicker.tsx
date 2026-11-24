@@ -36,12 +36,13 @@ export function EmployeePicker({
   label,
   value,
   onChange,
-  options,
+  options: optionsProp,
   placeholder = '— اختر الموظف —',
   error,
   required,
   className,
 }: EmployeePickerProps) {
+  const options = Array.isArray(optionsProp) ? optionsProp : [];
   const autoId = useId();
   const controlId = id ?? `picker-${autoId}`;
   const listId = `${controlId}-list`;

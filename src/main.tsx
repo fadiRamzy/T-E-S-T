@@ -22,8 +22,28 @@ import App from './App';
 document.documentElement.lang = 'ar';
 document.documentElement.dir = 'rtl';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+const rootEl = document.getElementById('root');
+
+function renderFatal(err: unknown) {
+  if (!rootEl) return;
+  const message = err instanceof Error ? err.message : String(err);
+  rootEl.innerHTML = `<div style="padding:24px;margin:24px;border:1px solid rgba(0,0,0,0.1);border-radius:16px;background:#fff;color:#1d1d1f;font-family:system-ui,sans-serif" dir="rtl"><h2 style="margin:0 0 8px;font-size:20px">تعذّر تحميل التطبيق</h2><p style="margin:0 0 12px;color:#6e6e73;font-size:14px">حدث خطأ أثناء التشغيل. يرجى تحديث الصفحة.</p><pre style="margin:0;padding:12px;background:#f5f5f7;border-radius:10px;white-space:pre-wrap;font-size:12px;direction:ltr;text-align:left">${message.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c] as string))}</pre></div>`;
+}
+
+window.addEventListener('error', (e) => {
+  if (rootEl && rootEl.childElementCount === 0) renderFatal(e.error || e.message);
+});
+window.addEventListener('unhandledrejection', (e) => {
+  if (rootEl && rootEl.childElementCount === 0) renderFatal(e.reason);
+});
+
+try {
+  createRoot(rootEl!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+} catch (err) {
+  console.error('[boot]', err);
+  renderFatal(err);
+}

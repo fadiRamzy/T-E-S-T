@@ -858,12 +858,12 @@
 .scope-mgmt .picker__control[aria-expanded='true'], .scope-mgmt.picker__control[aria-expanded='true'] { border-color: rgba(0,113,227,0.45); box-shadow: 0 0 0 4px rgba(0,113,227,0.16); background: #fff; outline: none; }
 .scope-mgmt .picker__control--empty, .scope-mgmt.picker__control--empty { color: #86868b; }
 .scope-mgmt .picker__value, .scope-mgmt.picker__value { display: flex; align-items: baseline; gap: 8px; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; }
-.scope-mgmt .picker__name, .scope-mgmt.picker__name { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; word-break: break-word; line-height: 22px; color: inherit; }
+.scope-mgmt .picker__name, .scope-mgmt.picker__name { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; word-break: break-word; line-height: 22px; color: inherit !important; }
 .scope-mgmt .picker__meta, .scope-mgmt.picker__meta { font-size: 12px; font-weight: 600; color: var(--text-secondary); background: rgba(0,0,0,0.05); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
 .scope-mgmt .picker__chevron, .scope-mgmt.picker__chevron { flex: 0 0 auto; color: #6e6e73; transition: transform .15s ease; }
 .scope-mgmt .picker__control[aria-expanded='true'] .picker__chevron, .scope-mgmt.picker__control[aria-expanded='true'] .picker__chevron { transform: rotate(180deg); color: #0071e3; }
 .scope-mgmt .picker__pop, .scope-mgmt.picker__pop {
-  position: fixed; z-index: 10020; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px;
+  position: fixed; z-index: 10020; background: #ffffff !important; color: #1d1d1f; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04); padding: 8px; max-height: 280px;
   display: flex; flex-direction: column; gap: 8px; backdrop-filter: none; -webkit-backdrop-filter: none;
 }
@@ -873,13 +873,13 @@
 .scope-mgmt .picker__list, .scope-mgmt.picker__list { list-style: none; margin: 0; padding: 0; overflow: auto; max-height: 220px; display: grid; gap: 2px; }
 .scope-mgmt .picker__option, .scope-mgmt.picker__option {
   display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 12px; border-radius: 8px;
-  font-size: 14px; line-height: 22px; color: var(--text); cursor: pointer; border: 1px solid transparent; text-align: start;
+  font-size: 14px; line-height: 22px; color: #1d1d1f !important; background: #fff; cursor: pointer; border: 1px solid transparent; text-align: start;
 }
 .scope-mgmt .picker__option .picker__name, .scope-mgmt.picker__option .picker__name { flex: 1 1 auto; }
 .scope-mgmt .picker__option:hover, .scope-mgmt.picker__option:hover, .scope-mgmt .picker__option.is-active, .scope-mgmt.picker__option.is-active { background: rgba(0,113,227,0.06); }
 .scope-mgmt .picker__option.is-selected, .scope-mgmt.picker__option.is-selected { background: rgba(0,113,227,0.1); border-color: rgba(0,113,227,0.14); font-weight: 600; color: #0066cc; }
 .scope-mgmt .picker__option svg, .scope-mgmt.picker__option svg { color: #0071e3; flex: 0 0 auto; }
-.scope-mgmt .picker__empty, .scope-mgmt.picker__empty { padding: 12px 10px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+.scope-mgmt .picker__empty, .scope-mgmt.picker__empty { padding: 12px 10px; text-align: center; font-size: 13px; color: #6e6e73 !important; background: #fff; }
 
 /* Native select: visible chevron, consistent RTL */
 .scope-mgmt select, .scope-mgmt .select, .scope-mgmt.select,

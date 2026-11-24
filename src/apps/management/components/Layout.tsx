@@ -3,6 +3,7 @@ import {useApp, useAppMeta} from '../state/store';
 import { useRoute } from '../state/router';
 import { Icon, type IconName } from './Icon';
 import { CollapseProvider, type CollapseSignal } from './ui';
+import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { cn } from '../lib/utils';
 
 interface NavItem {
