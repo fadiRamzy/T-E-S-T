@@ -4,7 +4,9 @@
    ========================================================================== */
 
 :root {
-  --apple-font: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+  --apple-font: "Calibri", "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --apple-font-formal: "Times New Roman", "IBM Plex Sans Arabic", Times, serif;
+  --font-numeric: "Calibri", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
   --apple-bg: #f5f5f7;
   --apple-bg-deep: #eef0f5;
   --apple-surface: rgba(255, 255, 255, 0.72);
@@ -156,9 +158,10 @@ body::after {
 
 .portal-title {
   margin: 0;
+  font-family: var(--apple-font-formal);
   font-size: clamp(34px, 6vw, 56px);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   line-height: 1.15;
   color: var(--apple-text);
   text-wrap: balance;

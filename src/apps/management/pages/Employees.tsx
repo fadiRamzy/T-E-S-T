@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData, useAppMeta} from '../state/store';
 import { navigate } from '../state/router';
 import {
   Badge,
@@ -54,8 +54,11 @@ const emptyDraft = (employeeNo: number): Draft => ({
 });
 
 export function EmployeesPage() {
-  const { data, settings, runAction, notify } = useApp();
+  const data = useAppData();
+const { settings } = useAppMeta();
+const { runAction, notify } = useAppActions();
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [sector, setSector] = useState('all');
   const [governorate, setGovernorate] = useState('all');
   const [status, setStatus] = useState('all');
@@ -73,7 +76,7 @@ export function EmployeesPage() {
   const [exporting, setExporting] = useState(false);
 
   const rows = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return data.employees
       .filter((row) => (showArchived ? true : !row.archived))
       .filter((row) => (sector === 'all' ? true : row.sector === sector))
@@ -84,7 +87,7 @@ export function EmployeesPage() {
         !text ? true : [row.name, row.code, row.sector, row.governorate, row.jobTitle, row.branches].join(' ').toLowerCase().includes(text),
       )
       .sort((a, b) => a.employeeNo - b.employeeNo);
-  }, [data.employees, query, sector, governorate, status, branch, showArchived]);
+  }, [data.employees, deferredQuery, sector, governorate, status, branch, showArchived]);
 
   const sectors = Array.from(new Set([...settings.sectors, ...data.employees.map((row) => row.sector)].filter(Boolean)));
   const governorates = Array.from(new Set([...settings.governorates, ...data.employees.map((row) => row.governorate)].filter(Boolean)));

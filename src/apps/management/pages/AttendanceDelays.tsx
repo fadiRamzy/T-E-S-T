@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import {useApp, useAppActions, useAppData} from '../state/store';
 import {
   Badge,
   Button,
@@ -30,7 +30,8 @@ interface Draft { id?: string; employeeId: string; date: string; arrivalTime: st
 const newDraft = (): Draft => ({ employeeId: '', date: todayInputValue(), arrivalTime: '', departureTime: '', notes: '' });
 
 export function AttendanceDelaysPage() {
-  const { data, runAction } = useApp();
+  const data = useAppData();
+const { runAction } = useAppActions();
   const [employeeFilter, setEmployeeFilter] = useState('all');
   const [monthFilter, setMonthFilter] = useState(thisMonth());
   const [yearFilter, setYearFilter] = useState(thisYear());

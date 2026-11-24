@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import {useApp, useAppActions, useAppData} from '../state/store';
 import {
   Badge,
   Button,
@@ -48,7 +48,8 @@ const emptyDraft = (): Draft => ({
 });
 
 export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean }) {
-  const { data, runAction } = useApp();
+  const data = useAppData();
+const { runAction } = useAppActions();
   const [employeeFilter, setEmployeeFilter] = useState('all');
   const [monthFilter, setMonthFilter] = useState(currentMonth());
   const [yearFilter, setYearFilter] = useState(currentYear());
@@ -76,9 +77,19 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
   );
   const employeeName = (id: string) => data.employees.find((row) => row.id === id)?.name ?? '—';
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
-  /** خلية رقمية عادية — الشارة الحمراء الشفافة (نفس شارة تأخيرات الحضور) تظهر فقط حول القيمة عندما تكون أكبر من صفر */
+  /** خلية رقمية — دائرة حدودية صغيرة ملوّنة حول الرقم فقط (بدون تلوين الخلية) */
+  const ringTone = (cls: string) => {
+    if (cls.includes('leave-summary-total')) return 'total';
+    if (cls.includes('leave-summary-warning')) return 'warning';
+    if (cls.includes('leave-summary-hours')) return 'hours';
+    if (cls.includes('leave-summary-permission')) return 'permission';
+    if (cls.includes('leave-summary-leave')) return 'leave';
+    return 'neutral';
+  };
   const numCell = (value: number, cls: string) => (
-    <td className={cls}>{value > 0 ? <Badge tone="danger">{fmtNumber(value)}</Badge> : fmtNumber(value)}</td>
+    <td className={cls}>
+      {value > 0 ? <span className={`count-ring count-ring--${ringTone(cls)}`}>{fmtNumber(value)}</span> : <span className="count-ring count-ring--zero">{fmtNumber(value)}</span>}
+    </td>
   );
 
   const submit = async () => {
@@ -176,8 +187,16 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
                 {numCell(summary.attendancePermissions, 'leave-summary-permission')}
                 {numCell(summary.totalPermissions, `leave-summary-${approaching ? 'warning' : 'permission'}`)}
                 {numCell(summary.permissionHours, `leave-summary-${approaching ? 'warning' : 'hours'}`)}
-                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? (summary.remainingEntries > 0 ? <Badge tone="danger">{fmtNumber(summary.remainingEntries)}</Badge> : fmtNumber(summary.remainingEntries)) : '—'}</td>
-                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? (summary.remainingHours > 0 ? <Badge tone="danger">{fmtNumber(summary.remainingHours)}</Badge> : fmtNumber(summary.remainingHours)) : '—'}</td>
+                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>
+                  {allowanceSelected
+                    ? <span className={`count-ring count-ring--${summary.remainingEntries > 0 ? quotaTone : 'zero'}`}>{fmtNumber(summary.remainingEntries)}</span>
+                    : '—'}
+                </td>
+                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>
+                  {allowanceSelected
+                    ? <span className={`count-ring count-ring--${summary.remainingHours > 0 ? quotaTone : 'zero'}`}>{fmtNumber(summary.remainingHours)}</span>
+                    : '—'}
+                </td>
               </tr>;
             })}</tbody>
           </Table></TableWrap>

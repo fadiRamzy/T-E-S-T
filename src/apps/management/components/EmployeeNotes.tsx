@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Field, IconButton, Select, Textarea } from './ui';
 import { deleteEmployeeNote, saveEmployeeNote } from '../db/repo';
 import type { Employee, EmployeeNote } from '../db/schema';
-import { useApp } from '../state/store';
+import {useApp, useAppActions} from '../state/store';
 
 export function EmployeeNotesManager({
   employees,
@@ -19,7 +19,7 @@ export function EmployeeNotesManager({
   /** Start with the notes list hidden (used on the dedicated notes page). Hiding never touches saved records. */
   defaultHidden?: boolean;
 }) {
-  const { runAction } = useApp();
+  const { runAction } = useAppActions();
   const [selectedEmployee, setSelectedEmployee] = useState(employeeId ?? employees[0]?.id ?? '');
   const [text, setText] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
