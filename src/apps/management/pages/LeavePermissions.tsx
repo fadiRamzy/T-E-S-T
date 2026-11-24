@@ -240,7 +240,7 @@ const { runAction } = useAppActions();
             </Select>
           </Field>
           <Field label="التاريخ" htmlFor="lp-date" error={errors.date}>
-            <div className="date-today-row"><Input id="lp-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button size="sm" onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div>
+            <div className="date-today-row"><Input id="lp-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div>
           </Field>
           {draft.requestType === 'permission' ? <Field label="مدة الإذن" htmlFor="lp-duration" error={errors.durationHours}>
             <Select id="lp-duration" value={draft.durationHours} onChange={(event) => set('durationHours', event.target.value as Draft['durationHours'])}>
