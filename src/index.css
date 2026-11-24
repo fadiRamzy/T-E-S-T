@@ -67,7 +67,7 @@ body::after {
   position: fixed;
   inset: 0 0 auto 0;
   height: 1px;
-  z-index: 9998;
+  z-index: 2;
   background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
   pointer-events: none;
 }
@@ -333,7 +333,7 @@ body::after {
   top: max(12px, env(safe-area-inset-top, 0px));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9999;
+  z-index: 40;
   display: inline-flex;
   align-items: center;
   gap: 8px;

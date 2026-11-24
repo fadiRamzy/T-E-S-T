@@ -377,7 +377,7 @@ const { runAction } = useAppActions();
                 onChange={(e) => set('clientName', e.target.value)}
               />
             </Field>
-            <Field label="مكان الزيارة" error={errors.location} htmlFor="vt-location">
+            <Field label="مكان الزيارة" error={errors.location} htmlFor="vt-location" className="span2">
               <Input id="vt-location" value={draft.location} onChange={(e) => set('location', e.target.value)} />
             </Field>
             <Field label="توقيت التحرك على الزيارة" error={errors.departureTime} htmlFor="vt-departure">
@@ -385,9 +385,6 @@ const { runAction } = useAppActions();
             </Field>
             <Field label="توقيت الرجوع للفرع" error={errors.returnTime} htmlFor="vt-return">
               <TimeInput id="vt-return" value={draft.returnTime} onChange={(value) => set('returnTime', value)} />
-            </Field>
-            <Field label="ملاحظات" htmlFor="vt-notes" className="span2">
-              <Textarea id="vt-notes" rows={2} value={draft.notes} onChange={(e) => set('notes', e.target.value)} />
             </Field>
             <div className="span2 small muted" data-testid="visit-preview">
               {preview && preview.minutes !== null ? (
@@ -401,6 +398,9 @@ const { runAction } = useAppActions();
                 <>أدخل توقيت التحرك والرجوع لحساب مدة الزيارة تلقائيًا. بدون توقيتين صالحين لا تُحسب مدة.</>
               )}
             </div>
+            <Field label="ملاحظات" htmlFor="vt-notes" className="span2">
+              <Textarea id="vt-notes" rows={3} value={draft.notes} onChange={(e) => set('notes', e.target.value)} />
+            </Field>
           </div>
         ) : null}
       </Modal>

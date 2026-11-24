@@ -272,7 +272,6 @@ const { runAction, notify } = useAppActions();
           <Button size="sm" icon="restore" onClick={resetFilters} disabled={!filtersActive}>
             إعادة تعيين
           </Button>
-          <span className="toolbar__spacer">{rows.length} موظف</span>
         </Toolbar>
           }>
         
@@ -282,36 +281,36 @@ const { runAction, notify } = useAppActions();
             <Table>
               <thead>
                 <tr>
-                  <th className="num">الرقم</th>
-                  <th>الاسم</th>
-                  <th>الكود</th>
+                  <th className="num col-emp-no">الرقم</th>
+                  <th className="col-emp-name">الاسم</th>
+                  <th className="col-emp-code">الكود</th>
                   <th>القطاع</th>
                   <th>المحافظة</th>
                   <th>المسمى الوظيفي</th>
                   <th>تاريخ التعيين</th>
-                  <th>الفروع</th>
-                  <th>حالة الموظف</th>
-                  <th>إجراءات</th>
+                  <th className="col-emp-branches">الفروع</th>
+                  <th className="col-emp-status">حالة الموظف</th>
+                  <th className="col-emp-actions">إجراءات</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((employee) => (
                   <tr key={employee.id}>
-                    <td className="num">{employee.employeeNo}</td>
-                    <td>
+                    <td className="num col-emp-no">{employee.employeeNo}</td>
+                    <td className="col-emp-name">
                       <a href={`#/mgmt/employees/${employee.id}`}>{employee.name}</a>
                       {employee.archived ? <Badge> مؤرشف</Badge> : null}
                     </td>
-                    <td className="mono">{employee.code}</td>
+                    <td className="mono col-emp-code">{employee.code}</td>
                     <td>{employee.sector}</td>
                     <td>{employee.governorate}</td>
                     <td>{employee.jobTitle}</td>
                     <td className="nowrap">{fmtDate(employee.employmentDate)}</td>
-                    <td>{employee.branches || '—'}</td>
-                    <td>
+                    <td className="col-emp-branches"><span>{employee.branches || '—'}</span></td>
+                    <td className="col-emp-status">
                       <Badge tone={employee.status === 'active' ? 'success' : 'neutral'}>{EMPLOYEE_STATUS_LABELS[employee.status]}</Badge>
                     </td>
-                    <td>
+                    <td className="col-emp-actions">
                       <div className="table__actions">
                         <IconButton icon="user" label="عرض الملف" onClick={() => navigate(`/employees/${employee.id}`)} />
                         <IconButton icon="edit" label="تعديل" onClick={() => openEdit(employee)} />
