@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { App as ManagementApp } from './apps/management/App';
 import { AppProvider } from './apps/management/state/store';
 import { App as EvaluationApp } from './apps/evaluation/ui/App';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 /**
  * Unified portal — merges the two original projects without changing either:
@@ -48,23 +49,23 @@ export default function App() {
 
   if (view === 'mgmt') {
     return (
-      <>
+      <ErrorBoundary name="management">
         <AppProvider>
           <ManagementApp />
         </AppProvider>
         <SiteSwitchButton view="mgmt" />
-      </>
+      </ErrorBoundary>
     );
   }
   if (view === 'eval') {
     return (
-      <>
+      <ErrorBoundary name="evaluation">
         <EvaluationApp />
         <SiteSwitchButton view="eval" />
-      </>
+      </ErrorBoundary>
     );
   }
-  return <Portal />;
+  return <ErrorBoundary name="portal"><Portal /></ErrorBoundary>;
 }
 
 /**
