@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useApp } from '../state/store';
+import {useApp, useAppMeta} from '../state/store';
 import { useRoute } from '../state/router';
 import { Icon, type IconName } from './Icon';
 import { CollapseProvider, type CollapseSignal } from './ui';
@@ -45,7 +45,7 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { settings, ready } = useApp();
+  const { settings, ready } = useAppMeta();
   const route = useRoute();
   const [collapse, setCollapse] = useState<CollapseSignal>({ version: 0, collapsed: false });
   const [sidebarOpen, setSidebarOpen] = useState(false);

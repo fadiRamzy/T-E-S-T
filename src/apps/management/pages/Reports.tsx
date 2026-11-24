@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useApp } from '../state/store';
+import { useAppActions } from '../state/store';
 import { Button, Callout, Modal, PageHeader } from '../components/ui';
 import {
   backupFileName,
@@ -13,7 +13,7 @@ import { downloadFile, readTextFile, safeJsonParse } from '../lib/utils';
 import { fmtDateTime } from '../lib/format';
 
 export function ReportsPage() {
-  const { refresh, notify } = useApp();
+  const { refresh, notify } = useAppActions();
   const [pending, setPending] = useState<{ payload: BackupPayload; validation: ValidationResult; name: string } | null>(null);
   const [restoring, setRestoring] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);

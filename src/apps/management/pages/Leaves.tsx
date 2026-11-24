@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData, useAppMeta} from '../state/store';
 import {
   Button,
   ListCard,
@@ -45,11 +45,14 @@ const emptyDraft = (employeeId = ''): Draft => ({
 });
 
 export function LeavesPage({ embedded = false }: { embedded?: boolean }) {
-  const { data, settings, runAction } = useApp();
+  const data = useAppData();
+const { settings } = useAppMeta();
+const { runAction } = useAppActions();
   const [employee, setEmployee] = useState('all');
   const [type, setType] = useState('all');
   const [year, setYear] = useState(String(new Date().getFullYear()));
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [confirmDelete, setConfirmDelete] = useState<Leave | null>(null);
@@ -57,7 +60,7 @@ export function LeavesPage({ embedded = false }: { embedded?: boolean }) {
   const nameOf = (id: string) => data.employees.find((row) => row.id === id)?.name ?? '—';
 
   const rows = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return data.leaves
       .filter((row) => (employee === 'all' ? true : row.employeeId === employee))
       .filter((row) => (type === 'all' ? true : row.type === type))
@@ -65,7 +68,7 @@ export function LeavesPage({ embedded = false }: { embedded?: boolean }) {
       .filter((row) => (!text ? true : `${row.type} ${row.notes} ${nameOf(row.employeeId)}`.toLowerCase().includes(text)))
       .sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.leaves, data.employees, employee, type, year, query]);
+  }, [data.leaves, data.employees, employee, type, year, deferredQuery]);
 
   const totals = leaveTotals(rows);
   const perEmployee = useMemo(

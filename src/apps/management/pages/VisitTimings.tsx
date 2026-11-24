@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData} from '../state/store';
 import {
   Badge,
   Button,
@@ -62,9 +62,11 @@ function durationCell(visit: VisitTiming) {
 }
 
 export function VisitTimingsPage() {
-  const { data, runAction } = useApp();
+  const data = useAppData();
+const { runAction } = useAppActions();
   const now = new Date();
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [listEmployee, setListEmployee] = useState('all');
   const [listBranch, setListBranch] = useState('all');
   const [listMonth, setListMonth] = useState('all');
@@ -94,7 +96,7 @@ export function VisitTimingsPage() {
 
   /** الزيارات المطابقة لكل الفلاتر مجتمعة (الموظف + الشهر + الفرع + السنة + البحث) */
   const rows = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return data.visitTimings
       .filter((row) => (listEmployee === 'all' ? true : row.employeeId === listEmployee))
       .filter((row) => (listBranch === 'all' ? true : row.branch === listBranch))
@@ -104,7 +106,7 @@ export function VisitTimingsPage() {
         !text ? true : `${nameOf(row.employeeId)} ${row.branch} ${row.clientName} ${row.location}`.toLowerCase().includes(text),
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.visitTimings, data.employees, query, listEmployee, listBranch, listMonth, listYear]);
+  }, [data.visitTimings, data.employees, deferredQuery, listEmployee, listBranch, listMonth, listYear]);
 
   /** عدد الزيارات لكل موظف داخل النتائج المفلترة */
   const perEmployee = useMemo(() => {

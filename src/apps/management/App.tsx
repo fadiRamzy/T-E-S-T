@@ -1,4 +1,4 @@
-import { useApp } from './state/store';
+import { useAppMeta, useAppToasts } from './state/store';
 import { useRoute } from './state/router';
 import { Layout } from './components/Layout';
 import { Icon } from './components/Icon';
@@ -12,7 +12,8 @@ import { NotesPage } from './pages/Notes';
 import { AttendanceDelaysPage } from './pages/AttendanceDelays';
 
 export function App() {
-  const { fatalError, toasts, dismissToast } = useApp();
+  const { fatalError } = useAppMeta();
+  const { toasts, dismissToast } = useAppToasts();
   const route = useRoute();
 
   if (fatalError) {
