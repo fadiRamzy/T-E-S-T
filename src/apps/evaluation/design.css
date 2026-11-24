@@ -4,9 +4,9 @@
    ========================================================================== */
 
 .scope-eval {
-  --font: "Calibri", "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-  --font-formal: "Times New Roman", "IBM Plex Sans Arabic", Times, serif;
-  --font-numeric: "Calibri", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --font: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-formal: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-numeric: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --serif: var(--font-formal);
   --bg: #f5f5f7;
   --card: rgba(255,255,255,0.72);
@@ -75,7 +75,6 @@
   background: rgba(255,255,255,0.72);
   border-inline-end: 1px solid rgba(255,255,255,0.7);
   box-shadow: inset -1px 0 0 rgba(0,0,0,0.04);
- -webkit-
   overflow: hidden; border-radius: 0;
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -167,7 +166,7 @@
 
 /* ── KPIs ───────────────────────────────────────────────────────────────── */
 .scope-eval .kpis, .scope-eval.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.scope-eval .kpi, .scope-eval.kpi { position: relative; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.75); border-radius: 18px; background: rgba(255,255,255,0.88); box-shadow: var(--shadow); -webkit- overflow: hidden; transition: box-shadow .3s var(--ease), transform .3s var(--ease); }
+.scope-eval .kpi, .scope-eval.kpi { position: relative; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.75); border-radius: 18px; background: rgba(255,255,255,0.88); box-shadow: var(--shadow); overflow: hidden; transition: box-shadow .3s var(--ease), transform .3s var(--ease); }
 .scope-eval .kpi:hover, .scope-eval.kpi:hover { box-shadow: var(--shadow-lift); transform: translateY(-2px); }
 .scope-eval .kpi::before, .scope-eval.kpi::before { content: ""; position: absolute; inset-inline-start: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 3px; background: #0071e3; opacity: 0.55; }
 .scope-eval .kpi small, .scope-eval.kpi small { display: block; padding-inline-end: 52px; color: var(--muted); font-size: 13px; font-weight: 550; }
@@ -241,11 +240,11 @@
 .scope-eval .cardwrap { overflow: auto; }
 
 /* ── Modals / drawer / toasts ───────────────────────────────────────────── */
-.scope-eval .overlay, .scope-eval.overlay { position: fixed; inset: 0; background: rgba(29,29,31,0.32); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 24px 16px; overflow: auto; }
+.scope-eval .overlay, .scope-eval.overlay { position: fixed; inset: 0; background: rgba(29,29,31,0.32); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; overflow-x: hidden; }
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .scope-eval .overlay, .scope-eval.overlay { background: rgba(29,29,31,0.45); }
 }
-.scope-eval .modal, .scope-eval.modal { background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-modal, 24px); width: 100%; max-width: 640px; max-height: 90vh; overflow: auto; padding: 24px; box-shadow: 0 24px 80px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.06); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.scope-eval .modal, .scope-eval.modal { background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-modal, 24px); width: 100%; max-width: 640px; max-height: calc(100dvh - 48px); overflow: auto; padding: 24px; margin: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.06); backdrop-filter: none; -webkit-backdrop-filter: none; position: relative; }
 .scope-eval .modal.wide, .scope-eval.modal.wide { max-width: 800px; }
 .scope-eval .modal > h2, .scope-eval.modal > h2 { margin: 0 0 20px; font-size: 20px; font-weight: 700; line-height: 28px; letter-spacing: 0; color: var(--text); padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
 .scope-eval .drawer, .scope-eval.drawer { position: fixed; inset-block: 0; inset-inline-end: 0; width: min(440px, 100vw); background: rgba(255,255,255,0.9); z-index: 51; padding: 24px; overflow: auto; box-shadow: -20px 0 60px rgba(0,0,0,0.15); backdrop-filter: blur(24px) saturate(130%); -webkit-backdrop-filter: blur(24px) saturate(130%); border-inline-start: 1px solid rgba(255,255,255,0.7); border-start-start-radius: 24px; border-end-start-radius: 24px; }
@@ -281,7 +280,7 @@
 
 /* ── Files / big buttons ────────────────────────────────────────────────── */
 .scope-eval .filesbox, .scope-eval.filesbox { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 780px; margin: 10vh auto 0; }
-.scope-eval .bigbtn, .scope-eval.bigbtn { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 180px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.75); background: rgba(255,255,255,0.88); color: var(--text); font-family: var(--font); font-size: 18px; font-weight: 650; cursor: pointer; box-shadow: var(--shadow); -webkit- overflow: hidden; transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.scope-eval .bigbtn, .scope-eval.bigbtn { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 180px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.75); background: rgba(255,255,255,0.88); color: var(--text); font-family: var(--font); font-size: 18px; font-weight: 650; cursor: pointer; box-shadow: var(--shadow); overflow: hidden; transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
 .scope-eval .bigbtn::after, .scope-eval.bigbtn::after { content: none; }
 .scope-eval .bigbtn svg.ic, .scope-eval.bigbtn svg.ic { width: 36px; height: 36px; stroke-width: 1.5; color: #0071e3; }
 .scope-eval .bigbtn:hover:not(:disabled), .scope-eval.bigbtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
@@ -342,7 +341,7 @@
   .scope-eval .sidebar, .scope-eval.sidebar { position: sticky; top: 0; z-index: 35; width: 100%; height: auto; min-height: 60px; flex-direction: row; align-items: center; gap: 10px; padding: 10px 16px; border-inline-end: 0; border-bottom: 1px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.72); }
   .scope-eval .brand, .scope-eval.brand { flex: 1; min-width: 0; min-height: 0; padding: 0; margin: 0; border: 0; }
   .scope-eval .brand b, .scope-eval.brand b { max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
-  .scope-eval .navbar, .scope-eval.navbar { position: fixed; inset: auto 10px calc(10px + env(safe-area-inset-bottom)) 10px; z-index: 40; flex-direction: row; justify-content: flex-start; gap: 2px; width: auto; max-height: 86px; padding: 6px; border: 1px solid rgba(255,255,255,0.75); border-radius: 22px; background: rgba(255,255,255,0.88); -webkit- box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .scope-eval .navbar, .scope-eval.navbar { position: fixed; inset: auto 10px calc(10px + env(safe-area-inset-bottom)) 10px; z-index: 40; flex-direction: row; justify-content: flex-start; gap: 2px; width: auto; max-height: 86px; padding: 6px; border: 1px solid rgba(255,255,255,0.75); border-radius: 22px; background: rgba(255,255,255,0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
   .scope-eval .nav, .scope-eval.nav { flex: 1 0 56px; flex-direction: column; justify-content: center; gap: 3px; min-width: 56px; min-height: 60px; padding: 6px 3px; border-radius: 14px; color: #6e6e73; font-size: 10.5px; font-weight: 550; text-align: center; }
   .scope-eval .nav:hover:not(:disabled):not(.active), .scope-eval.nav:hover:not(:disabled):not(.active) { background: rgba(0,0,0,0.04); color: var(--text); transform: none; }
   .scope-eval .nav.active, .scope-eval.nav.active { background: rgba(0,113,227,0.12); color: #0071e3; box-shadow: none; }
@@ -504,3 +503,132 @@
   border-color: rgba(0,113,227,0.45);
   box-shadow: 0 0 0 4px rgba(0,113,227,0.14);
 }
+
+/* Native select: visible chevron, consistent RTL */
+.scope-eval select, .scope-eval .select, .scope-eval.select,
+.scope-eval select, .scope-eval .select {
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px 16px;
+  padding-inline-end: 36px;
+  padding-inline-start: 14px;
+}
+.scope-eval select:focus, .scope-eval .select:focus, .scope-eval.select:focus,
+.scope-eval select:focus, .scope-eval .select:focus {
+  border-color: rgba(0,113,227,0.45) !important;
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.16) !important;
+  outline: none;
+}
+
+/* ============================================================
+   UNIFIED QUALITY PASS — shared tokens/components (eval)
+   ============================================================ */
+.scope-eval, .scope-eval * { letter-spacing: 0 !important; }
+.scope-eval {
+  --font: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-formal: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-numeric: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --text: #1d1d1f; --text-secondary: #6e6e73; --text-tertiary: #86868b;
+  --blue: #0071e3; --blue-hover: #0077ed; --focus-ring: rgba(0,113,227,0.16);
+  --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.12);
+  --surface: #ffffff; --bg: #f5f5f7;
+  --radius-control: 12px; --radius-card: 16px; --radius-modal: 24px;
+  --control-h: 40px; --control-h-compact: 32px;
+}
+.scope-eval { font-family: var(--font); color: var(--text); background: var(--bg); }
+.scope-eval .page, .scope-eval.page { width: min(100%, 1600px); margin-inline: auto; padding-inline: 32px; padding-bottom: 24px; }
+.scope-eval .page__title, .scope-eval h1.page__title { font-size: 28px; line-height: 36px; font-weight: 700; color: var(--text); margin: 0; }
+.scope-eval .page__subtitle, .scope-eval .page__desc { font-size: 14px; line-height: 22px; font-weight: 400; color: var(--text-secondary); margin: 6px 0 0; }
+.scope-eval .page__eyebrow { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--text-secondary); }
+.scope-eval .pagehead { gap: 16px; margin-bottom: 24px; }
+.scope-eval .card, .scope-eval.card { border-radius: var(--radius-card); border: 1px solid var(--border); background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); }
+.scope-eval .card__head, .scope-eval.card__head { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.scope-eval .card__title, .scope-eval.card__title { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--text); }
+.scope-eval .card__desc, .scope-eval.card__desc { font-size: 13px; line-height: 20px; color: var(--text-secondary); margin-top: 2px; }
+.scope-eval .card__body, .scope-eval.card__body { padding: 24px; }
+.scope-eval .section-gap, .scope-eval .page > * + * { margin-top: 0; }
+.scope-eval .page { display: flex; flex-direction: column; gap: 20px; }
+
+/* Controls */
+.scope-eval .input, .scope-eval.input, .scope-eval .select, .scope-eval.select, .scope-eval input[type="text"], .scope-eval input[type="search"], .scope-eval input[type="date"], .scope-eval input[type="time"], .scope-eval input[type="number"], .scope-eval input[type="email"], .scope-eval input[type="password"], .scope-eval select, .scope-eval .timefield__input {
+  height: var(--control-h); min-height: var(--control-h); padding: 0 14px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-control);
+  background: rgba(255,255,255,0.96); color: var(--text);
+  font-family: var(--font); font-size: 14px; line-height: 22px;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.scope-eval textarea, .scope-eval .textarea, .scope-eval.textarea { min-height: 96px; max-height: 240px; padding: 10px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-control); background: rgba(255,255,255,0.96); font-family: var(--font); font-size: 14px; line-height: 22px; }
+.scope-eval .input:focus, .scope-eval.input:focus, .scope-eval .select:focus, .scope-eval.select:focus, .scope-eval input:focus, .scope-eval select:focus, .scope-eval textarea:focus, .scope-eval .textarea:focus, .scope-eval .timefield__input:focus {
+  outline: none; border-color: rgba(0,113,227,0.45) !important; box-shadow: 0 0 0 4px var(--focus-ring) !important; background: #fff;
+}
+.scope-eval .field label, .scope-eval label.field__label, .scope-eval .field > label { display: block; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.scope-eval .formgrid, .scope-eval.formgrid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px; }
+.scope-eval .formgrid .span2, .scope-eval.formgrid .span2, .scope-eval .field--full { grid-column: 1 / -1; }
+@media (max-width: 720px) { .scope-eval .formgrid, .scope-eval.formgrid { grid-template-columns: 1fr; } .scope-eval .formgrid .span2, .scope-eval.formgrid .span2 { grid-column: auto; } }
+.scope-eval .field__hint, .scope-eval .help, .scope-eval .small, .scope-eval small { font-size: 13px; line-height: 20px; color: var(--text-secondary); }
+
+/* Buttons */
+.scope-eval .btn, .scope-eval.btn { height: 40px; min-height: 40px; padding: 0 20px; border-radius: 12px; font-family: var(--font); font-size: 14px; line-height: 20px; font-weight: 600; border: 1px solid transparent; gap: 8px; }
+.scope-eval .btn--primary, .scope-eval.btn--primary { background: var(--blue); color: #fff; border-color: var(--blue); min-width: 96px; }
+.scope-eval .btn--primary:hover:not(:disabled), .scope-eval.btn--primary:hover:not(:disabled) { background: var(--blue-hover); }
+.scope-eval .btn--ghost, .scope-eval.btn--ghost, .scope-eval .btn--secondary, .scope-eval.btn--secondary { background: #fff; color: var(--text); border-color: var(--border-strong); min-width: 96px; }
+.scope-eval .btn--danger, .scope-eval.btn--danger { background: #fff; color: #d70015; border-color: rgba(215,0,21,0.2); }
+.scope-eval .btn--danger.btn--solid, .scope-eval .btn--danger-solid { background: #d70015; color: #fff; border-color: #d70015; }
+.scope-eval .btn:focus-visible, .scope-eval.btn:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--focus-ring); }
+.scope-eval .iconbtn, .scope-eval.iconbtn { width: 36px; height: 36px; min-width: 36px; padding: 0; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; }
+.scope-eval .iconbtn svg, .scope-eval.iconbtn svg, .scope-eval .btn svg, .scope-eval.btn svg { width: 18px; height: 18px; }
+
+/* Modal shell */
+.scope-eval .overlay, .scope-eval.overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; background: rgba(29,29,31,0.32); }
+.scope-eval .modal, .scope-eval.modal { margin: auto; width: min(100%, 640px); max-height: calc(100dvh - 48px); display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-modal); border: 1px solid var(--border); background: #fff; box-shadow: 0 24px 80px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.06); }
+.scope-eval .modal--sm, .scope-eval.modal--sm { width: min(100%, 480px); }
+.scope-eval .modal--lg, .scope-eval.modal--lg { width: min(100%, 920px); }
+.scope-eval .modal__head, .scope-eval.modal__head { padding: 20px 24px; min-height: 72px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--border); background: #fff; }
+.scope-eval .modal__head h2, .scope-eval.modal__head h2 { font-size: 20px; line-height: 28px; font-weight: 700; color: var(--text); margin: 0; }
+.scope-eval .modal__head p, .scope-eval.modal__head p, .scope-eval .modal__subtitle { font-size: 13px; line-height: 20px; color: var(--text-secondary); margin: 4px 0 0; }
+.scope-eval .modal__body, .scope-eval.modal__body { padding: 24px; overflow-y: auto; flex: 1 1 auto; background: #fff; }
+.scope-eval .modal__foot, .scope-eval.modal__foot { padding: 16px 24px; min-height: 72px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--border); background: #fff; }
+
+/* Tables */
+.scope-eval .tablewrap, .scope-eval.tablewrap { overflow: auto; border: 1px solid var(--border); border-radius: 16px; background: #fff; }
+.scope-eval .table, .scope-eval.table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.scope-eval .table thead th, .scope-eval.table thead th { background: #f1f5f9; color: #475569; font-size: 13px; line-height: 18px; font-weight: 700; height: 44px; padding: 0 16px; text-align: start; border-bottom: 1px solid rgba(0,0,0,0.08); white-space: nowrap; }
+.scope-eval .table tbody td, .scope-eval.table tbody td { height: 52px; padding: 10px 16px; font-size: 14px; line-height: 20px; color: var(--text); border-bottom: 1px solid rgba(0,0,0,0.06); background: transparent; vertical-align: middle; }
+.scope-eval .table tbody tr:last-child td, .scope-eval.table tbody tr:last-child td { border-bottom: 0; }
+.scope-eval .table tbody tr:hover td, .scope-eval.table tbody tr:hover td { background: rgba(0,113,227,0.035); }
+.scope-eval .table tbody tr:nth-child(even), .scope-eval .table tbody tr:nth-child(even) td { background: transparent; }
+.scope-eval .table .num, .scope-eval.table .num { text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Sidebar */
+.scope-eval .sidebar__item, .scope-eval.sidebar__item { min-height: 40px; padding: 0 12px; border-radius: 10px; font-size: 14px; line-height: 20px; }
+.scope-eval .sidebar__item.is-active, .scope-eval.sidebar__item.is-active { font-weight: 600; }
+.scope-eval .sidebar__section-label, .scope-eval.sidebar__section-label { font-size: 12px; line-height: 18px; font-weight: 600; color: rgba(255,255,255,0.72); }
+.scope-eval .sidebar__footer, .scope-eval.sidebar__footer { padding-bottom: 24px; }
+
+/* Floating nav pill below overlays */
+/* site-switch z-index handled globally */
+
+/* Misc */
+.scope-eval .badge, .scope-eval.badge { border-radius: 999px; font-size: 12px; line-height: 18px; font-weight: 600; padding: 2px 10px; }
+.scope-eval .stat__value, .scope-eval.stat__value { font-size: 32px; line-height: 38px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.scope-eval .stat__label, .scope-eval.stat__label { font-size: 13px; line-height: 20px; color: var(--text-secondary); }
+.scope-eval .search, .scope-eval.search { height: 40px; min-height: 40px; border: 1px solid var(--border-strong); border-radius: var(--radius-control); background: #fff; }
+.scope-eval .search input, .scope-eval.search input { font-size: 14px; }
+.scope-eval .table__actions, .scope-eval.table__actions { display: inline-flex; align-items: center; gap: 8px; }
+.scope-eval .listcard__controls, .scope-eval.listcard__controls { margin-bottom: 20px; gap: 12px; }
+.scope-eval .listcard__controls .select, .scope-eval .listcard__controls .input, .scope-eval .listcard__controls .search { height: 40px; min-height: 40px; }
+@media (max-width: 900px) { .scope-eval .page, .scope-eval.page { padding-inline: 16px; } .scope-eval .modal__head, .scope-eval.modal__head, .scope-eval .modal__body, .scope-eval.modal__body, .scope-eval .modal__foot, .scope-eval.modal__foot { padding-inline: 16px; } }
+
+
+/* Eval layout aliases */
+.scope-eval .container, .scope-eval.container { width: min(100%, 1600px); margin-inline: auto; padding-inline: 32px; padding-bottom: 24px; }
+.scope-eval .pagehead h1, .scope-eval .page-title { font-size: 28px; line-height: 36px; font-weight: 700; color: #1d1d1f; }
+.scope-eval .pagehead p, .scope-eval .page-subtitle { font-size: 14px; line-height: 22px; color: #6e6e73; }
+@media (max-width: 900px) { .scope-eval .container, .scope-eval.container { padding-inline: 16px; } }
+
+.scope-eval .overlay, .scope-eval.overlay { z-index: 1000 !important; }
+.scope-eval .modal, .scope-eval.modal { z-index: 1001; }
+.scope-eval .checkbox input[type="checkbox"] { width: 18px; height: 18px; margin: 0; }
+.scope-eval .checkbox, .scope-eval.checkbox { gap: 10px; align-items: center; font-size: 14px; line-height: 20px; }

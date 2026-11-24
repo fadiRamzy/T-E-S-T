@@ -16,6 +16,7 @@ import {
   Textarea,
   Toolbar,
 } from '../components/ui';
+import { EmployeePicker } from '../components/EmployeePicker';
 import { ValidationError, deleteLeave, saveLeave } from '../db/repo';
 import { type Leave, type LeaveUnit } from '../db/schema';
 import { leaveTotals } from '../lib/calc';
@@ -287,16 +288,15 @@ const { runAction } = useAppActions();
       >
         {draft ? (
           <div className="formgrid">
-            <Field label="الموظف" required error={errors.employeeId} htmlFor="lev-employee">
-              <Select id="lev-employee" value={draft.employeeId} onChange={(e) => set('employeeId', e.target.value)}>
-                <option value="">— اختر —</option>
-                {data.employees.map((row) => (
-                  <option key={row.id} value={row.id}>
-                    {row.employeeNo} — {row.name}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+            <EmployeePicker
+              id="lev-employee"
+              label="الموظف"
+              required
+              error={errors.employeeId}
+              value={draft.employeeId}
+              onChange={(value) => set('employeeId', value)}
+              options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((row) => ({ id: row.id, name: row.name, meta: `رقم ${row.employeeNo}` }))}
+            />
             <Field label="النوع" required error={errors.type} htmlFor="lev-type">
               <Input id="lev-type" list="leave-types" value={draft.type} onChange={(e) => set('type', e.target.value)} />
               <datalist id="leave-types">
