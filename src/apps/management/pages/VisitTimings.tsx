@@ -361,7 +361,7 @@ const { runAction } = useAppActions();
               value={draft.employeeId}
               error={errors.employeeId}
               onChange={(value) => set('employeeId', value)}
-              options={activeEmployees.map((row) => ({ id: row.id, name: row.name, meta: `رقم ${row.employeeNo}` }))}
+              options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((row) => ({ id: row.id, name: row.name, meta: `رقم ${row.employeeNo}` }))}
             />
             <Field label="التاريخ" error={errors.visitDate} htmlFor="vt-date">
               <Input id="vt-date" type="date" value={draft.visitDate} onChange={(e) => set('visitDate', e.target.value)} />

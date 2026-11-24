@@ -42,7 +42,20 @@ export function EmployeePicker({
   required,
   className,
 }: EmployeePickerProps) {
-  const options = Array.isArray(optionsProp) ? optionsProp : [];
+  const options = useMemo(() => {
+    const raw = Array.isArray(optionsProp) ? optionsProp : [];
+    return raw
+      .filter((option): option is PickerOption => Boolean(option && typeof option === 'object' && option.id != null))
+      .map((option) => {
+        const name = typeof option.name === 'string' ? option.name.trim() : String(option.name ?? '').trim();
+        const meta = typeof option.meta === 'string' ? option.meta.trim() : option.meta == null ? '' : String(option.meta).trim();
+        return {
+          id: String(option.id),
+          name: name || meta || 'موظف',
+          meta: meta || undefined,
+        } as PickerOption;
+      });
+  }, [optionsProp]);
   const autoId = useId();
   const controlId = id ?? `picker-${autoId}`;
   const listId = `${controlId}-list`;
@@ -126,6 +139,7 @@ export function EmployeePicker({
     }
     if (event.key === 'Escape') {
       event.preventDefault();
+      event.stopPropagation();
       close();
       buttonRef.current?.focus();
       return;
@@ -186,6 +200,7 @@ export function EmployeePicker({
         ? createPortal(
             <div
               ref={popRef}
+              dir="rtl"
               className={cn('picker__pop scope-mgmt', placement === 'top' && 'picker__pop--top')}
               style={{
                 top: rect.top,
@@ -193,6 +208,11 @@ export function EmployeePicker({
                 left: rect.left,
                 width: rect.width,
                 zIndex: 10020,
+                background: '#ffffff',
+                color: '#1d1d1f',
+                fontFamily: '"IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif',
+                fontSize: 14,
+                lineHeight: '22px',
               }}
               onKeyDown={onKeyDown}
             >
@@ -205,7 +225,7 @@ export function EmployeePicker({
                   placeholder="ابحث بالاسم أو الرقم…"
                   aria-label="بحث في الموظفين"
                   onChange={(event) => {
-                    setQuery(event.target.value);
+                    setQuery(event.target.value ?? '');
                     setActiveIndex(0);
                   }}
                 />
@@ -213,25 +233,41 @@ export function EmployeePicker({
 
               <ul className="picker__list" id={listId} role="listbox" aria-label={label}>
                 {filtered.length ? (
-                  filtered.map((option, index) => (
-                    <li
-                      key={option.id}
-                      role="option"
-                      aria-selected={option.id === value}
-                      className={cn(
-                        'picker__option',
-                        index === activeIndex && 'is-active',
-                        option.id === value && 'is-selected',
-                      )}
-                      onMouseEnter={() => setActiveIndex(index)}
-                      onClick={() => choose(option)}
-                    >
-                      <span className="picker__name">{option.name}</span>
-                      {option.id === value ? <Icon name="check" size={14} /> : null}
-                    </li>
-                  ))
+                  filtered.map((option, index) => {
+                    const isSelected = option.id === value;
+                    const isActive = index === activeIndex;
+                    return (
+                      <li
+                        key={option.id}
+                        role="option"
+                        aria-selected={isSelected}
+                        className={cn(
+                          'picker__option',
+                          isActive && 'is-active',
+                          isSelected && 'is-selected',
+                        )}
+                        style={{
+                          color: '#1d1d1f',
+                          background: isSelected ? 'rgba(0,113,227,0.10)' : isActive ? 'rgba(0,113,227,0.06)' : '#ffffff',
+                          minHeight: 40,
+                          padding: '8px 12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          cursor: 'pointer',
+                          borderRadius: 8,
+                        }}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onClick={() => choose(option)}
+                      >
+                        <span className="picker__name" style={{ flex: '1 1 auto', whiteSpace: 'normal', overflowWrap: 'anywhere', wordBreak: 'break-word', color: '#1d1d1f' }}>{option.name}</span>
+                        {option.meta ? <span className="picker__meta" style={{ flex: '0 0 auto', fontSize: 12, color: '#6e6e73' }}>{option.meta}</span> : null}
+                        {isSelected ? <Icon name="check" size={14} /> : null}
+                      </li>
+                    );
+                  })
                 ) : (
-                  <li className="picker__empty">{options.length === 0 ? "لا يوجد موظفون متاحون للاختيار" : "لا يوجد موظف مطابق لهذا البحث."}</li>
+                  <li className="picker__empty" style={{ padding: '12px 10px', textAlign: 'center', fontSize: 13, color: '#6e6e73', background: '#fff' }}>{options.length === 0 ? 'لا يوجد موظفون متاحون للاختيار' : 'لا يوجد موظف مطابق لهذا البحث.'}</li>
                 )}
               </ul>
             </div>,
