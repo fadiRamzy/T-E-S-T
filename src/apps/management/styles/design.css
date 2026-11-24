@@ -869,7 +869,7 @@
 .scope-mgmt .picker__control[aria-expanded='true'] .picker__chevron, .scope-mgmt.picker__control[aria-expanded='true'] .picker__chevron { transform: rotate(180deg); color: #0071e3; }
 .scope-mgmt .picker__pop, .scope-mgmt.picker__pop {
   position: fixed; z-index: 10020; background: #ffffff !important; color: #1d1d1f; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04); padding: 8px 8px 4px; max-height: 280px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04); padding: 8px 8px 4px; max-height: none;
   display: flex; flex-direction: column; gap: 8px; backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 .scope-mgmt .picker__search, .scope-mgmt.picker__search { display: flex; align-items: center; gap: 8px; padding: 0 12px; min-height: 40px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; background: #f5f5f7; color: #6e6e73; }
