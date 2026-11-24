@@ -145,6 +145,11 @@
     radial-gradient(ellipse 50% 40% at 85% 100%, rgba(90, 140, 255, 0.06), transparent 55%),
     linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
 }
+/* Portal popovers carry scope-mgmt for tokens but must not inherit the app-shell backdrop. */
+.scope-mgmt.picker__pop::before,
+.scope-mgmt.timefield__pop::before {
+  content: none !important;
+}
 
 .scope-mgmt h1, .scope-mgmt h2, .scope-mgmt h3, .scope-mgmt h4 { color: var(--text); letter-spacing: -0.015em; }
 .scope-mgmt a { color: var(--navy-2); text-decoration: none; }
