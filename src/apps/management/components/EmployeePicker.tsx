@@ -208,8 +208,6 @@ export function EmployeePicker({
                 left: rect.left,
                 width: rect.width,
                 zIndex: 10020,
-                maxHeight: 280,
-                overflow: 'hidden',
                 background: '#ffffff',
                 color: '#1d1d1f',
                 fontFamily: '"IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif',
