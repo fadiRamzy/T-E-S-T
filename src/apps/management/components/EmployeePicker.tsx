@@ -50,7 +50,7 @@ export function EmployeePicker({
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const [placement, setPlacement] = useState<'bottom' | 'top'>('bottom');
-  const [rect, setRect] = useState<{ top: number; left: number; width: number } | null>(null);
+  const [rect, setRect] = useState<{ top?: number; bottom?: number; left: number; width: number } | null>(null);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
@@ -69,10 +69,14 @@ export function EmployeePicker({
     if (!node) return;
     const box = node.getBoundingClientRect();
     const width = Math.max(box.width, 280);
-    const left = Math.min(Math.max(8, box.right - width), window.innerWidth - width - 8);
+    const left = Math.min(Math.max(8, box.left), window.innerWidth - width - 8);
     const spaceBelow = window.innerHeight - box.bottom;
-    const nextPlacement = spaceBelow < 260 && box.top > spaceBelow ? 'top' : 'bottom';
-    setRect({ top: nextPlacement === 'top' ? box.top - 6 : box.bottom + 6, left, width });
+    const nextPlacement = spaceBelow < 280 && box.top > spaceBelow ? 'top' : 'bottom';
+    setRect(
+      nextPlacement === 'top'
+        ? { bottom: Math.max(8, window.innerHeight - box.top + 6), left, width }
+        : { top: box.bottom + 6, left, width },
+    );
     setPlacement(nextPlacement);
   };
 
@@ -182,7 +186,13 @@ export function EmployeePicker({
             <div
               ref={popRef}
               className={cn('picker__pop scope-mgmt', placement === 'top' && 'picker__pop--top')}
-              style={{ top: rect.top, left: rect.left, width: rect.width }}
+              style={{
+                top: rect.top,
+                bottom: rect.bottom,
+                left: rect.left,
+                width: rect.width,
+                zIndex: 10020,
+              }}
               onKeyDown={onKeyDown}
             >
               <div className="picker__search">
@@ -220,7 +230,7 @@ export function EmployeePicker({
                     </li>
                   ))
                 ) : (
-                  <li className="picker__empty">لا يوجد موظف مطابق لهذا البحث.</li>
+                  <li className="picker__empty">{options.length === 0 ? "لا يوجد موظفون متاحون للاختيار" : "لا يوجد موظف مطابق لهذا البحث."}</li>
                 )}
               </ul>
             </div>,

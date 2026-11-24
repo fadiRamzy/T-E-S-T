@@ -97,7 +97,13 @@ const { runAction } = useAppActions();
 
     <Modal open={Boolean(draft)} onClose={() => setDraft(null)} title={draft?.id ? 'تعديل سجل الحضور والانصراف' : 'إضافة سجل حضور وانصراف'} subtitle="يمكن حفظ السجل حتى عند ترك كل الحقول دون إدخال." footer={<><Button onClick={() => setDraft(null)}>إلغاء</Button><Button variant="primary" icon="save" onClick={submit}>حفظ</Button></>}>
       {draft ? <div className="formgrid">
-        <Field label="الموظف" htmlFor="att-employee"><Select id="att-employee" value={draft.employeeId} onChange={(event) => set('employeeId', event.target.value)}><option value="">— اختر الموظف —</option>{data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.employeeNo} — {employee.name}</option>)}</Select></Field>
+        <EmployeePicker
+          id="att-employee"
+          label="الموظف"
+          value={draft.employeeId}
+          onChange={(value) => set('employeeId', value)}
+          options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((employee) => ({ id: employee.id, name: employee.name, meta: `رقم ${employee.employeeNo}` }))}
+        />
         <Field label="التاريخ" htmlFor="att-date"><div className="date-today-row"><Input id="att-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button size="sm" onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div></Field>
         <Field label="وقت الحضور" htmlFor="att-arrival"><TimeInput id="att-arrival" label="وقت الحضور" value={draft.arrivalTime} onChange={(value) => set('arrivalTime', value)} /></Field>
         <Field label="وقت الانصراف" htmlFor="att-departure"><TimeInput id="att-departure" label="وقت الانصراف" value={draft.departureTime} onChange={(value) => set('departureTime', value)} /></Field>

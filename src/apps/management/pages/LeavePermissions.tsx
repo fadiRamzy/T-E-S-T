@@ -17,6 +17,7 @@ import {
   Textarea,
   Toolbar,
 } from '../components/ui';
+import { EmployeePicker } from '../components/EmployeePicker';
 import { ValidationError, deleteLeavePermission, saveLeavePermission } from '../db/repo';
 import type { LeavePermissionRecord } from '../db/schema';
 import { MONTHS_AR } from '../db/schema';
@@ -224,11 +225,14 @@ const { runAction } = useAppActions();
 
       <Modal open={Boolean(draft)} onClose={() => setDraft(null)} title={draft?.id ? 'تعديل طلب' : 'إضافة إجازة أو إذن'} footer={<><Button onClick={() => setDraft(null)}>إلغاء</Button><Button variant="primary" icon="save" onClick={submit}>حفظ</Button></>}>
         {draft ? <div className="formgrid">
-          <Field label="الموظف" htmlFor="lp-employee" error={errors.employeeId}>
-            <Select id="lp-employee" value={draft.employeeId} onChange={(event) => set('employeeId', event.target.value)}>
-              <option value="">— اختر الموظف —</option>{data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.employeeNo} — {employee.name}</option>)}
-            </Select>
-          </Field>
+          <EmployeePicker
+            id="lp-employee"
+            label="الموظف"
+            error={errors.employeeId}
+            value={draft.employeeId}
+            onChange={(value) => set('employeeId', value)}
+            options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((employee) => ({ id: employee.id, name: employee.name, meta: `رقم ${employee.employeeNo}` }))}
+          />
           <Field label="نوع الطلب" htmlFor="lp-request-type">
             <Select id="lp-request-type" value={draft.requestType} onChange={(event) => updateRequestType(event.target.value as Draft['requestType'])}>
               <option value="leave">إجازة</option><option value="permission">إذن</option>
