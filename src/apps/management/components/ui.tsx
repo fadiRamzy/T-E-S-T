@@ -549,7 +549,11 @@ export function Modal({
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeRef.current();
+      if (event.key === 'Escape') {
+        const target = event.target as HTMLElement | null;
+        if (target?.closest?.('.picker__pop, .timefield__pop, [data-popover-open="true"]')) return;
+        closeRef.current();
+      }
     };
     document.addEventListener('keydown', onKey);
     const previous = document.body.style.overflow;

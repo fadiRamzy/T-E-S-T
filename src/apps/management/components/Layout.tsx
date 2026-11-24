@@ -164,7 +164,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="app-frame">
         <CollapseProvider signal={collapse}>
           <main className="page" id="main-content">
-            {ready ? children : <div className="loading">جارٍ فتح البيانات المحلية…</div>}
+            <ErrorBoundary name="mgmt-page">
+              {ready ? children : <div className="loading">جارٍ فتح البيانات المحلية…</div>}
+            </ErrorBoundary>
           </main>
         </CollapseProvider>
 
