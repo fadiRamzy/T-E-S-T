@@ -1,112 +1,389 @@
 /* ==========================================================================
-   DESIGN SYSTEM v4 — «Atlas Institutional» (unified portal)
-   Global shell + landing page. App visuals live under .scope-mgmt /
-   .scope-eval (design.css layers); this file owns the portal, the global
-   font/background, and the floating site-switch clearance rules.
+   Apple-inspired Liquid Glass — Unified Portal Shell
+   Functional layer: glass. Content: calm, readable, solid/light.
    ========================================================================== */
+
+:root {
+  --apple-font: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+  --apple-bg: #f5f5f7;
+  --apple-bg-deep: #eef0f5;
+  --apple-surface: rgba(255, 255, 255, 0.72);
+  --apple-surface-solid: #ffffff;
+  --apple-surface-elevated: rgba(255, 255, 255, 0.82);
+  --apple-text: #1d1d1f;
+  --apple-text-secondary: #6e6e73;
+  --apple-text-tertiary: #86868b;
+  --apple-blue: #0071e3;
+  --apple-blue-hover: #0077ed;
+  --apple-navy: #1d1d1f;
+  --apple-separator: rgba(0, 0, 0, 0.08);
+  --apple-separator-strong: rgba(0, 0, 0, 0.12);
+  --apple-glass-fill: rgba(255, 255, 255, 0.66);
+  --apple-glass-fill-strong: rgba(255, 255, 255, 0.78);
+  --apple-glass-border: rgba(255, 255, 255, 0.65);
+  --apple-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --apple-glass-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+  --apple-radius: 20px;
+  --apple-radius-sm: 12px;
+  --apple-radius-xs: 10px;
+  --apple-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --apple-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 html {
-  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+  font-family: var(--apple-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 body {
-  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
-  background: #f4f6fa;
-  color: #1e3247;
+  font-family: var(--apple-font);
+  background: var(--apple-bg);
+  color: var(--apple-text);
   -webkit-text-size-adjust: 100%;
 }
+
+/* Ambient background — gives glass something to refract */
 body::before {
   content: "";
   position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(120, 160, 255, 0.18), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 0%, rgba(200, 180, 255, 0.12), transparent 55%),
+    radial-gradient(ellipse 50% 50% at 10% 100%, rgba(160, 210, 255, 0.10), transparent 55%),
+    linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 45%, #f0f1f5 100%);
+}
+
+/* Subtle top hairline */
+body::after {
+  content: "";
+  position: fixed;
   inset: 0 0 auto 0;
-  height: 3px;
+  height: 1px;
   z-index: 9998;
-  background: #0a2540;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+  pointer-events: none;
 }
-.scope-mgmt, .scope-eval { min-height: 100vh; }
 
-/* Clearance for the floating site-switch button so it never overlaps page
-   content (both apps reserve the same 64px strip at the top center). */
+#root { position: relative; z-index: 1; }
+
+.scope-mgmt, .scope-eval { min-height: 100vh; position: relative; }
+
+/* Clearance for the floating site-switch button */
 @media screen {
-  .scope-mgmt .page { padding-top: 64px; }
-  .scope-eval .container { padding-top: 64px; }
+  .scope-mgmt .page { padding-top: 72px; }
+  .scope-eval .container { padding-top: 72px; }
 }
 
-/* ── Landing page — institutional: light canvas, navy wordmark rule,
-      exactly two solid action buttons ── */
+/* ── Landing page / Portal ──────────────────────────────────────────────── */
 .portal {
   min-height: 100vh;
-  background: #f4f6fa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 46px;
-  padding: 48px 24px;
+  gap: 40px;
+  padding: 56px 24px 72px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
+
+/* Ambient orbs behind portal */
+.portal::before,
+.portal::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+.portal::before {
+  width: min(700px, 90vw);
+  height: min(700px, 90vw);
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(0, 113, 227, 0.10) 0%, rgba(120, 160, 255, 0.04) 45%, transparent 70%);
+  filter: blur(2px);
+}
+.portal::after {
+  width: min(500px, 70vw);
+  height: min(500px, 70vw);
+  bottom: -10%;
+  right: 10%;
+  background: radial-gradient(circle, rgba(175, 155, 255, 0.08) 0%, transparent 65%);
+}
+
+.portal-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.portal-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--apple-text-secondary);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.portal-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34c759;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.15);
+}
+
 .portal-title {
   margin: 0;
-  font-size: clamp(28px, 5vw, 44px);
-  font-weight: 800;
-  color: #0a2540;
-  line-height: 1.4;
+  font-size: clamp(34px, 6vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--apple-text);
+  text-wrap: balance;
 }
+
+/* keep the subtle rule from original design via ::after for continuity */
 .portal-title::after {
   content: "";
   display: block;
-  width: 64px;
-  height: 4px;
-  margin: 16px auto 0;
-  border-radius: 4px;
-  background: #a8842c;
-}
-.portal-actions {
-  display: flex;
-  gap: 22px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.portal-btn {
-  display: inline-block;
-  min-width: 240px;
-  padding: 18px 48px;
-  border-radius: 12px;
-  font-size: 19px;
-  font-weight: 700;
-  color: #fff;
-  text-decoration: none;
-  transition: transform .2s cubic-bezier(.2, .7, .2, 1), box-shadow .25s cubic-bezier(.2, .7, .2, 1), background-color .2s;
-}
-.portal-btn:hover { transform: translateY(-3px); }
-.portal-btn:active { transform: translateY(-1px); }
-.portal-btn:focus-visible, .site-switch:focus-visible { outline: 3px solid #1b4a73; outline-offset: 3px; }
-.portal-btn--mgmt { background: #0a2540; box-shadow: 0 14px 30px -14px rgba(8, 31, 56, .5); }
-.portal-btn--mgmt:hover { background: #10365c; }
-.portal-btn--eval { background: #fff; color: #0a2540; border: 1px solid #cbd6e4; box-shadow: 0 1px 2px rgba(16, 42, 67, .06); }
-.portal-btn--eval:hover { background: #edf1f7; border-color: #b9c7d6; box-shadow: 0 10px 24px -12px rgba(16, 42, 67, .25); }
-@media (max-width: 560px) {
-  .portal-actions { flex-direction: column; width: 100%; max-width: 340px; }
-  .portal-btn { width: 100%; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .portal-title { animation: portal-rise .5s cubic-bezier(.2, .7, .2, 1) both; }
-  .portal-actions { animation: portal-rise .5s .12s cubic-bezier(.2, .7, .2, 1) both; }
-  @keyframes portal-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  width: 48px;
+  height: 3px;
+  margin: 20px auto 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(0,113,227,0.9), rgba(100,160,255,0.7));
 }
 
-/* ── Dynamic website-switching button — floating, precisely centered
-      horizontally at the top of both websites ── */
-.site-switch {
-  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-  z-index: 9999;
-  display: inline-flex; align-items: center; gap: 8px;
-  background: #0a2540; color: #fff; text-decoration: none;
-  font-size: 13.5px; font-weight: 700; padding: 10px 18px; border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, .25);
-  box-shadow: 0 12px 26px -12px rgba(8, 31, 56, .55);
-  transition: background-color .2s, transform .2s cubic-bezier(.2, .7, .2, 1);
+.portal-subtitle {
+  margin: 0;
+  max-width: 520px;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--apple-text-secondary);
+  font-weight: 400;
 }
-.site-switch:hover { background: #10365c; transform: translateX(-50%) translateY(-2px); }
-.site-switch svg { width: 17px; height: 17px; stroke: #e8c87a; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-@media print { .site-switch { display: none; } body::before { display: none; } }
+
+.portal-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 720px;
+}
+
+.portal-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 6px;
+  flex: 1 1 280px;
+  min-width: 260px;
+  min-height: 168px;
+  padding: 28px 30px;
+  border-radius: 28px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--apple-text);
+  text-decoration: none;
+  text-align: start;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 12px 40px -12px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  transition: transform 0.35s var(--apple-spring), box-shadow 0.35s var(--apple-ease), border-color 0.3s var(--apple-ease);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .portal-btn { background: rgba(255,255,255,0.92); }
+  .portal-eyebrow { background: rgba(255,255,255,0.92); }
+  .site-switch { background: rgba(255,255,255,0.95); }
+}
+
+/* Rim highlight */
+.portal-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.portal-btn:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 24px 56px -16px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+.portal-btn:active { transform: translateY(-1px) scale(0.995); transition-duration: 0.12s; }
+.portal-btn:focus-visible, .site-switch:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.28), 0 12px 40px -12px rgba(0, 0, 0, 0.12);
+}
+
+.portal-btn__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  margin-bottom: auto;
+  font-size: 24px;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 12px -2px rgba(0,0,0,0.2);
+}
+.portal-btn__icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.portal-btn__label { display: block; font-size: 22px; font-weight: 700; color: var(--apple-text); line-height: 1.25; }
+.portal-btn__desc { display: block; font-size: 14px; font-weight: 500; color: var(--apple-text-secondary); line-height: 1.45; min-height: 1.45em; }
+.portal-btn--mgmt .portal-btn__desc::before { content: "الموظفون، الزيارات، المحاضر، والإجازات"; }
+.portal-btn--eval .portal-btn__desc::before { content: "لوحة المؤشرات، التقييم الشهري، والملفات"; }
+.portal-btn__arrow {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.04);
+  color: var(--apple-text-secondary);
+  transition: transform 0.3s var(--apple-spring), background-color 0.25s var(--apple-ease), color 0.25s var(--apple-ease);
+}
+.portal-btn__arrow svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.portal-btn:hover .portal-btn__arrow { transform: translateX(-3px); background: rgba(0,113,227,0.1); color: var(--apple-blue); }
+
+.portal-btn--mgmt .portal-btn__icon {
+  background: linear-gradient(180deg, #3a3a3c 0%, #1d1d1f 100%);
+}
+.portal-btn--eval .portal-btn__icon {
+  background: linear-gradient(180deg, #4da3ff 0%, #0071e3 100%);
+}
+
+/* Preserve legacy color intent for tests/any direct selector usage */
+.portal-btn--mgmt { color: var(--apple-text); }
+.portal-btn--eval { color: var(--apple-text); }
+
+@media (max-width: 640px) {
+  .portal { gap: 32px; padding: 48px 20px 64px; }
+  .portal-actions { flex-direction: column; max-width: 420px; }
+  .portal-btn { width: 100%; min-height: 148px; padding: 24px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portal-hero { animation: portal-rise 0.7s var(--apple-spring) both; }
+  .portal-actions { animation: portal-rise 0.7s 0.08s var(--apple-spring) both; }
+  @keyframes portal-rise {
+    from { opacity: 0; transform: translateY(16px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+/* ── Dynamic website-switching button ───────────────────────────────────── */
+.site-switch {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px 10px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--apple-font);
+  color: var(--apple-text);
+  text-decoration: none;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 8px 24px -8px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  transition: transform 0.3s var(--apple-spring), box-shadow 0.3s var(--apple-ease), background-color 0.25s var(--apple-ease);
+}
+.site-switch:hover {
+  transform: translateX(-50%) translateY(-1px);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 12px 32px -8px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+.site-switch:active {
+  transform: translateX(-50%) scale(0.98);
+  transition-duration: 0.1s;
+}
+.site-switch svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--apple-blue);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+@media (max-width: 860px) {
+  .site-switch { top: max(10px, env(safe-area-inset-top, 0px)); }
+}
+
+@media print {
+  .site-switch { display: none; }
+  body::before, body::after { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
