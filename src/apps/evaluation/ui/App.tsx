@@ -87,8 +87,8 @@ export function App() {
         )}
       </main>
 
-      <nav className="bottom-nav sidebar" aria-label="التنقل الرئيسي">
-        <div className="bottom-nav__inner navbar">
+      <nav className="bottom-nav" aria-label="التنقل الرئيسي">
+        <div className="bottom-nav__inner">
           {PAGES.map((p) => {
             const off = !model && p.id !== 'files';
             const active = page === p.id;

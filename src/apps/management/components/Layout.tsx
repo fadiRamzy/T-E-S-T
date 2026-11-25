@@ -61,8 +61,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </main>
       </CollapseProvider>
 
-      <nav className="bottom-nav sidebar__nav" aria-label="التنقل الرئيسي">
-        <div className="bottom-nav__inner sidebar__nav">
+      <nav className="bottom-nav" aria-label="التنقل الرئيسي">
+        <div className="bottom-nav__inner">
           {NAV_ITEMS.map((item) => {
             const active =
               item.path.startsWith('/eval')

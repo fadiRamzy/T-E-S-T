@@ -42,7 +42,7 @@ test('unified app: portal, management app, evaluation app, legacy routes', async
   // 2. Management app
   setHash('#/mgmt/employees');
   await waitFor(() => expect(mgmtShell()).toBeTruthy(), { timeout: 10000 });
-  expect(document.querySelector('.sidebar__nav')).toBeTruthy();
+  expect(document.querySelector('.bottom-nav')).toBeTruthy();
   // the data provider finishes loading from IndexedDB and the page replaces the loading line
   await waitFor(
     () => expect(container.textContent).not.toContain('جارٍ فتح البيانات المحلية…'),
@@ -61,7 +61,7 @@ test('unified app: portal, management app, evaluation app, legacy routes', async
   // 3. Evaluation app
   setHash('#/eval/dashboard');
   await waitFor(() => expect(evalShell()).toBeTruthy(), { timeout: 10000 });
-  expect(document.querySelector('.sidebar .navbar')).toBeTruthy();
+  expect(document.querySelector('.bottom-nav')).toBeTruthy();
   // with no imported data the evaluation app stays on its files page
   await waitFor(
     () => expect(window.location.hash).toBe('#/eval/files'),
