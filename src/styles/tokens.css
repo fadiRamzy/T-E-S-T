@@ -1,136 +1,194 @@
 /* ==========================================================================
-   Institutional Government Portal — unified design tokens
-   Inspired by whitehouse.gov principles: formal, premium, readable.
+   Unified design system — warm institutional identity
+   Inspired by Anba-Bishoy-Church visual language: ivory / maroon / gold.
+   Adapted for a professional financial risk-management platform.
    Light default; dark via prefers-color-scheme.
    ========================================================================== */
 :root {
   color-scheme: light dark;
 
-  /* Surfaces */
-  --canvas: #F3F5F7;
+  /* --- palette (warm ivory / deep maroon / muted gold) --- */
+  --canvas: #FAF6EC;
   --surface: #FFFFFF;
-  --surface-sunken: #F7F9FB;
-  --surface-alt: #EDF2F7;
+  --surface-alt: #F3EDDD;
+  --surface-tint: #FBF8F0;
 
-  /* Text */
-  --text: #243447;
-  --text-2: #4A5E73;
-  --text-3: #607B96;
+  --text: #2A211B;
+  --text-2: #6B5E4F;
+  --text-3: #94897B;
 
-  /* Lines / controls */
-  --divider: #D9E2EC;
-  --control-border: #A9BACB;
-  --control-border-strong: #8299AE;
+  --divider: #E6DCC5;
+  --divider-strong: #D9CEA8;
+  --control-border: #C9BDA3;
+  --control-border-strong: #B8A88E;
 
-  /* Brand / institutional */
-  --navy: #102A43;
-  --navy-2: #183B5A;
-  --navy-3: #1D4E89;
-  --accent: #1D4E89;
-  --accent-hover: #184274;
-  --on-accent: #FFFFFF;
-  --accent-soft: #EAF2FA;
-  --gold: #B69A5A;
-  --gold-soft: #F7F3EA;
+  --maroon: #7C1F2C;
+  --maroon-dark: #591420;
+  --maroon-bright: #93283A;
+  --maroon-tint: #F6E9EA;
 
-  /* Semantic */
-  --success: #1E6B45;
-  --success-bg: #EAF4EE;
-  --warning: #8A6508;
-  --warning-bg: #FBF5E6;
-  --danger: #A1262B;
-  --danger-bg: #FCEEEF;
+  --gold: #AD8332;
+  --gold-dark: #8C6926;
+  --gold-light: #E7D6A8;
+  --gold-tint: #FBF3DF;
 
-  /* Typography */
-  --font-family: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
-  --font-serif: Georgia, "Times New Roman", "Noto Naskh Arabic", "IBM Plex Sans Arabic", serif;
-  --font-numeric: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --success: #3F7A4F;
+  --success-bg: #F0F6F1;
+  --danger: #A6362C;
+  --danger-bg: #FBEBEA;
+  --warning: #8C6926;
+  --warning-bg: #FBF3DF;
 
-  /* Spacing / layout */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
+  /* --- typography --- */
+  --font-body: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-display: Georgia, "Times New Roman", "Noto Naskh Arabic",
+    "IBM Plex Sans Arabic", serif;
+  --font-numeric: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", system-ui, sans-serif;
+
+  /* --- radii --- */
+  --radius-xs: 10px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+  --radius-control: 10px;
+  --radius-card: 16px;
+  --radius-dialog: 20px;
+
+  /* --- spacing / layout --- */
+  --space-1: 6px;
+  --space-2: 12px;
+  --space-3: 18px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 40px;
   --page-pad: 28px;
-  --radius-badge: 3px;
-  --radius-control: 4px;
-  --radius-card: 6px;
-  --radius-dialog: 6px;
-  --control-h: 38px;
-  --table-row-h: 42px;
 
-  /* Motion / elevation */
-  --motion: 140ms;
-  --ease: ease;
-  --shadow-popover: 0 4px 12px rgba(11, 35, 65, 0.10);
-  --shadow-dialog: 0 8px 24px rgba(11, 35, 65, 0.14);
+  /* --- control metrics --- */
+  --control-h: 46px;
+  --control-h-compact: 40px;
+  --table-row-h: 50px;
+  --icon-size: 18px;
 
-  /* Compatibility aliases */
+  /* --- motion --- */
+  --dur-fast: 140ms;
+  --dur: 220ms;
+  --dur-slow: 320ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+
+  /* --- elevation --- */
+  --shadow-soft: 0 2px 10px rgba(42, 33, 27, 0.06), 0 1px 2px rgba(42, 33, 27, 0.05);
+  --shadow-card: 0 1px 2px rgba(42, 33, 27, 0.05), 0 8px 22px -14px rgba(42, 33, 27, 0.22);
+  --shadow-lift: 0 10px 30px rgba(42, 33, 27, 0.12);
+  --shadow-bar: 0 6px 24px -10px rgba(42, 33, 27, 0.22);
+  --shadow-popover: 0 4px 12px rgba(42, 33, 27, 0.08);
+  --shadow-dialog: 0 10px 30px rgba(42, 33, 27, 0.14);
+
+  /* --- glass / surface helpers --- */
+  --surface-glass: rgba(253, 250, 243, 0.86);
+  --surface-glass-border: rgba(173, 131, 50, 0.22);
+
+  /* --- compatibility aliases (kept so existing component CSS still resolves) --- */
+  --navy: var(--maroon);
+  --navy-2: var(--maroon-dark);
+  --navy-3: var(--maroon-bright);
+  --accent: var(--maroon);
+  --accent-hover: var(--maroon-dark);
+  --on-accent: #FFFFFF;
+  --accent-soft: var(--maroon-tint);
+  --gold: var(--gold);
+  --gold-soft: var(--gold-tint);
+  --bg: var(--canvas);
+
   --glass-fill: var(--surface);
   --glass-border: var(--divider);
   --glass-blur: 0px;
-  --apple-font: var(--font-family);
-  --apple-font-formal: var(--font-serif);
+  --apple-font: var(--font-body);
+  --apple-font-formal: var(--font-display);
   --apple-bg: var(--canvas);
-  --apple-bg-deep: var(--surface-sunken);
+  --apple-bg-deep: var(--surface-alt);
   --apple-surface: var(--surface);
   --apple-surface-solid: var(--surface);
-  --apple-surface-elevated: var(--surface);
+  --apple-surface-elevated: var(--surface-tint);
   --apple-text: var(--text);
   --apple-text-secondary: var(--text-2);
   --apple-text-tertiary: var(--text-3);
-  --apple-blue: var(--accent);
-  --apple-blue-hover: var(--accent-hover);
-  --apple-navy: var(--navy);
+  --apple-blue: var(--maroon);
+  --apple-blue-hover: var(--maroon-dark);
+  --apple-navy: var(--maroon);
   --apple-separator: var(--divider);
-  --apple-separator-strong: var(--control-border);
-  --apple-glass-fill: var(--surface);
-  --apple-glass-fill-strong: var(--surface);
-  --apple-glass-border: var(--divider);
-  --apple-glass-shadow: var(--shadow-popover);
+  --apple-separator-strong: var(--divider-strong);
+  --apple-glass-fill: var(--surface-glass);
+  --apple-glass-fill-strong: var(--surface-tint);
+  --apple-glass-border: var(--surface-glass-border);
+  --apple-glass-shadow: var(--shadow-soft);
   --apple-glass-shadow-lg: var(--shadow-dialog);
   --apple-radius: var(--radius-card);
   --apple-radius-sm: var(--radius-control);
-  --apple-radius-xs: var(--radius-badge);
+  --apple-radius-xs: var(--radius-xs);
   --apple-ease: var(--ease);
-  --apple-spring: var(--ease);
+  --apple-spring: var(--ease-spring);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #0F1824;
-    --surface: #172437;
-    --surface-sunken: #1C2C42;
-    --surface-alt: #24364F;
-    --text: #EDF2F8;
-    --text-2: #C2CEDB;
-    --text-3: #9FB0C3;
-    --divider: #304A66;
-    --control-border: #5A7590;
-    --control-border-strong: #7891AA;
-    --navy: #0C2236;
-    --navy-2: #15324D;
-    --navy-3: #1D4E89;
-    --accent: #84B1DA;
-    --accent-hover: #9CC3E6;
-    --on-accent: #0B1A2A;
-    --accent-soft: #1D3550;
-    --gold: #CDB06F;
-    --gold-soft: #2F291D;
-    --success: #7BCB98;
-    --success-bg: #183326;
-    --warning: #E0C06A;
-    --warning-bg: #352D14;
-    --danger: #F0A39C;
-    --danger-bg: #3B2123;
-    --shadow-popover: 0 4px 12px rgba(0,0,0,0.30);
-    --shadow-dialog: 0 8px 24px rgba(0,0,0,0.36);
-    --glass-fill: var(--surface);
-    --glass-border: var(--divider);
+    --canvas: #211916;
+    --surface: #2A211B;
+    --surface-alt: #3A2D29;
+    --surface-tint: #302521;
+
+    --text: #F0EDE8;
+    --text-2: #D1C9BF;
+    --text-3: #B7AFA6;
+
+    --divider: #786052;
+    --divider-strong: #5B483E;
+    --control-border: #5B483E;
+    --control-border-strong: #786052;
+
+    --maroon: #EFB1B5;
+    --maroon-dark: #FFD2D3;
+    --maroon-bright: #F2B7BB;
+    --maroon-tint: #55383E;
+
+    --gold: #E1C382;
+    --gold-dark: #EDCF8C;
+    --gold-light: #B79B68;
+    --gold-tint: #4B4332;
+
+    --success: #A9D5B1;
+    --success-bg: #354B40;
+    --danger: #FFB4AD;
+    --danger-bg: #53363C;
+    --warning: #EDCF8C;
+    --warning-bg: #4B4332;
+
+    --shadow-popover: 0 6px 18px -12px rgba(0, 0, 0, 0.7);
+    --shadow-dialog: 0 6px 20px -14px rgba(0, 0, 0, 0.6);
+
+    --surface-glass: rgba(55, 41, 35, 0.94);
+    --surface-glass-border: rgba(217, 186, 149, 0.25);
   }
 }
-@media (max-width: 860px) { :root { --page-pad: 16px; } }
-@media (pointer: coarse) { :root { --control-h: 44px; } }
-@media (prefers-reduced-motion: reduce) { :root { --motion: 0.01ms; } }
+
+@media (max-width: 860px) {
+  :root {
+    --page-pad: 16px;
+  }
+}
+@media (pointer: coarse) {
+  :root {
+    --control-h: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0.01ms;
+    --dur: 0.01ms;
+    --dur-slow: 0.01ms;
+  }
+}

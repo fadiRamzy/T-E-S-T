@@ -33,7 +33,7 @@ export function Drawer({ onClose, children }: { onClose: () => void; children: R
   }, [onClose]);
   return (
     <>
-      <div className="overlay" style={{ background: 'rgba(15,25,50,.25)', zIndex: 39 }} onMouseDown={onClose} />
+      <div className="overlay" style={{ background: 'rgba(42, 33, 27, 0.35)', zIndex: 39 }} onMouseDown={onClose} />
       <aside className="drawer" role="dialog" aria-modal="true">{children}</aside>
     </>
   );
