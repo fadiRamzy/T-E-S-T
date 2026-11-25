@@ -13,6 +13,7 @@ const PAGES: Array<{ id: string; label: string; icon: IconName }> = [
   { id: 'employees', label: 'الموظفون', icon: 'users' },
   { id: 'monthly', label: 'التقييم الشهري', icon: 'calendar' },
   { id: 'files', label: 'الملفات', icon: 'file' },
+  { id: 'mgmt/employees', label: 'نظام المتابعة', icon: 'chart' },
 ];
 type PageId = 'dashboard' | 'employees' | 'monthly' | 'files';
 const isPage = (x: string): x is PageId => PAGES.some((p) => p.id === x);
