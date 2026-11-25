@@ -1476,3 +1476,112 @@
 /* remove legacy sidebar gradient */
 .scope-mgmt .sidebar::after, .scope-mgmt .sidebar::before { background: none !important; background-image: none !important; content: none !important; }
 .scope-mgmt .sidebar { background-image: none !important; }
+
+
+/* ==========================================================================
+   Institutional Government Portal theme (White House-inspired)
+   Visual/UX only — preserves all selectors and functionality.
+   ========================================================================== */
+.scope-mgmt { background: var(--canvas); color: var(--text); }
+.scope-mgmt .app-shell { background: var(--canvas); }
+.scope-mgmt .app-sidebar { background: var(--navy); color: #fff; border-inline-end: 0; box-shadow: inset -1px 0 0 rgba(255,255,255,0.06); }
+.scope-mgmt .sidebar__brand { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.10); }
+.scope-mgmt .sidebar__mark { background: rgba(168,137,79,0.18); color: #E6D2A8; border: 1px solid rgba(168,137,79,0.30); border-radius: 4px; }
+.scope-mgmt .sidebar__brand-copy strong { font-family: var(--font-serif); font-size: 18px; letter-spacing: 0; color: #fff; }
+.scope-mgmt .sidebar__brand-copy small { color: rgba(255,255,255,0.68); font-size: 12px; }
+.scope-mgmt .sidebar__workspace { margin: 12px 12px 0; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; }
+.scope-mgmt .sidebar__workspace-label { color: rgba(255,255,255,0.56); font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: none; }
+.scope-mgmt .sidebar__workspace strong { color: #fff; font-size: 13px; }
+.scope-mgmt .sidebar__group-label { color: rgba(230,210,168,0.78); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 14px 16px 6px; }
+.scope-mgmt .sidebar__link { color: rgba(255,255,255,0.82); border-radius: 4px; margin: 1px 8px; padding: 10px 12px; font-size: 14px; }
+.scope-mgmt .sidebar__link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.scope-mgmt .sidebar__link.is-active { background: rgba(255,255,255,0.10); color: #fff; box-shadow: inset 3px 0 0 var(--gold); }
+[dir="rtl"] .scope-mgmt .sidebar__link.is-active { box-shadow: inset -3px 0 0 var(--gold); }
+.scope-mgmt .sidebar__link-icon { color: rgba(255,255,255,0.72); }
+.scope-mgmt .sidebar__link.is-active .sidebar__link-icon { color: #E6D2A8; }
+.scope-mgmt .sidebar__active-dot { background: var(--gold); }
+.scope-mgmt .sidebar__footer { border-top: 1px solid rgba(255,255,255,0.10); padding: 12px; gap: 10px; }
+.scope-mgmt .sidebar__switch { color: rgba(255,255,255,0.86); border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; background: transparent; }
+.scope-mgmt .sidebar__switch:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.scope-mgmt .sidebar__status { color: rgba(255,255,255,0.72); }
+.scope-mgmt .sidebar__status-indicator { background: #7BCB98; box-shadow: none; }
+.scope-mgmt .sidebar__status-copy strong { color: #fff; }
+.scope-mgmt .sidebar__status-copy small { color: rgba(255,255,255,0.58); }
+.scope-mgmt .sidebar__collapse, .scope-mgmt .sidebar__mobile-close, .scope-mgmt .sidebar__quick-tools .iconbtn { color: rgba(255,255,255,0.78); border-color: rgba(255,255,255,0.16); background: transparent; border-radius: 4px; }
+.scope-mgmt .sidebar__collapse:hover, .scope-mgmt .sidebar__mobile-close:hover, .scope-mgmt .sidebar__quick-tools .iconbtn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+/* Desktop topbar */
+.scope-mgmt .desktop-topbar { background: var(--surface); border-bottom: 1px solid var(--divider); position: sticky; top: 0; z-index: 30; }
+.scope-mgmt .desktop-topbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 28px; max-width: 100%; }
+.scope-mgmt .desktop-topbar__eyebrow { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--gold); margin-bottom: 2px; }
+.scope-mgmt .desktop-topbar__title strong, .scope-mgmt .desktop-topbar__inner strong { display: block; font-family: var(--font-serif); font-size: 20px; line-height: 28px; color: var(--navy); font-weight: 700; }
+.scope-mgmt .desktop-topbar__org { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); padding: 6px 12px; background: var(--surface-sunken); border: 1px solid var(--divider); border-radius: 4px; }
+.scope-mgmt .desktop-topbar__org svg { color: var(--gold); }
+@media (max-width: 860px) { .scope-mgmt .desktop-topbar { display: none; } }
+
+.scope-mgmt .page { padding: 24px 28px 32px; }
+@media (max-width: 860px) { .scope-mgmt .page { padding: 16px; } }
+.scope-mgmt .pagehead { border-bottom: 1px solid var(--divider); padding-bottom: 18px; margin-bottom: 24px; }
+.scope-mgmt .pagehead__eyebrow { background: var(--gold-soft); color: #7A5A22; border: 1px solid #E5D6B8; font-size: 11px; font-weight: 700; letter-spacing: 0.03em; border-radius: 3px; }
+.scope-mgmt .pagehead__text h1, .scope-mgmt .pagehead h1 { font-family: var(--font-serif); color: var(--navy); font-size: 30px; line-height: 38px; font-weight: 700; }
+.scope-mgmt .pagehead__text p, .scope-mgmt .pagehead p { color: var(--text-2); font-size: 14px; line-height: 22px; }
+
+/* Cards / stats */
+.scope-mgmt .card { border: 1px solid var(--divider); border-radius: 6px; box-shadow: none; background: var(--surface); }
+.scope-mgmt .card__head { border-bottom: 1px solid var(--divider); padding: 16px 20px; margin-bottom: 0; background: #FBFCFD; }
+.scope-mgmt .card__head h2, .scope-mgmt .card__head h3 { font-family: var(--font-serif); color: var(--navy); font-size: 18px; font-weight: 700; }
+.scope-mgmt .card__body { padding: 20px; }
+.scope-mgmt .card__body--flush { padding: 0; }
+.scope-mgmt .stat { border: 1px solid var(--divider); border-radius: 6px; background: var(--surface); box-shadow: none; }
+.scope-mgmt .stat::before { content: ""; display: block; height: 3px; background: var(--gold); margin: -16px -16px 12px; border-radius: 6px 6px 0 0; }
+.scope-mgmt .stat__icon { background: var(--accent-soft); color: var(--navy); border-radius: 4px; }
+.scope-mgmt .stat__label { color: var(--text-3); font-size: 12px; font-weight: 700; letter-spacing: 0.01em; }
+.scope-mgmt .stat__value { color: var(--navy); font-family: var(--font-serif); font-size: 28px; line-height: 34px; }
+.scope-mgmt .stat__hint { color: var(--text-2); }
+
+/* Tables */
+.scope-mgmt .tablewrap { border: 1px solid var(--divider); border-radius: 6px; }
+.scope-mgmt .table th { background: #F3F6FA; color: var(--navy); font-size: 12px; font-weight: 700; border-bottom: 1px solid var(--divider); padding: 12px 16px; }
+.scope-mgmt .table td { padding: 11px 16px; border-bottom: 1px solid #E7EDF3; font-size: 13.5px; }
+.scope-mgmt .table tbody tr:hover td { background: #F8FAFC; }
+.scope-mgmt .table td a { color: var(--accent); font-weight: 600; }
+
+/* Forms / controls */
+.scope-mgmt .input, .scope-mgmt .select, .scope-mgmt .textarea, .scope-mgmt input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), .scope-mgmt select, .scope-mgmt textarea { border-radius: 4px; border-color: var(--control-border); font-size: 14px; }
+.scope-mgmt .input:focus, .scope-mgmt .select:focus, .scope-mgmt .textarea:focus, .scope-mgmt input:focus, .scope-mgmt select:focus, .scope-mgmt textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,77,128,0.12); }
+.scope-mgmt .search, .scope-mgmt .search-wrap { border-radius: 4px; }
+.scope-mgmt .btn { border-radius: 4px; font-weight: 600; letter-spacing: 0; }
+.scope-mgmt .btn--primary, .scope-mgmt .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.scope-mgmt .btn--primary:hover:not(:disabled), .scope-mgmt .btn.primary:hover:not(:disabled) { background: var(--navy-2); border-color: var(--navy-2); }
+.scope-mgmt .btn--secondary, .scope-mgmt .btn.secondary { background: var(--surface); border-color: var(--control-border); color: var(--navy); }
+.scope-mgmt .btn--secondary:hover:not(:disabled), .scope-mgmt .btn.secondary:hover:not(:disabled) { background: var(--surface-sunken); }
+.scope-mgmt .btn--ghost, .scope-mgmt .btn.ghost { color: var(--accent); }
+.scope-mgmt .badge { border-radius: 3px; font-weight: 700; font-size: 11.5px; }
+.scope-mgmt .badge--success { background: var(--success-bg); color: var(--success); }
+.scope-mgmt .badge--warning { background: var(--warning-bg); color: var(--warning); }
+.scope-mgmt .badge--danger { background: var(--danger-bg); color: var(--danger); }
+
+/* Modal */
+.scope-mgmt .overlay { background: rgba(11,35,65,0.45); }
+.scope-mgmt .modal { border-radius: 6px; border: 1px solid var(--divider); box-shadow: var(--shadow-dialog); }
+.scope-mgmt .modal__head { background: #FBFCFD; border-bottom: 1px solid var(--divider); padding: 18px 20px; }
+.scope-mgmt .modal__head h2 { font-family: var(--font-serif); color: var(--navy); font-size: 22px; }
+.scope-mgmt .modal__foot { background: #FBFCFD; border-top: 1px solid var(--divider); }
+
+/* Listcard / toolbar */
+.scope-mgmt .listcard .card__head { background: #FBFCFD; }
+.scope-mgmt .listcard__controls { background: #F7F9FC; border-bottom: 1px solid var(--divider); }
+.scope-mgmt .toolbar { gap: 10px; }
+.scope-mgmt .empty { color: var(--text-2); }
+
+/* Mobile */
+.scope-mgmt .mobile-topbar { background: var(--navy); color: #fff; border-bottom: 0; }
+.scope-mgmt .mobile-topbar__head { background: var(--navy); }
+.scope-mgmt .mobile-topbar__title strong { color: #fff; font-family: var(--font-serif); }
+.scope-mgmt .mobile-topbar__title small { color: rgba(255,255,255,0.72); }
+.scope-mgmt .mobile-topbar__switch, .scope-mgmt .app-topbar__menu { color: #fff; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+.scope-mgmt .mobile-nav-wrap { background: var(--navy-2); border-top: 1px solid rgba(255,255,255,0.08); }
+.scope-mgmt .mobile-nav__item { color: rgba(255,255,255,0.78); }
+.scope-mgmt .mobile-nav__item.is-active { color: #fff; background: rgba(255,255,255,0.1); box-shadow: inset 0 -2px 0 var(--gold); }
+.scope-mgmt .mobile-nav__item svg { color: inherit; }
+@media (max-width: 860px) { .scope-mgmt .desktop-topbar { display: none !important; } }

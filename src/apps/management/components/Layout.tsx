@@ -157,6 +157,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {sidebarOpen && <button className="sidebar-scrim" type="button" aria-label="إغلاق القائمة" onClick={() => setSidebarOpen(false)} />}
 
       <div className="app-frame">
+        <header className="desktop-topbar print-hide" aria-label="رأس الصفحة">
+          <div className="desktop-topbar__inner">
+            <div className="desktop-topbar__title">
+              <span className="desktop-topbar__eyebrow">منظومة رسمية</span>
+              <strong>نظام المتابعة وإدارة المخاطر</strong>
+            </div>
+            <div className="desktop-topbar__meta">
+              <span className="desktop-topbar__org"><Icon name="building" size={14} />{settings.organizationName}</span>
+            </div>
+          </div>
+        </header>
         <div className="mobile-topbar print-hide">
           <div className="mobile-topbar__head">
             <button

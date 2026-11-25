@@ -80,6 +80,15 @@ export function App() {
         </div>
       </aside>
       <div className="main">
+        <header className="eval-desktop-topbar print-hide" aria-label="رأس الصفحة">
+          <div className="eval-desktop-topbar__inner">
+            <div>
+              <span className="eval-desktop-topbar__eyebrow">منظومة رسمية</span>
+              <strong className="eval-desktop-topbar__title">نظام تقييم مسئولي المخاطر</strong>
+            </div>
+            <a className="eval-desktop-topbar__switch" href="#/mgmt/employees"><Icon name="chart" /><span>نظام المتابعة</span></a>
+          </div>
+        </header>
         <header className="eval-mobile-topbar print-hide">
           <div className="eval-mobile-topbar__title">تقييم مسئولي المخاطر</div>
           <a className="eval-mobile-topbar__switch" href="#/mgmt/employees">نظام المتابعة</a>
