@@ -277,3 +277,50 @@
 .scope-mgmt .unified-records-stack { display: grid; gap: 12px; }
 .scope-mgmt .date-today-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .scope-mgmt .emp-count { font-size: 12px; color: var(--text-3); }
+
+/* === Significant layout upgrade === */
+.scope-mgmt .pagehead { padding: 0 0 16px; margin-bottom: 20px; border-bottom: 1px solid var(--divider); }
+.scope-mgmt .pagehead__eyebrow { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); font-size: 12px; line-height: 18px; font-weight: 600; margin-bottom: 8px; }
+.scope-mgmt .pagehead__text h1 { font-size: 26px; line-height: 34px; letter-spacing: -0.01em; }
+.scope-mgmt .pagehead__text p { max-width: 720px; }
+
+.scope-mgmt .stats, .scope-mgmt .employees-summary { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.scope-mgmt .stat { flex-direction: row; align-items: flex-start; gap: 12px; padding: 16px; }
+.scope-mgmt .stat__icon { width: 40px; height: 40px; border-radius: 8px; margin-bottom: 0; flex: 0 0 40px; }
+.scope-mgmt .stat__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.scope-mgmt .stat__label { font-size: 12px; line-height: 18px; color: var(--text-3); font-weight: 600; }
+.scope-mgmt .stat__value { font-size: 24px; line-height: 32px; font-weight: 700; color: var(--text); }
+.scope-mgmt .stat__hint { font-size: 12px; line-height: 18px; color: var(--text-2); }
+
+.scope-mgmt .listcard { overflow: hidden; }
+.scope-mgmt .listcard .card__head { padding: 16px 20px; margin-bottom: 0; border-bottom: 1px solid var(--divider); background: var(--surface); }
+.scope-mgmt .listcard .card__body { padding: 0; }
+.scope-mgmt .listcard__controls { padding: 16px 20px; background: var(--surface-sunken); border-bottom: 1px solid var(--divider); }
+.scope-mgmt .listcard__controls-inner .toolbar { margin-bottom: 0; }
+.scope-mgmt .listcard__list { padding: 0; }
+.scope-mgmt .listcard__list .tablewrap { border: 0; border-radius: 0; }
+.scope-mgmt .listcard__list .empty { padding: 40px 20px; }
+.scope-mgmt .listcard__list .collapsed-note { padding: 24px 20px; }
+
+.scope-mgmt .card__head { padding: 16px 20px 0; }
+.scope-mgmt .card__body { padding: 0 20px 20px; }
+.scope-mgmt .card__body--flush { padding: 0; }
+
+.scope-mgmt .table th { padding: 12px 16px; font-size: 12px; }
+.scope-mgmt .table td { padding: 11px 16px; }
+.scope-mgmt .table tbody tr:hover td { background: #F8FAFC; }
+@media (prefers-color-scheme: dark) { .scope-mgmt .table tbody tr:hover td { background: #22344A; } }
+
+.scope-mgmt .toolbar { gap: 10px; }
+.scope-mgmt .toolbar > .search, .scope-mgmt .toolbar > .search-wrap { min-width: 280px; }
+
+.scope-mgmt .modal__head { background: var(--surface-sunken); }
+.scope-mgmt .modal__foot { background: var(--surface-sunken); }
+
+@media (max-width: 860px) {
+  .scope-mgmt .pagehead__text h1 { font-size: 22px; line-height: 30px; }
+  .scope-mgmt .stat { padding: 14px; }
+  .scope-mgmt .stat__value { font-size: 22px; line-height: 30px; }
+  .scope-mgmt .listcard .card__head, .scope-mgmt .listcard__controls { padding: 14px 16px; }
+  .scope-mgmt .table th, .scope-mgmt .table td { padding: 10px 12px; }
+}
