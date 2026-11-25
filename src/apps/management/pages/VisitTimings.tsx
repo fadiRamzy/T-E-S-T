@@ -189,154 +189,174 @@ const { runAction } = useAppActions();
           />
         </Card>
       ) : (
-        <>
-        {/* أزرار تصفية الموظفين — صف واحد أفقي (scroll أفقي عند زيادة الموظفين) */}
-        <div
-          className="emp-filter-row"
-          role="group"
-          aria-label="تصفية الزيارات حسب الموظف"
-          data-testid="visit-employee-counts"
-        >
-          <button
-            type="button"
-            className={cn('emp-filter-btn', listEmployee === 'all' && 'is-active')}
-            aria-pressed={listEmployee === 'all'}
-            onClick={() => setListEmployee('all')}
-          >
-            <span>كل الموظفين</span>
-            <span className="emp-count">{rows.length}</span>
-          </button>
-          {perEmployee.map((item) => (
-            <button
-              key={item.employeeId || 'none'}
-              type="button"
-              className={cn('emp-filter-btn', listEmployee === item.employeeId && 'is-active')}
-              aria-pressed={listEmployee === item.employeeId}
-              onClick={() => setListEmployee(item.employeeId)}
-            >
-              <span>{item.name}</span>
-              <span className="emp-count">{item.count}</span>
-            </button>
-          ))}
-        </div>
-        <ListCard
-          id="visits-records"
-          padded={false}
-          title="الزيارات المسجلة"
-          subtitle={`${rows.length} زيارة مطابقة`}
-          hideLabel="إخفاء البيانات"
-          showLabel="إظهار البيانات"
-          note={`قائمة الزيارات مخفية (${rows.length} زيارة) — اضغط «إظهار البيانات» لعرضها. الإخفاء لا يحذف أي سجل.`}
+        <div className="page-stack">
+          <section className="section-card" aria-label="ملخص الزيارات">
+            <div className="section-card__head">
+              <div>
+                <span className="section-card__eyebrow">نظرة سريعة</span>
+                <h2 className="section-card__title">ملخص الزيارات المسجلة</h2>
+              </div>
+              <div className="section-card__meta">
+                <span className="meta-pill"><strong>{rows.length}</strong> زيارة مطابقة</span>
+                <span className="meta-pill"><strong>{perEmployee.length}</strong> موظف ضمن النتائج</span>
+              </div>
+            </div>
+            <div className="section-card__body">
+              <div className="filter-strip-label">تصفية حسب الموظف</div>
+              <div
+                className="emp-filter-row filter-strip"
+                role="group"
+                aria-label="تصفية الزيارات حسب الموظف"
+                data-testid="visit-employee-counts"
+              >
+                <button
+                  type="button"
+                  className={cn('emp-filter-btn', listEmployee === 'all' && 'is-active')}
+                  aria-pressed={listEmployee === 'all'}
+                  onClick={() => setListEmployee('all')}
+                >
+                  <span>كل الموظفين</span>
+                  <span className="emp-count">{rows.length}</span>
+                </button>
+                {perEmployee.map((item) => (
+                  <button
+                    key={item.employeeId || 'none'}
+                    type="button"
+                    className={cn('emp-filter-btn', listEmployee === item.employeeId && 'is-active')}
+                    aria-pressed={listEmployee === item.employeeId}
+                    onClick={() => setListEmployee(item.employeeId)}
+                  >
+                    <span>{item.name}</span>
+                    <span className="emp-count">{item.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
 
-            controls={
-              <Toolbar>
-            <SearchInput value={query} onChange={setQuery} placeholder="بحث بالموظف أو الفرع أو العميل…" />
-            <Select value={listMonth} onChange={(e) => setListMonth(e.target.value)} aria-label="شهر الزيارة">
-              <option value="all">كل الشهور</option>
-              {MONTHS_AR.map((label, index) => (
-                <option key={label} value={index + 1}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-            <Select value={listBranch} onChange={(e) => setListBranch(e.target.value)} aria-label="الفرع في الزيارات">
-              <option value="all">كل الفروع</option>
-              {branches.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-            <Select value={listYear} onChange={(e) => setListYear(e.target.value)} aria-label="سنة الزيارة">
-              <option value="all">كل السنوات</option>
-              {years.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-            <Button size="sm" icon="restore" onClick={resetListFilters} disabled={!filtersActive}>
-              إعادة تعيين
-            </Button>
-            <span className="toolbar__spacer" data-testid="visit-count-total">
-              عدد الزيارات: {rows.length}
-            </span>
-          </Toolbar>
-            }>
-          
+          <ListCard
+            id="visits-records"
+            padded={false}
+            title="الزيارات المسجلة"
+            subtitle={`${rows.length} زيارة مطابقة`}
+            hideLabel="إخفاء البيانات"
+            showLabel="إظهار البيانات"
+            note={`قائمة الزيارات مخفية (${rows.length} زيارة) — اضغط «إظهار البيانات» لعرضها. الإخفاء لا يحذف أي سجل.`}
 
-          {rows.length ? (
-            <>
-              <TableWrap>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>الموظف</th>
-                      <th>التاريخ</th>
-                      <th>الفرع</th>
-                      <th>اسم العميل</th>
-                      <th>مكان الزيارة</th>
-                      <th>توقيت التحرك على الزيارة</th>
-                      <th>توقيت الرجوع للفرع</th>
-                      <th>مدة الزيارة</th>
-                      <th>ملاحظات</th>
-                      <th>إجراءات</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row) => (
-                      <tr key={row.id}>
-                        <td>{nameOf(row.employeeId)}</td>
-                        <td className="nowrap">{row.visitDate ? fmtDate(row.visitDate) : '—'}</td>
-                        <td>{row.branch || '—'}</td>
-                        <td>{row.clientName || '—'}</td>
-                        <td>{row.location || '—'}</td>
-                        <td className="nowrap">{fmtTime(row.departureTime)}</td>
-                        <td className="nowrap">{fmtTime(row.returnTime)}</td>
-                        <td>{durationCell(row)}</td>
-                        <td className="wrap small">{row.notes || '—'}</td>
-                        <td>
-                          <div className="table__actions">
-                            <IconButton
-                              icon="edit"
-                              label="تعديل"
-                              onClick={() => {
-                                setErrors({});
-                                setDraft({
-                                  id: row.id,
-                                  employeeId: row.employeeId,
-                                  visitDate: row.visitDate ?? '',
-                                  branch: row.branch ?? '',
-                                  clientName: row.clientName ?? '',
-                                  location: row.location ?? '',
-                                  departureTime: row.departureTime ?? '',
-                                  returnTime: row.returnTime ?? '',
-                                  notes: row.notes ?? '',
-                                });
-                              }}
-                            />
-                            <IconButton icon="trash" tone="danger" label="حذف" onClick={() => setConfirmDelete(row)} />
-                          </div>
-                        </td>
+              controls={
+                <div className="filter-panel">
+                  <div className="filter-panel__head">
+                    <span className="filter-panel__title">بحث وفلاتر</span>
+                    <span className="toolbar__spacer filter-panel__count" data-testid="visit-count-total">
+                      عدد الزيارات: {rows.length}
+                    </span>
+                  </div>
+                  <Toolbar>
+                    <SearchInput value={query} onChange={setQuery} placeholder="بحث بالموظف أو الفرع أو العميل…" />
+                    <Select value={listMonth} onChange={(e) => setListMonth(e.target.value)} aria-label="شهر الزيارة">
+                      <option value="all">كل الشهور</option>
+                      {MONTHS_AR.map((label, index) => (
+                        <option key={label} value={index + 1}>
+                          {label}
+                        </option>
+                      ))}
+                    </Select>
+                    <Select value={listBranch} onChange={(e) => setListBranch(e.target.value)} aria-label="الفرع في الزيارات">
+                      <option value="all">كل الفروع</option>
+                      {branches.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </Select>
+                    <Select value={listYear} onChange={(e) => setListYear(e.target.value)} aria-label="سنة الزيارة">
+                      <option value="all">كل السنوات</option>
+                      {years.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </Select>
+                    <Button size="sm" icon="restore" onClick={resetListFilters} disabled={!filtersActive}>
+                      إعادة تعيين
+                    </Button>
+                  </Toolbar>
+                </div>
+              }>
+
+            {rows.length ? (
+              <div className="table-panel">
+                <TableWrap>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>الموظف</th>
+                        <th>التاريخ</th>
+                        <th>الفرع</th>
+                        <th>اسم العميل</th>
+                        <th>مكان الزيارة</th>
+                        <th>توقيت التحرك على الزيارة</th>
+                        <th>توقيت الرجوع للفرع</th>
+                        <th>مدة الزيارة</th>
+                        <th>ملاحظات</th>
+                        <th>إجراءات</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </TableWrap>
-            </>
-          ) : (
-            <EmptyState
-              title={filtersActive ? 'لا زيارات مطابقة للفلاتر' : 'لا زيارات مسجلة'}
-              description={
-                filtersActive
-                  ? 'جرّب تعديل الفلاتر أو إعادة تعيينها لاستعادة كل الزيارات.'
-                  : 'اضغط «إضافة زيارة» لتسجيل أول زيارة.'
-              }
-            />
-          )}
-        </ListCard>
-        </>
+                    </thead>
+                    <tbody>
+                      {rows.map((row) => (
+                        <tr key={row.id}>
+                          <td>{nameOf(row.employeeId)}</td>
+                          <td className="nowrap">{row.visitDate ? fmtDate(row.visitDate) : '—'}</td>
+                          <td>{row.branch || '—'}</td>
+                          <td>{row.clientName || '—'}</td>
+                          <td>{row.location || '—'}</td>
+                          <td className="nowrap">{fmtTime(row.departureTime)}</td>
+                          <td className="nowrap">{fmtTime(row.returnTime)}</td>
+                          <td>{durationCell(row)}</td>
+                          <td className="wrap small">{row.notes || '—'}</td>
+                          <td>
+                            <div className="table__actions">
+                              <IconButton
+                                icon="edit"
+                                label="تعديل"
+                                onClick={() => {
+                                  setErrors({});
+                                  setDraft({
+                                    id: row.id,
+                                    employeeId: row.employeeId,
+                                    visitDate: row.visitDate ?? '',
+                                    branch: row.branch ?? '',
+                                    clientName: row.clientName ?? '',
+                                    location: row.location ?? '',
+                                    departureTime: row.departureTime ?? '',
+                                    returnTime: row.returnTime ?? '',
+                                    notes: row.notes ?? '',
+                                  });
+                                }}
+                              />
+                              <IconButton icon="trash" tone="danger" label="حذف" onClick={() => setConfirmDelete(row)} />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </TableWrap>
+              </div>
+            ) : (
+              <EmptyState
+                title={filtersActive ? 'لا زيارات مطابقة للفلاتر' : 'لا زيارات مسجلة'}
+                description={
+                  filtersActive
+                    ? 'جرّب تعديل الفلاتر أو إعادة تعيينها لاستعادة كل الزيارات.'
+                    : 'اضغط «إضافة زيارة» لتسجيل أول زيارة.'
+                }
+              />
+            )}
+          </ListCard>
+        </div>
       )}
+
 
       <Modal
         open={Boolean(draft)}

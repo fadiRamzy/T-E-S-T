@@ -1585,3 +1585,40 @@
 .scope-mgmt .mobile-nav__item.is-active { color: #fff; background: rgba(255,255,255,0.1); box-shadow: inset 0 -2px 0 var(--gold); }
 .scope-mgmt .mobile-nav__item svg { color: inherit; }
 @media (max-width: 860px) { .scope-mgmt .desktop-topbar { display: none !important; } }
+
+
+/* === Page layout system (Phase 1 reference + reusable) === */
+.scope-mgmt .page-stack { display: grid; gap: 20px; }
+.scope-mgmt .section-card { background: var(--surface); border: 1px solid var(--divider); border-radius: 6px; overflow: hidden; }
+.scope-mgmt .section-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 20px; background: #FBFCFD; border-bottom: 1px solid var(--divider); }
+.scope-mgmt .section-card__eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--gold); margin-bottom: 4px; }
+.scope-mgmt .section-card__title { margin: 0; font-family: var(--font-serif); font-size: 20px; line-height: 28px; color: var(--navy); font-weight: 700; }
+.scope-mgmt .section-card__meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.scope-mgmt .meta-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 4px; background: var(--surface); border: 1px solid var(--divider); font-size: 13px; color: var(--text-2); }
+.scope-mgmt .meta-pill strong { color: var(--navy); font-size: 14px; font-variant-numeric: tabular-nums; }
+.scope-mgmt .section-card__body { padding: 18px 20px; }
+.scope-mgmt .filter-strip-label { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 10px; letter-spacing: 0.01em; }
+
+.scope-mgmt .filter-strip, .scope-mgmt .emp-filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.scope-mgmt .emp-filter-btn { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 8px 14px; border-radius: 4px; border: 1px solid var(--divider); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 500; font-family: var(--font-family); cursor: pointer; white-space: nowrap; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+.scope-mgmt .emp-filter-btn:hover { background: var(--surface-sunken); border-color: var(--control-border); }
+.scope-mgmt .emp-filter-btn.is-active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.scope-mgmt .emp-filter-btn .emp-count { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 22px; padding: 0 7px; border-radius: 3px; background: var(--surface-sunken); color: var(--text-2); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.scope-mgmt .emp-filter-btn.is-active .emp-count { background: rgba(255,255,255,0.16); color: #fff; }
+
+.scope-mgmt .filter-panel { display: grid; gap: 12px; }
+.scope-mgmt .filter-panel__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.scope-mgmt .filter-panel__title { font-size: 12px; font-weight: 700; color: var(--text-2); letter-spacing: 0.01em; }
+.scope-mgmt .filter-panel__count { font-size: 13px; color: var(--text-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+.scope-mgmt .filter-panel .toolbar { margin-bottom: 0; }
+
+.scope-mgmt .table-panel { padding: 0; }
+.scope-mgmt .table-panel .tablewrap { border: 0; border-radius: 0; }
+.scope-mgmt .table-panel .table th { background: #F3F6FA; padding: 13px 16px; }
+.scope-mgmt .table-panel .table td { padding: 12px 16px; vertical-align: middle; }
+
+@media (max-width: 860px) {
+  .scope-mgmt .section-card__head { flex-direction: column; align-items: stretch; padding: 16px; }
+  .scope-mgmt .section-card__body { padding: 16px; }
+  .scope-mgmt .filter-panel__head { flex-direction: column; align-items: stretch; }
+}
