@@ -13,11 +13,13 @@ const PAGES: Array<{ id: string; label: string; icon: IconName }> = [
   { id: 'employees', label: 'الموظفون', icon: 'users' },
   { id: 'monthly', label: 'التقييم الشهري', icon: 'calendar' },
   { id: 'files', label: 'الملفات', icon: 'file' },
-  { id: 'mgmt/employees', label: 'نظام المتابعة', icon: 'chart' },
 ];
 type PageId = 'dashboard' | 'employees' | 'monthly' | 'files';
 const isPage = (x: string): x is PageId => PAGES.some((p) => p.id === x);
-const isMgmt = (x: string) => x === 'mgmt/employees';
+const pageFromHash = (hash: string): PageId => {
+  const seg = hash.replace(/^#\/?/, '').replace(/^eval\//, '');
+  return isPage(seg) ? seg : 'dashboard';
+};
 
 export function App() {
   const ready = useStore((s) => s.ready);
@@ -28,17 +30,21 @@ export function App() {
   const canRedo = useStore((s) => s.future.length > 0);
   const changes = useStore((s) => s.changesSinceExport);
   // [merged] this app lives under the #/eval/ namespace of the unified portal (legacy #<page> hashes still accepted)
-  const [page, setPage] = useState<PageId | 'mgmt/employees'>(() => {
-    const seg = location.hash.replace(/^#\/?/, '').replace(/^eval\//, '');
-    if (isMgmt(seg)) return 'mgmt/employees';
-    return isPage(seg) ? (seg as PageId) : 'dashboard';
-  });
+  const [page, setPage] = useState<PageId>(() => pageFromHash(location.hash));
 
   useEffect(() => { init(); }, []);
   useEffect(() => {
-    const target = page === 'mgmt/employees' ? '#/mgmt/employees' : `/eval/${page}`;
-    location.hash = target;
+    location.hash = `/eval/${page}`;
   }, [page]);
+  // keep the page in sync when the hash changes without a nav click (browser Back/Forward, typed URL)
+  useEffect(() => {
+    const onHash = () => {
+      if (!location.hash.startsWith('#/eval')) return; // leaving for the management site is handled by the portal
+      setPage(pageFromHash(location.hash));
+    };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
   // with no data yet the only useful page is «الملفات»; staying on it keeps the import result visible after the first import
   useEffect(() => { if (ready && !model) setPage('files'); }, [ready, model]);
   useEffect(() => {
@@ -52,8 +58,7 @@ export function App() {
     return () => window.removeEventListener('keydown', k);
   }, []);
 
-  const effective: PageId | 'mgmt/employees' = !model ? 'files' : page;
-  const isMgmtPage = page === 'mgmt/employees';
+  const effective: PageId = !model ? 'files' : page;
 
   return (
     <div className="shell scope-eval">
@@ -112,7 +117,7 @@ export function App() {
           })}
           <a
             href="#/mgmt/employees"
-            className={`bottom-nav__item ${isMgmtPage ? 'is-active' : ''}`}
+            className="bottom-nav__item"
             title="نظام المتابعة"
             aria-label="الانتقال إلى نظام المتابعة"
           >
