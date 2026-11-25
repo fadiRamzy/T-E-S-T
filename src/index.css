@@ -1,226 +1,37 @@
-/* ==========================================================================
-   Quiet Ledger — global shell, portal, site switch
-   ========================================================================== */
-
+/* Simple Banking Dashboard — global shell / portal */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html {
-  font-family: var(--font-family);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-body {
-  font-family: var(--font-family);
-  background: var(--canvas);
-  color: var(--text);
-  -webkit-text-size-adjust: 100%;
-}
+html { font-family: var(--font-family); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body { font-family: var(--font-family); background: var(--canvas); color: var(--text); -webkit-text-size-adjust: 100%; }
+#root { min-height: 100vh; }
+.scope-mgmt, .scope-eval { min-height: 100vh; }
 
-#root { position: relative; min-height: 100vh; }
-.scope-mgmt, .scope-eval { min-height: 100vh; position: relative; }
-
-/* ── Portal ─────────────────────────────────────────────────────────────── */
-.portal {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  padding: 48px 24px 64px;
-  text-align: center;
-  background: var(--canvas);
-}
-.portal-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.portal-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 18px;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border: 1px solid transparent;
-}
-.portal-title {
-  margin: 0;
-  font-size: clamp(28px, 4vw, 40px);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  text-wrap: balance;
-}
-.portal-subtitle {
-  margin: 0;
-  max-width: 560px;
-  font-size: 14px;
-  line-height: 22px;
-  color: var(--text-2);
-}
-.portal-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 280px));
-  gap: 16px;
-  width: 100%;
-  max-width: 576px;
-  justify-content: center;
-}
-.portal-btn {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 8px;
-  min-height: 136px;
-  padding: 20px;
-  border-radius: 12px;
-  text-decoration: none;
-  text-align: start;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--divider);
-  box-shadow: none;
-  transition: border-color var(--motion) var(--ease), background-color var(--motion) var(--ease);
-}
-.portal-btn:hover {
-  border-color: var(--control-border);
-  background: var(--surface);
-}
-.portal-btn:focus-visible,
-.site-switch:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.portal-btn__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: var(--accent-soft);
-  margin-bottom: 4px;
-}
-.portal-btn__icon svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.portal-btn__label {
-  display: block;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  color: var(--text);
-}
-.portal-btn__desc {
-  display: block;
-  font-size: 13.5px;
-  line-height: 20px;
-  color: var(--text-2);
-  min-height: 20px;
-}
+/* Portal */
+.portal { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 40px 24px; background: var(--canvas); }
+.portal-hero { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.portal-eyebrow { display: inline-flex; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; line-height: 18px; color: var(--accent); background: var(--accent-soft); }
+.portal-title { margin: 0; font-size: clamp(28px, 4vw, 36px); line-height: 1.25; font-weight: 700; color: var(--text); }
+.portal-subtitle { margin: 0; max-width: 560px; font-size: 14px; line-height: 22px; color: var(--text-2); }
+.portal-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 280px)); gap: 16px; width: 100%; max-width: 576px; }
+.portal-btn { position: relative; display: flex; flex-direction: column; gap: 8px; min-height: 132px; padding: 20px; border-radius: 8px; text-decoration: none; text-align: start; color: var(--text); background: var(--surface); border: 1px solid var(--divider); transition: border-color var(--motion) var(--ease), background-color var(--motion) var(--ease); }
+.portal-btn:hover { border-color: var(--control-border-strong); background: var(--surface-sunken); }
+.portal-btn:focus-visible, .site-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.portal-btn__icon { width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center; color: var(--accent); background: var(--accent-soft); }
+.portal-btn__icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.portal-btn__label { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--text); }
+.portal-btn__desc { font-size: 13px; line-height: 20px; color: var(--text-2); }
 .portal-btn--mgmt .portal-btn__desc::before { content: "الموظفون، الزيارات، المحاضر، والإجازات"; }
 .portal-btn--eval .portal-btn__desc::before { content: "لوحة المؤشرات، التقييم الشهري، والملفات"; }
-.portal-btn__arrow {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  color: var(--text-3);
-  background: transparent;
-}
-.portal-btn__arrow svg {
-  width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-}
+.portal-btn__arrow { position: absolute; top: 20px; left: 20px; width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center; color: var(--text-3); }
+.portal-btn__arrow svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .portal-btn:hover .portal-btn__arrow { color: var(--accent); }
+@media (max-width: 640px) { .portal { padding: 32px 16px; } .portal-actions { grid-template-columns: 1fr; max-width: 420px; } .portal-btn { min-height: 120px; } }
 
-@media (max-width: 640px) {
-  .portal { padding: 40px 16px 56px; gap: 24px; }
-  .portal-actions { grid-template-columns: 1fr; max-width: 420px; }
-  .portal-btn { min-height: 124px; }
-}
-@media (max-width: 860px) {
-  .site-switch { display: none !important; }
-}
-
-/* ── Site switch (global fallback) ──────────────────────────────────────── */
-.site-switch {
-  position: fixed;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 60;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--font-family);
-  color: var(--text);
-  text-decoration: none;
-  white-space: nowrap;
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-popover);
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  transition: background-color var(--motion) var(--ease), border-color var(--motion) var(--ease);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .site-switch { background: var(--surface); }
-}
-.site-switch:hover { background: var(--surface); }
-.site-switch svg {
-  width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none;
-}
-
-/* Desktop: shell provides the switch; hide global floating button. */
-@media (min-width: 1200px) {
-  body:has(.scope-mgmt) .site-switch,
-  body:has(.scope-eval) .site-switch { display: none !important; }
-}
-/* Tablet/mobile: keep switch accessible but out of content flow. */
-@media (max-width: 1199px) {
-  body:has(.scope-mgmt) .site-switch,
-  body:has(.scope-eval) .site-switch {
-    top: 10px;
-    left: 16px;
-    right: auto;
-    transform: none;
-    height: 32px;
-    padding: 0 10px;
-    font-size: 12px;
-    z-index: 70;
-  }
-  .scope-mgmt .page, .scope-eval .container { padding-top: 56px !important; }
-}
-
-@media print {
-  .site-switch { display: none !important; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-}
+/* Global site switch fallback - simple, no glass */
+.site-switch { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 60; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: var(--font-family); color: var(--text); text-decoration: none; white-space: nowrap; background: var(--surface); border: 1px solid var(--divider); box-shadow: var(--shadow-popover); }
+.site-switch:hover { background: var(--surface-sunken); }
+.site-switch svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+@media (min-width: 1200px) { body:has(.scope-mgmt) .site-switch, body:has(.scope-eval) .site-switch { display: none !important; } }
+@media (max-width: 1199px) { body:has(.scope-mgmt) .site-switch, body:has(.scope-eval) .site-switch { display: none !important; } }
+@media print { .site-switch { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
