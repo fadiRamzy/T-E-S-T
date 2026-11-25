@@ -37,6 +37,8 @@
   justify-content: center;
   padding: 4px 14px calc(8px + env(safe-area-inset-bottom, 0px));
   background: transparent;
+  /* Override conflicting flex: 1 from base.css .sidebar__nav (applied via sidebar__nav class) */
+  flex: 0 0 auto;
 }
 
 .scope-mgmt .bottom-nav__inner {
@@ -53,8 +55,11 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
   overflow-x: auto;
+  overflow-y: visible;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  /* Override conflicting flex: 1 and overflow-y: auto from base.css .sidebar__nav */
+  flex: 0 0 auto;
 }
 
 .scope-mgmt .bottom-nav__inner::-webkit-scrollbar {
