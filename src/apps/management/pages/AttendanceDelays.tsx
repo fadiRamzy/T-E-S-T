@@ -64,23 +64,29 @@ const { runAction } = useAppActions();
     />
 
     <Card title="ملخص الشهر والفلاتر" subtitle="بداية الدوام 9:00 ص، والسماح حتى 9:15 ص؛ الانصراف الرسمي 5:00 م">
-      <Toolbar>
-        <Select aria-label="الموظف" value={employeeFilter} onChange={(event) => setEmployeeFilter(event.target.value)}><option value="all">كل الموظفين</option>{data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}</Select>
+      <div className="filter-panel">
+        <div className="filter-panel__head">
+          <span className="filter-panel__title">تصفية السجلات</span>
+          <span className="filter-panel__count">{summaries.length} موظف ضمن النتائج</span>
+        </div>
+        <Toolbar>
+          <Select aria-label="الموظف" value={employeeFilter} onChange={(event) => setEmployeeFilter(event.target.value)}><option value="all">كل الموظفين</option>{data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}</Select>
         <Select aria-label="الشهر" value={monthFilter} onChange={(event) => setMonthFilter(event.target.value)}><option value="all">كل الشهور</option>{MONTHS_AR.map((month, index) => <option key={month} value={String(index + 1).padStart(2, '0')}>{month}</option>)}</Select>
         <Select aria-label="السنة" value={yearFilter} onChange={(event) => setYearFilter(event.target.value)}><option value="all">كل السنوات</option>{years.map((year) => <option key={year} value={year}>{year}</option>)}</Select>
-      </Toolbar>
-      {summaries.length ? <TableWrap><Table>
+        </Toolbar>
+      </div>
+      {summaries.length ? <div className="table-panel"><TableWrap><Table>
         <thead><tr><th>الموظف</th><th className="num">مرات تأخير الحضور</th><th className="num">إجمالي دقائق تأخير الحضور</th></tr></thead>
         <tbody>{summaries.map((summary) => <tr key={summary.employee.id}>
           <td>{summary.employee.name}</td>
           <td className="num"><Badge tone={summary.lateCount ? 'danger' : 'neutral'}>{fmtNumber(summary.lateCount)}</Badge></td>
           <td className="num">{fmtNumber(summary.lateMinutes)}</td>
         </tr>)}</tbody>
-      </Table></TableWrap> : <EmptyState title="لا يوجد موظفون مطابقون" />}
+      </Table></TableWrap></div> : <EmptyState title="لا يوجد موظفون مطابقون" />}
     </Card>
 
     <ListCard id="attendance-records" title="سجلات الحضور والانصراف" subtitle={`${rows.length} سجل في الفترة المختارة`} defaultCollapsed hideLabel="إخفاء التفاصيل" showLabel="إظهار التفاصيل" note={`قائمة السجلات مخفية (${rows.length} سجل) — اضغط «إظهار التفاصيل» لعرضها.`}>
-      {rows.length ? <TableWrap><Table>
+      {rows.length ? <div className="table-panel"><TableWrap><Table>
         <thead><tr><th>الموظف</th><th>التاريخ</th><th>الحضور</th><th>التأخير</th><th>الانصراف</th><th>الانصراف المبكر</th><th>الملاحظات</th><th>إجراءات</th></tr></thead>
         <tbody>{rows.map((row) => {
           const late = attendanceDelayMinutes(row.arrivalTime);
@@ -92,7 +98,7 @@ const { runAction } = useAppActions();
             <td className="wrap small">{row.notes || '—'}</td><td><div className="table__actions"><IconButton icon="edit" label="تعديل" onClick={() => edit(row)} /><IconButton icon="trash" tone="danger" label="حذف" onClick={() => setDeleting(row)} /></div></td>
           </tr>;
         })}</tbody>
-      </Table></TableWrap> : <EmptyState title="لا توجد سجلات في الفترة المحددة" description="يمكن إضافة سجل جديد من أعلى الصفحة." />}
+      </Table></TableWrap></div> : <EmptyState title="لا توجد سجلات في الفترة المحددة" description="يمكن إضافة سجل جديد من أعلى الصفحة." />}
     </ListCard>
 
     <Modal open={Boolean(draft)} onClose={() => setDraft(null)} title={draft?.id ? 'تعديل سجل الحضور والانصراف' : 'إضافة سجل حضور وانصراف'} subtitle="يمكن حفظ السجل حتى عند ترك كل الحقول دون إدخال." footer={<><Button onClick={() => setDraft(null)}>إلغاء</Button><Button variant="primary" icon="save" onClick={submit}>حفظ</Button></>}>
