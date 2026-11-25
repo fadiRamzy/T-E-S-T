@@ -1486,7 +1486,7 @@
 .scope-mgmt .app-shell { background: var(--canvas); }
 .scope-mgmt .app-sidebar { background: var(--navy); color: #fff; border-inline-end: 0; box-shadow: inset -1px 0 0 rgba(255,255,255,0.06); }
 .scope-mgmt .sidebar__brand { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.10); }
-.scope-mgmt .sidebar__mark { background: rgba(168,137,79,0.18); color: #E6D2A8; border: 1px solid rgba(168,137,79,0.30); border-radius: 4px; }
+.scope-mgmt .sidebar__mark { background: rgba(182,154,90,0.18); color: #E5D4AE; border: 1px solid rgba(182,154,90,0.30); border-radius: 4px; }
 .scope-mgmt .sidebar__brand-copy strong { font-family: var(--font-serif); font-size: 18px; letter-spacing: 0; color: #fff; }
 .scope-mgmt .sidebar__brand-copy small { color: rgba(255,255,255,0.68); font-size: 12px; }
 .scope-mgmt .sidebar__workspace { margin: 12px 12px 0; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; }
@@ -1498,7 +1498,7 @@
 .scope-mgmt .sidebar__link.is-active { background: rgba(255,255,255,0.10); color: #fff; box-shadow: inset 3px 0 0 var(--gold); }
 [dir="rtl"] .scope-mgmt .sidebar__link.is-active { box-shadow: inset -3px 0 0 var(--gold); }
 .scope-mgmt .sidebar__link-icon { color: rgba(255,255,255,0.72); }
-.scope-mgmt .sidebar__link.is-active .sidebar__link-icon { color: #E6D2A8; }
+.scope-mgmt .sidebar__link.is-active .sidebar__link-icon { color: #E5D4AE; }
 .scope-mgmt .sidebar__active-dot { background: var(--gold); }
 .scope-mgmt .sidebar__footer { border-top: 1px solid rgba(255,255,255,0.10); padding: 12px; gap: 10px; }
 .scope-mgmt .sidebar__switch { color: rgba(255,255,255,0.86); border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; background: transparent; }
@@ -1522,7 +1522,7 @@
 .scope-mgmt .page { padding: 24px 28px 32px; }
 @media (max-width: 860px) { .scope-mgmt .page { padding: 16px; } }
 .scope-mgmt .pagehead { border-bottom: 1px solid var(--divider); padding-bottom: 18px; margin-bottom: 24px; }
-.scope-mgmt .pagehead__eyebrow { background: var(--gold-soft); color: #7A5A22; border: 1px solid #E5D6B8; font-size: 11px; font-weight: 700; letter-spacing: 0.03em; border-radius: 3px; }
+.scope-mgmt .pagehead__eyebrow { background: var(--gold-soft); color: #7A6328; border: 1px solid #E3D6BE; font-size: 11px; font-weight: 700; letter-spacing: 0.03em; border-radius: 3px; }
 .scope-mgmt .pagehead__text h1, .scope-mgmt .pagehead h1 { font-family: var(--font-serif); color: var(--navy); font-size: 30px; line-height: 38px; font-weight: 700; }
 .scope-mgmt .pagehead__text p, .scope-mgmt .pagehead p { color: var(--text-2); font-size: 14px; line-height: 22px; }
 
@@ -1548,7 +1548,7 @@
 
 /* Forms / controls */
 .scope-mgmt .input, .scope-mgmt .select, .scope-mgmt .textarea, .scope-mgmt input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), .scope-mgmt select, .scope-mgmt textarea { border-radius: 4px; border-color: var(--control-border); font-size: 14px; }
-.scope-mgmt .input:focus, .scope-mgmt .select:focus, .scope-mgmt .textarea:focus, .scope-mgmt input:focus, .scope-mgmt select:focus, .scope-mgmt textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,77,128,0.12); }
+.scope-mgmt .input:focus, .scope-mgmt .select:focus, .scope-mgmt .textarea:focus, .scope-mgmt input:focus, .scope-mgmt select:focus, .scope-mgmt textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,78,137,0.12); }
 .scope-mgmt .search, .scope-mgmt .search-wrap { border-radius: 4px; }
 .scope-mgmt .btn { border-radius: 4px; font-weight: 600; letter-spacing: 0; }
 .scope-mgmt .btn--primary, .scope-mgmt .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
@@ -1562,7 +1562,7 @@
 .scope-mgmt .badge--danger { background: var(--danger-bg); color: var(--danger); }
 
 /* Modal */
-.scope-mgmt .overlay { background: rgba(11,35,65,0.45); }
+.scope-mgmt .overlay { background: rgba(16,42,67,0.45); }
 .scope-mgmt .modal { border-radius: 6px; border: 1px solid var(--divider); box-shadow: var(--shadow-dialog); }
 .scope-mgmt .modal__head { background: #FBFCFD; border-bottom: 1px solid var(--divider); padding: 18px 20px; }
 .scope-mgmt .modal__head h2 { font-family: var(--font-serif); color: var(--navy); font-size: 22px; }

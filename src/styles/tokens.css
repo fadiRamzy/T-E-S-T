@@ -7,31 +7,31 @@
   color-scheme: light dark;
 
   /* Surfaces */
-  --canvas: #F5F6F8;
+  --canvas: #F3F5F7;
   --surface: #FFFFFF;
-  --surface-sunken: #F0F2F5;
-  --surface-alt: #E8EDF3;
+  --surface-sunken: #F7F9FB;
+  --surface-alt: #EDF2F7;
 
   /* Text */
-  --text: #142033;
-  --text-2: #3D4F63;
-  --text-3: #5C6F85;
+  --text: #243447;
+  --text-2: #4A5E73;
+  --text-3: #607B96;
 
   /* Lines / controls */
-  --divider: #D7DEE6;
-  --control-border: #AAB8C8;
-  --control-border-strong: #7E93A8;
+  --divider: #D9E2EC;
+  --control-border: #A9BACB;
+  --control-border-strong: #8299AE;
 
   /* Brand / institutional */
-  --navy: #0B2341;
-  --navy-2: #163A5F;
-  --navy-3: #1E4B78;
-  --accent: #1A4D80;
-  --accent-hover: #163F69;
+  --navy: #102A43;
+  --navy-2: #183B5A;
+  --navy-3: #1D4E89;
+  --accent: #1D4E89;
+  --accent-hover: #184274;
   --on-accent: #FFFFFF;
-  --accent-soft: #EAF1F8;
-  --gold: #A8894F;
-  --gold-soft: #F5F0E6;
+  --accent-soft: #EAF2FA;
+  --gold: #B69A5A;
+  --gold-soft: #F7F3EA;
 
   /* Semantic */
   --success: #1E6B45;
@@ -110,15 +110,15 @@
     --divider: #304A66;
     --control-border: #5A7590;
     --control-border-strong: #7891AA;
-    --navy: #081828;
-    --navy-2: #10263D;
-    --navy-3: #183756;
-    --accent: #7BA9D6;
-    --accent-hover: #96BCE2;
+    --navy: #0C2236;
+    --navy-2: #15324D;
+    --navy-3: #1D4E89;
+    --accent: #84B1DA;
+    --accent-hover: #9CC3E6;
     --on-accent: #0B1A2A;
     --accent-soft: #1D3550;
-    --gold: #C9AA70;
-    --gold-soft: #2E281C;
+    --gold: #CDB06F;
+    --gold-soft: #2F291D;
     --success: #7BCB98;
     --success-bg: #183326;
     --warning: #E0C06A;
