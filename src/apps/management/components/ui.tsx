@@ -141,7 +141,7 @@ export function ListCard({
   const { collapsed, toggle } = useCollapse(defaultCollapsed);
   return (
     <Card
-      className={cn('listcard', className)}
+      className={className}
       title={title}
       subtitle={subtitle}
       padded={padded}
@@ -160,7 +160,7 @@ export function ListCard({
         </>
       }
     >
-      {controls ? <div className="listcard__controls"><div className="listcard__controls-inner">{controls}</div></div> : null}
+      {controls ? <div className="listcard__controls">{controls}</div> : null}
       <div className="listcard__list" id={id} data-collapsed={collapsed ? 'true' : 'false'}>
         {collapsed ? (
           <div className="collapsed-note small muted">
@@ -615,14 +615,12 @@ export function Stat({
     <>
       {icon ? (
         <span className={cn('stat__icon', `stat__icon--${tone}`)}>
-          <Icon name={icon} size={18} />
+          <Icon name={icon} size={17} />
         </span>
       ) : null}
-      <div className="stat__body">
-        <span className="stat__label">{label}</span>
-        <strong className="stat__value">{value}</strong>
-        {hint ? <span className="stat__hint">{hint}</span> : null}
-      </div>
+      <span className="stat__label">{label}</span>
+      <strong className="stat__value">{value}</strong>
+      {hint ? <span className="stat__hint">{hint}</span> : null}
     </>
   );
   return onClick ? (
