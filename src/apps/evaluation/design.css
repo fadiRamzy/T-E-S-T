@@ -12,6 +12,8 @@
   font-family: var(--font-body);
   font-size: 14.5px;
   line-height: 1.6;
+  --line: var(--divider);
+  --line-soft: rgba(42, 33, 27, 0.06);
 }
 
 /* ── Shell ──────────────────────────────────────────────────────────────── */
