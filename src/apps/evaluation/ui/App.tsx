@@ -13,9 +13,11 @@ const PAGES: Array<{ id: string; label: string; icon: IconName }> = [
   { id: 'employees', label: 'الموظفون', icon: 'users' },
   { id: 'monthly', label: 'التقييم الشهري', icon: 'calendar' },
   { id: 'files', label: 'الملفات', icon: 'file' },
+  { id: 'mgmt/employees', label: 'نظام المتابعة', icon: 'chart' },
 ];
 type PageId = 'dashboard' | 'employees' | 'monthly' | 'files';
 const isPage = (x: string): x is PageId => PAGES.some((p) => p.id === x);
+const isMgmt = (x: string) => x === 'mgmt/employees';
 
 export function App() {
   const ready = useStore((s) => s.ready);
@@ -26,13 +28,17 @@ export function App() {
   const canRedo = useStore((s) => s.future.length > 0);
   const changes = useStore((s) => s.changesSinceExport);
   // [merged] this app lives under the #/eval/ namespace of the unified portal (legacy #<page> hashes still accepted)
-  const [page, setPage] = useState<PageId>(() => {
+  const [page, setPage] = useState<PageId | 'mgmt/employees'>(() => {
     const seg = location.hash.replace(/^#\/?/, '').replace(/^eval\//, '');
+    if (isMgmt(seg)) return 'mgmt/employees';
     return isPage(seg) ? (seg as PageId) : 'dashboard';
   });
 
   useEffect(() => { init(); }, []);
-  useEffect(() => { location.hash = `/eval/${page}`; }, [page]);
+  useEffect(() => {
+    const target = page === 'mgmt/employees' ? '#/mgmt/employees' : `/eval/${page}`;
+    location.hash = target;
+  }, [page]);
   // with no data yet the only useful page is «الملفات»; staying on it keeps the import result visible after the first import
   useEffect(() => { if (ready && !model) setPage('files'); }, [ready, model]);
   useEffect(() => {
@@ -46,70 +52,76 @@ export function App() {
     return () => window.removeEventListener('keydown', k);
   }, []);
 
-  const effective: PageId = !model ? 'files' : page;
+  const effective: PageId | 'mgmt/employees' = !model ? 'files' : page;
+  const isMgmtPage = page === 'mgmt/employees';
 
   return (
     <div className="shell scope-eval">
-      <aside className="sidebar">
-        <div className="brand">
-          <span className="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-6 4 3 7-9" /></svg></span>
-          <b>تقييم مسئولي المخاطر</b>
+      <header className="eval-desktop-topbar print-hide" aria-label="رأس الصفحة">
+        <div className="eval-desktop-topbar__inner">
+          <div>
+            <span className="eval-desktop-topbar__eyebrow">منظومة رسمية</span>
+            <strong className="eval-desktop-topbar__title">نظام تقييم مسئولي المخاطر</strong>
+          </div>
+          <a className="eval-desktop-topbar__switch" href="#/mgmt/employees"><Icon name="chart" /><span>نظام المتابعة</span></a>
         </div>
-        <a className="sidebar-switch" href="#/mgmt/employees" title="الانتقال إلى نظام المتابعة">
-          <Icon name="chart" /><span className="lbl">نظام المتابعة</span>
-        </a>
-        <nav className="navbar" aria-label="التنقل الرئيسي">
+      </header>
+      <header className="eval-mobile-topbar print-hide">
+        <div className="eval-mobile-topbar__title">تقييم مسئولي المخاطر</div>
+        <a className="eval-mobile-topbar__switch" href="#/mgmt/employees">نظام المتابعة</a>
+      </header>
+      <main className="container">
+        {model && (
+          <>
+            <datalist id="dl-sectors">{model.lists.sectors.map((s) => <option key={s} value={s} />)}</datalist>
+            <datalist id="dl-govs">{[...new Set([...model.lists.governorates, ...EGYPT_GOVERNORATES])].map((s) => <option key={s} value={s} />)}</datalist>
+          </>
+        )}
+        {!ready ? <Empty>جارٍ التحميل…</Empty> : (
+          <div key={effective} className={effective === 'monthly' ? 'page page--monthly' : 'page'}>
+            {effective === 'dashboard' && model && <DashboardPage model={model} />}
+            {effective === 'employees' && model && <EmployeesPage model={model} />}
+            {effective === 'monthly' && model && <MonthlyPage model={model} />}
+            {effective === 'files' && <FilesPage model={model} />}
+          </div>
+        )}
+      </main>
+
+      <nav className="bottom-nav sidebar" aria-label="التنقل الرئيسي">
+        <div className="bottom-nav__inner navbar">
           {PAGES.map((p) => {
             const off = !model && p.id !== 'files';
+            const active = page === p.id;
             return (
-              <button key={p.id} title={p.label} aria-label={p.label} className={`nav ${effective === p.id ? 'active' : ''}`} onClick={() => setPage(p.id as PageId)} aria-current={effective === p.id ? 'page' : undefined} disabled={off}>
-                <Icon name={p.icon} /><span className="lbl">{p.label}</span>
-              </button>
+              <a
+                key={p.id}
+                href={`#/eval/${p.id}`}
+                className={`bottom-nav__item ${active ? 'is-active' : ''} ${off ? 'opacity-50 pointer-events-none' : ''}`}
+                aria-current={active ? 'page' : undefined}
+                aria-label={p.label}
+                title={p.label}
+                onClick={(e) => {
+                  if (off) e.preventDefault();
+                  else setPage(p.id as PageId);
+                }}
+              >
+                <span className="bottom-nav__icon"><Icon name={p.icon} size={18} /></span>
+                <span className="bottom-nav__label">{p.label}</span>
+              </a>
             );
           })}
-        </nav>
-        <div className="side-foot">
-          <span className="status" aria-live="polite" data-testid="save-status">
-            <span className={`dot ${saving ? 'saving' : ''}`} />
-            <span className="txt">{saving ? 'جارٍ الحفظ…' : lastSaved ? `محفوظ ${new Date(lastSaved).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}` : 'غير محفوظ'}{changes > 0 ? ` · ${changes} غير مُصدَّر` : ''}</span>
-          </span>
-          <span className="undo-tools">
-            <button className="iconbtn" onClick={undo} disabled={!canUndo} title="تراجع (Ctrl+Z)" aria-label="تراجع"><Icon name="undo" /></button>
-            <button className="iconbtn" onClick={redo} disabled={!canRedo} title="إعادة (Ctrl+Y)" aria-label="إعادة"><Icon name="redo" /></button>
-          </span>
+          <a
+            href="#/mgmt/employees"
+            className={`bottom-nav__item ${isMgmtPage ? 'is-active' : ''}`}
+            title="نظام المتابعة"
+            aria-label="الانتقال إلى نظام المتابعة"
+          >
+            <span className="bottom-nav__icon"><Icon name="chart" size={18} /></span>
+            <span className="bottom-nav__label">نظام المتابعة</span>
+          </a>
         </div>
-      </aside>
-      <div className="main">
-        <header className="eval-desktop-topbar print-hide" aria-label="رأس الصفحة">
-          <div className="eval-desktop-topbar__inner">
-            <div>
-              <span className="eval-desktop-topbar__eyebrow">منظومة رسمية</span>
-              <strong className="eval-desktop-topbar__title">نظام تقييم مسئولي المخاطر</strong>
-            </div>
-            <a className="eval-desktop-topbar__switch" href="#/mgmt/employees"><Icon name="chart" /><span>نظام المتابعة</span></a>
-          </div>
-        </header>
-        <header className="eval-mobile-topbar print-hide">
-          <div className="eval-mobile-topbar__title">تقييم مسئولي المخاطر</div>
-          <a className="eval-mobile-topbar__switch" href="#/mgmt/employees">نظام المتابعة</a>
-        </header>
-        <main className="container">
-          {model && (
-            <>
-              <datalist id="dl-sectors">{model.lists.sectors.map((s) => <option key={s} value={s} />)}</datalist>
-              <datalist id="dl-govs">{[...new Set([...model.lists.governorates, ...EGYPT_GOVERNORATES])].map((s) => <option key={s} value={s} />)}</datalist>
-            </>
-          )}
-          {!ready ? <Empty>جارٍ التحميل…</Empty> : (
-            <div key={effective} className={effective === 'monthly' ? 'page page--monthly' : 'page'}>
-              {effective === 'dashboard' && model && <DashboardPage model={model} />}
-              {effective === 'employees' && model && <EmployeesPage model={model} />}
-              {effective === 'monthly' && model && <MonthlyPage model={model} />}
-              {effective === 'files' && <FilesPage model={model} />}
-            </div>
-          )}
-        </main>
-      </div>
+      </nav>
+
       <ConfirmHost />
       <ToastHost />
     </div>

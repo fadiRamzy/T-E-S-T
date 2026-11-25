@@ -21,221 +21,101 @@
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: var(--side) minmax(0, 1fr);
-  gap: 0;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   direction: rtl;
 }
 
-/* Sidebar — neutral cream rail; maroon used only as accent */
-.scope-eval .sidebar, .scope-eval.sidebar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  height: 100vh;
-  width: auto;
-  flex: none;
+/* Bottom navigation bar — replaces right-side sidebar */
+.scope-eval .bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: auto;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 4px 14px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: transparent;
+  pointer-events: none;
+}
+
+.scope-eval .bottom-nav__inner {
+  pointer-events: auto;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  background: var(--surface-tint);
+  border: 1.5px solid var(--divider);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scope-eval .bottom-nav__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.scope-eval .bottom-nav__item {
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 12px;
-  background: var(--surface-tint);
-  border-inline-end: 1px solid var(--divider);
-  box-shadow: inset -1px 0 0 rgba(0,0,0,0.04);
-  backdrop-filter: blur(28px) saturate(140%);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
-  overflow: hidden;
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .scope-eval .sidebar, .scope-eval.sidebar { background: var(--surface-tint); }
-}
-.scope-eval .sidebar::after, .scope-eval.sidebar::after { content: none; }
-
-.scope-eval .brand, .scope-eval.brand {
-  display: flex; align-items: center; gap: 10px;
-  min-height: 60px; padding: 20px 16px 16px; margin: 0;
-  border-bottom: 1px solid var(--divider);
-}
-.scope-eval .brand .logo, .scope-eval.brand .logo {
-  width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center;
-  border-radius: var(--radius-md); color: var(--maroon-dark);
-  background: linear-gradient(180deg, var(--gold-light), var(--gold));
-  border: 1px solid rgba(173, 131, 50, 0.35);
-  box-shadow: 0 4px 12px rgba(173, 131, 50, 0.25), inset 0 1px 0 rgba(255,255,255,0.5);
-}
-.scope-eval .brand .logo svg, .scope-eval.brand .logo svg {
-  width: 20px; height: 20px; stroke: var(--maroon-dark); fill: none; stroke-width: 2.1;
-  stroke-linecap: round; stroke-linejoin: round;
-}
-.scope-eval .brand b, .scope-eval.brand b {
-  color: var(--maroon-dark); font-family: var(--font-display); font-size: 17px; font-weight: 800;
-  letter-spacing: 0; line-height: 1.25; white-space: nowrap;
-}
-.scope-eval .brand b small, .scope-eval.brand b small {
-  color: var(--text-2); font-size: 12px; display: block; margin-top: 1px;
-}
-
-.scope-eval .sidebar__switch, .scope-eval.sidebar__switch {
-  display: flex; align-items: center; gap: 8px; min-height: 36px;
-  padding: 0 12px; border-radius: var(--radius-sm);
-  border: 1px solid var(--divider); background: var(--surface);
-  color: var(--text-2); text-decoration: none;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.scope-eval .sidebar__switch:hover { background: var(--surface-alt); color: var(--maroon-dark); }
-
-.scope-eval .sidebar__collapse, .scope-eval.sidebar__collapse,
-.scope-eval .sidebar__mobile-close, .scope-eval.sidebar__mobile-close,
-.scope-eval .app-topbar__menu, .scope-eval.app-topbar__menu {
-  width: 32px; height: 32px; display: grid; place-items: center;
-  border: 1px solid var(--divider); border-radius: var(--radius-sm); background: var(--surface);
-  color: var(--text-2); cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
-}
-.scope-eval .sidebar__collapse:hover, .scope-eval.sidebar__collapse:hover,
-.scope-eval .sidebar__mobile-close:hover, .scope-eval.sidebar__mobile-close:hover,
-.scope-eval .app-topbar__menu:hover, .scope-eval.app-topbar__menu:hover {
-  background: var(--surface-alt); color: var(--maroon-dark);
-}
-.scope-eval .sidebar__mobile-close, .scope-eval.sidebar__mobile-close,
-.scope-eval .app-topbar__menu, .scope-eval.app-topbar__menu { display: none; }
-
-.scope-eval .sidebar__body, .scope-eval.sidebar__body {
-  position: relative; z-index: 1; flex: 1; min-height: 0;
-  display: flex; flex-direction: column; overflow: hidden;
-}
-.scope-eval .sidebar__nav, .scope-eval.sidebar__nav {
-  flex: 1; min-height: 0; overflow-y: auto;
-  padding: 14px 2px 12px; display: flex; flex-direction: column; gap: 12px;
-  scrollbar-width: thin;
-}
-.scope-eval .sidebar__group-label, .scope-eval.sidebar__group-label {
-  display: block; padding: 14px 16px 6px;
-  color: rgba(230,210,168,0.8); font-size: 11px; font-weight: 700;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.scope-eval .sidebar__links, .scope-eval.sidebar__links { display: grid; gap: 2px; }
-
-.scope-eval .sidebar__link, .scope-eval.sidebar__link,
-.scope-eval .nav, .scope-eval.nav {
-  position: relative; display: flex; align-items: center; gap: 12px;
-  width: 100%; min-height: 44px; height: 44px; padding: 10px 14px;
-  border: 0; border-radius: var(--radius-md); background: transparent;
-  color: var(--text);
-  font-family: var(--font-body); font-size: 14px; font-weight: 600; line-height: 20px;
-  text-align: start; text-decoration: none; cursor: pointer;
-  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease),
-              transform var(--dur-fast) var(--ease);
-}
-.scope-eval .sidebar__link:hover:not(.is-active), .scope-eval.sidebar__link:hover:not(.is-active),
-.scope-eval .nav:hover:not(:disabled):not(.active), .scope-eval.nav:hover:not(:disabled):not(.active) {
-  background: var(--surface-alt); color: var(--maroon-dark);
-}
-.scope-eval .sidebar__link:active:not(.is-active), .scope-eval.sidebar__link:active:not(.is-active),
-.scope-eval .nav:active:not(:disabled):not(.active), .scope-eval.nav:active:not(:disabled):not(.active) {
-  transform: scale(0.985);
-}
-.scope-eval .sidebar__link.is-active, .scope-eval.sidebar__link.is-active,
-.scope-eval .nav.active, .scope-eval.nav.active {
-  background: var(--maroon-tint);
-  color: var(--maroon-dark); font-weight: 700;
-  box-shadow: inset 3px 0 0 var(--gold);
-}
-[dir="rtl"] .scope-eval .sidebar__link.is-active,
-[dir="rtl"] .scope-eval.sidebar__link.is-active,
-[dir="rtl"] .scope-eval .nav.active, [dir="rtl"] .scope-eval.nav.active {
-  box-shadow: inset -3px 0 0 var(--gold);
-}
-.scope-eval .nav:disabled, .scope-eval.nav:disabled { opacity: 0.45; cursor: default; }
-.scope-eval .sidebar__link-icon, .scope-eval.sidebar__link-icon,
-.scope-eval .nav svg.ic, .scope-eval.nav svg.ic {
-  width: 20px; height: 20px; flex: 0 0 20px; display: grid; place-items: center;
-  color: inherit; opacity: 0.85;
-}
-.scope-eval .sidebar__link-icon svg, .scope-eval.sidebar__link-icon svg,
-.scope-eval .nav svg.ic, .scope-eval.nav svg.ic {
-  width: 20px; height: 20px;
-}
-.scope-eval .sidebar__link.is-active .sidebar__link-icon,
-.scope-eval.sidebar__link.is-active .sidebar__link-icon,
-.scope-eval .nav.active svg.ic, .scope-eval.nav.active svg.ic {
-  color: var(--gold); opacity: 1;
-}
-.scope-eval .sidebar__link-label, .scope-eval.sidebar__link-label,
-.scope-eval .nav .lbl, .scope-eval.nav .lbl {
-  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.scope-eval .sidebar__active-dot, .scope-eval.sidebar__active-dot {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
-  flex: none; margin-inline-start: auto;
-  box-shadow: 0 0 0 3px rgba(173, 131, 50, 0.35);
-}
-
-.scope-eval .sidebar__footer, .scope-eval.sidebar__footer {
-  display: grid; gap: 10px; padding: 12px;
-  border-top: 1px solid var(--divider);
-}
-.scope-eval .sidebar__status, .scope-eval.sidebar__status {
-  display: flex; align-items: center; gap: 9px;
-  padding: 8px 10px; border-radius: var(--radius-sm);
-  background: var(--surface); border: 1px solid var(--divider);
-}
-.scope-eval .sidebar__status-indicator, .scope-eval.sidebar__status-indicator {
-  width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%;
-  background: var(--success); box-shadow: 0 0 0 3px rgba(63, 122, 79, 0.35);
-}
-.scope-eval .sidebar__status-copy, .scope-eval.sidebar__status-copy {
-  display: grid; gap: 0; min-width: 0;
-}
-.scope-eval .sidebar__status-copy strong, .scope-eval.sidebar__status-copy strong {
-  color: var(--maroon-dark); font-size: 12px; font-weight: 600;
-}
-.scope-eval .sidebar__status-copy small, .scope-eval.sidebar__status-copy small {
-  color: var(--text-2); font-size: 11px;
-}
-.scope-eval .sidebar__quick-tools, .scope-eval.sidebar__quick-tools {
-  display: flex; gap: 6px;
-}
-.scope-eval .sidebar__quick-tools .iconbtn, .scope-eval.sidebar__quick-tools .iconbtn {
-  width: 34px; height: 34px; border: 1px solid var(--divider);
-  border-radius: var(--radius-sm); background: var(--surface);
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 64px;
+  height: 46px;
+  padding: 4px 6px;
+  border-radius: var(--radius-lg);
   color: var(--text-2);
-}
-.scope-eval .sidebar__quick-tools .iconbtn:hover:not(:disabled) {
-  background: var(--surface-alt); color: var(--maroon-dark);
-}
-.scope-eval .sidebar__workspace, .scope-eval.sidebar__workspace,
-.scope-eval .sidebar__workspace-label, .scope-eval.sidebar__workspace-label { display: none; }
-.scope-eval .sidebar-scrim, .scope-eval.sidebar-scrim {
-  display: none; background: rgba(0,0,0,0.35);
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  flex: 0 0 auto;
 }
 
-/* Collapsed rail */
-.scope-eval .app-sidebar.is-collapsed, .scope-eval.sidebar.is-collapsed {
-  width: 72px; padding-inline: 10px;
+.scope-eval .bottom-nav__item svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
 }
-.scope-eval .app-sidebar.is-collapsed .brand, .scope-eval.sidebar.is-collapsed .brand {
-  justify-content: center; padding-inline: 0;
-}
-.scope-eval .app-sidebar.is-collapsed .brand b,
-.scope-eval .app-sidebar.is-collapsed .nav .lbl,
-.scope-eval .app-sidebar.is-collapsed .sidebar__status-copy,
-.scope-eval .app-sidebar.is-collapsed .sidebar__group-label,
-.scope-eval .app-sidebar.is-collapsed .sidebar__active-dot { display: none; }
-.scope-eval .app-sidebar.is-collapsed .nav { justify-content: center; padding-inline: 0; }
-.scope-eval .app-sidebar.is-collapsed .sidebar__footer { justify-items: center; padding-inline: 0; }
-.scope-eval .app-sidebar.is-collapsed .sidebar__status { justify-content: center; padding-inline: 0; width: 100%; }
-.scope-eval .app-sidebar.is-collapsed .sidebar__quick-tools { flex-direction: column; }
 
-/* Frame / page */
-.scope-eval .main, .scope-eval.main {
-  min-width: 0; min-height: 100vh; display: flex; flex-direction: column;
-  position: relative; z-index: 1;
+.scope-eval .bottom-nav__item:active {
+  transform: scale(0.96);
 }
+
+.scope-eval .bottom-nav__item.is-active {
+  color: var(--maroon-dark);
+  background: var(--maroon-tint);
+  font-weight: 700;
+}
+
+.scope-eval .bottom-nav__item.opacity-50 {
+  opacity: 0.5;
+}
+
+.scope-eval .bottom-nav__item.pointer-events-none {
+  pointer-events: none;
+}
+
+/* Leave room for the fixed bottom nav bar so content is never blocked */
 .scope-eval .container, .scope-eval.container {
-  width: 100%; max-width: var(--content-max, 1600px); flex: 1;
-  margin: 0 auto; padding: 24px var(--page-gutter, 32px) 64px;
+  width: 100%;
+  max-width: var(--content-max, 1600px);
+  margin: 0 auto;
+  padding: 24px var(--page-gutter, 32px) calc(72px + env(safe-area-inset-bottom, 0px) + 20px);
 }
 .scope-eval .page, .scope-eval.page { min-height: auto; }
 

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppMeta } from '../state/store';
 import { useRoute } from '../state/router';
 import { Icon, type IconName } from './Icon';
-import { CollapseProvider, type CollapseSignal } from './ui';
+import { CollapseProvider } from './ui';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { cn } from '../lib/utils';
 
@@ -12,212 +12,83 @@ interface NavItem {
   icon: IconName;
 }
 
-interface NavGroup {
-  label: string;
-  items: NavItem[];
-}
-
-const NAV_GROUPS: NavGroup[] = [
-  {
-    label: 'الرئيسية',
-    items: [
-      { path: '/employees', label: 'الموظفون', icon: 'employees' },
-      { path: '/notes', label: 'الملاحظات والمتابعة', icon: 'edit' },
-    ],
-  },
-  {
-    label: 'العمليات الميدانية',
-    items: [
-      { path: '/visit-times', label: 'توقيت الزيارات', icon: 'visits' },
-      { path: '/minutes', label: 'المحاضر اليومية', icon: 'minutes' },
-    ],
-  },
-  {
-    label: 'الحضور والإجازات',
-    items: [
-      { path: '/leave-permissions', label: 'الإجازات والأذونات', icon: 'calendar' },
-      { path: '/attendance-delays', label: 'تأخيرات الحضور والانصراف', icon: 'clock' },
-    ],
-  },
-  {
-    label: 'الإدارة',
-    items: [{ path: '/reports', label: 'التقارير والنسخ الاحتياطي', icon: 'reports' }],
-  },
+const NAV_ITEMS: NavItem[] = [
+  { path: '/employees', label: 'الموظفون', icon: 'employees' },
+  { path: '/notes', label: 'الملاحظات والمتابعة', icon: 'edit' },
+  { path: '/visit-times', label: 'توقيت الزيارات', icon: 'visits' },
+  { path: '/minutes', label: 'المحاضر', icon: 'minutes' },
+  { path: '/leave-permissions', label: 'الإجازات', icon: 'calendar' },
+  { path: '/attendance-delays', label: 'تأخيرات الحضور', icon: 'clock' },
+  { path: '/reports', label: 'التقارير', icon: 'reports' },
+  { path: '/eval/dashboard', label: 'نظام التقييمات', icon: 'chart' },
 ];
 
-const NAV_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
+const isMgmtPath = (path: string) => !path.startsWith('/eval');
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { settings, ready } = useAppMeta();
   const route = useRoute();
-  const [collapse, setCollapse] = useState<CollapseSignal>({ version: 0, collapsed: false });
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const broadcast = (collapsed: boolean) => setCollapse((prev) => ({ version: prev.version + 1, collapsed }));
-  const isActive = (path: string) => path === '/employees' ? route.path === '/' || route.path === path || route.path.startsWith(`${path}/`) : route.path === path;
+  const isActive = (path: string) =>
+    path === '/employees'
+      ? route.path === '/' || route.path === path || route.path.startsWith(`${path}/`)
+      : route.path === path;
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
-    setSidebarOpen(false);
   }, [route.path]);
 
-  useEffect(() => {
-    if (!sidebarOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setSidebarOpen(false);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [sidebarOpen]);
-
   return (
-    <div className={cn('app-shell', sidebarCollapsed && 'is-sidebar-collapsed')}>
-      <aside
-        className={cn('app-sidebar print-hide', sidebarOpen && 'is-open', sidebarCollapsed && 'is-collapsed')}
-        id="app-sidebar"
-        aria-label="القائمة الجانبية"
-      >
-        <div className="sidebar__brand">
-          <a className="sidebar__identity" href="#/mgmt/employees" aria-label="الانتقال إلى الموظفين" onClick={() => setSidebarOpen(false)}>
-            <span className="sidebar__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 17l5-6 4 3 7-9" /></svg></span>
-            <span className="sidebar__brand-copy"><strong>إدارة المخاطر</strong><small>{settings.organizationName}</small></span>
-          </a>
-          <button
-            type="button"
-            className="sidebar__collapse"
-            aria-label={sidebarCollapsed ? 'توسيع الشريط الجانبي' : 'تصغير الشريط الجانبي'}
-            title={sidebarCollapsed ? 'توسيع الشريط الجانبي' : 'تصغير الشريط الجانبي'}
-            onClick={() => setSidebarCollapsed((value) => !value)}
-          >
-            <Icon name={sidebarCollapsed ? 'chevron-left' : 'chevron-right'} size={16} />
-          </button>
-          <button type="button" className="sidebar__mobile-close" aria-label="إغلاق القائمة" onClick={() => setSidebarOpen(false)}>
-            <Icon name="close" size={18} />
-          </button>
-        </div>
-
-        <div className="sidebar__workspace" title={settings.organizationName}>
-          <span className="sidebar__workspace-label">مساحة العمل</span>
-          <strong><Icon name="building" size={15} />{settings.organizationName}</strong>
-        </div>
-
-        <div className="sidebar__body">
-          <nav className="sidebar__nav" aria-label="التنقل الرئيسي">
-            {NAV_GROUPS.map((group) => (
-              <section className="sidebar__group" key={group.label} aria-label={group.label}>
-                <div className="sidebar__group-label">{group.label}</div>
-                <div className="sidebar__links">
-                  {group.items.map((item) => (
-                    <a
-                      key={item.path}
-                      href={`#/mgmt${item.path}`}
-                      className={cn('sidebar__link', isActive(item.path) && 'is-active')}
-                      aria-current={isActive(item.path) ? 'page' : undefined}
-                      title={item.label}
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      <span className="sidebar__link-icon"><Icon name={item.icon} size={18} strokeWidth={1.65} /></span>
-                      <span className="sidebar__link-label">{item.label}</span>
-                      {isActive(item.path) && <span className="sidebar__active-dot" aria-hidden="true" />}
-                    </a>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </nav>
-
-          <div className="sidebar__footer">
-            <a className="sidebar__switch" href="#/eval/dashboard" title="الانتقال إلى نظام التقييمات">
-              <Icon name="chart" size={16} />
-              <span>نظام التقييمات</span>
-            </a>
-            <div className="sidebar__status">
-              <span className="sidebar__status-indicator" />
-              <span className="sidebar__status-copy"><strong>{ready ? 'البيانات جاهزة' : 'جارٍ فتح البيانات'}</strong><small>محفوظة على هذا الجهاز</small></span>
-            </div>
-            {route.path !== '/reports' ? (
-              <div className="sidebar__quick-tools" aria-label="أدوات القوائم">
-                <button type="button" className="iconbtn" onClick={() => broadcast(true)} title="إخفاء جميع القوائم" aria-label="إخفاء الكل">
-                  <Icon name="close" size={15} />
-                </button>
-                <button type="button" className="iconbtn" onClick={() => broadcast(false)} title="إظهار جميع القوائم" aria-label="إظهار الكل">
-                  <Icon name="list" size={15} />
-                </button>
-              </div>
-            ) : null}
+    <div className="app-shell">
+      <header className="desktop-topbar print-hide" aria-label="رأس الصفحة">
+        <div className="desktop-topbar__inner">
+          <div className="desktop-topbar__title">
+            <span className="desktop-topbar__eyebrow">منظومة رسمية</span>
+            <strong>نظام المتابعة وإدارة المخاطر</strong>
+          </div>
+          <div className="desktop-topbar__meta">
+            <span className="desktop-topbar__org">
+              <Icon name="building" size={14} /> {settings.organizationName}
+            </span>
           </div>
         </div>
-      </aside>
+      </header>
 
-      {sidebarOpen && <button className="sidebar-scrim" type="button" aria-label="إغلاق القائمة" onClick={() => setSidebarOpen(false)} />}
+      <CollapseProvider signal={{ version: 0, collapsed: false }}>
+        <main className="page" id="main-content">
+          <ErrorBoundary name="mgmt-page">
+            {ready ? children : <div className="loading">جارٍ فتح البيانات المحلية…</div>}
+          </ErrorBoundary>
+        </main>
+      </CollapseProvider>
 
-      <div className="app-frame">
-        <header className="desktop-topbar print-hide" aria-label="رأس الصفحة">
-          <div className="desktop-topbar__inner">
-            <div className="desktop-topbar__title">
-              <span className="desktop-topbar__eyebrow">منظومة رسمية</span>
-              <strong>نظام المتابعة وإدارة المخاطر</strong>
-            </div>
-            <div className="desktop-topbar__meta">
-              <span className="desktop-topbar__org"><Icon name="building" size={14} />{settings.organizationName}</span>
-            </div>
-          </div>
-        </header>
-        <div className="mobile-topbar print-hide">
-          <div className="mobile-topbar__head">
-            <button
-              type="button"
-              className="app-topbar__menu"
-              aria-label="فتح قائمة التنقل"
-              aria-controls="app-sidebar"
-              aria-expanded={sidebarOpen}
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Icon name="menu" size={18} />
-            </button>
-            <div className="mobile-topbar__title">
-              <strong>إدارة المخاطر</strong>
-              <small>{settings.organizationName}</small>
-            </div>
-            <a className="mobile-topbar__switch" href="#/eval/dashboard" aria-label="الانتقال إلى نظام التقييمات">
-              <Icon name="chart" size={15} />
-              <span>التقييمات</span>
-            </a>
-          </div>
-          <div className="mobile-nav-wrap">
-            <nav className="mobile-nav" aria-label="تنقل سريع">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item.path}
-                  href={`#/mgmt${item.path}`}
-                  className={cn('mobile-nav__item', isActive(item.path) && 'is-active')}
-                  aria-current={isActive(item.path) ? 'page' : undefined}
-                >
-                  <Icon name={item.icon} size={15} />
-                  <span>{item.label}</span>
-                </a>
-              ))}
-            </nav>
-          </div>
+      <nav className="bottom-nav sidebar__nav" aria-label="التنقل الرئيسي">
+        <div className="bottom-nav__inner sidebar__nav">
+          {NAV_ITEMS.map((item) => {
+            const active =
+              item.path.startsWith('/eval')
+                ? route.path === '/eval/dashboard' || route.path.startsWith('/eval/')
+                : isActive(item.path);
+            return (
+              <a
+                key={item.path}
+                href={`#${item.path}`}
+                className={cn('bottom-nav__item', active && 'is-active')}
+                aria-current={active ? 'page' : undefined}
+                title={item.label}
+              >
+                <span className="bottom-nav__icon">
+                  <Icon name={item.icon} size={18} strokeWidth={1.65} />
+                </span>
+                <span className="bottom-nav__label">{item.label}</span>
+              </a>
+            );
+          })}
         </div>
+      </nav>
 
-        <CollapseProvider signal={collapse}>
-          <main className="page" id="main-content">
-            <ErrorBoundary name="mgmt-page">
-              {ready ? children : <div className="loading">جارٍ فتح البيانات المحلية…</div>}
-            </ErrorBoundary>
-          </main>
-        </CollapseProvider>
-
-        <footer className="appfoot print-hide">
-          <span>البيانات محفوظة محليًا على هذا الجهاز فقط</span>
-        </footer>
-      </div>
+      <footer className="appfoot print-hide">
+        <span>البيانات محفوظة محليًا على هذا الجهاز فقط</span>
+      </footer>
     </div>
   );
 }
