@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData, useAppMeta} from '../state/store';
 import {
   Badge,
   Button,
@@ -65,13 +65,16 @@ const emptyDraft = (employeeId = ''): Draft => ({
 });
 
 export function ObservationsPage({ embedded = false }: { embedded?: boolean } = {}) {
-  const { data, settings, runAction } = useApp();
+  const data = useAppData();
+const { settings } = useAppMeta();
+const { runAction } = useAppActions();
   const [employee, setEmployee] = useState('all');
   const [category, setCategory] = useState('all');
   const [status, setStatus] = useState('all');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [confirmDelete, setConfirmDelete] = useState<Observation | null>(null);
@@ -79,7 +82,7 @@ export function ObservationsPage({ embedded = false }: { embedded?: boolean } = 
   const nameOf = (id: string) => data.employees.find((row) => row.id === id)?.name ?? '—';
 
   const rows = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return data.observations
       .filter((row) => (employee === 'all' ? true : row.employeeId === employee))
       .filter((row) => (category === 'all' ? true : row.category === category))
@@ -88,7 +91,7 @@ export function ObservationsPage({ embedded = false }: { embedded?: boolean } = 
       .filter((row) => (to ? row.date <= to : true))
       .filter((row) => (!text ? true : `${row.details} ${row.correctiveAction} ${row.followUpNotes} ${row.branch}`.toLowerCase().includes(text)))
       .sort((a, b) => (a.date < b.date ? 1 : -1));
-  }, [data.observations, employee, category, status, from, to, query]);
+  }, [data.observations, employee, category, status, from, to, deferredQuery]);
 
   const categories = Array.from(new Set([...settings.observationCategories, ...data.observations.map((row) => row.category)].filter(Boolean)));
 

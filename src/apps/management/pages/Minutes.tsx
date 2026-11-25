@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData} from '../state/store';
 import {
   Badge,
   Button,
@@ -46,8 +46,10 @@ const emptyDraft = (): Draft => ({
 });
 
 export function MinutesPage() {
-  const { data, runAction } = useApp();
+  const data = useAppData();
+const { runAction } = useAppActions();
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [employeeFilter, setEmployeeFilter] = useState('all');
   const [monthFilter, setMonthFilter] = useState('all');
   const [yearFilter, setYearFilter] = useState('all');
@@ -71,14 +73,14 @@ export function MinutesPage() {
   }, [data.minutes]);
 
   const rows = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return data.minutes
       .filter((row) => (employeeFilter === 'all' ? true : row.employeeId === employeeFilter))
       .filter((row) => (yearFilter === 'all' ? true : dateOf(row).slice(0, 4) === yearFilter))
       .filter((row) => (monthFilter === 'all' ? true : Number(dateOf(row).slice(5, 7)) === Number(monthFilter)))
       .filter((row) => (!text ? true : nameOf(row.employeeId).toLowerCase().includes(text)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.minutes, data.employees, query, employeeFilter, monthFilter, yearFilter]);
+  }, [data.minutes, data.employees, deferredQuery, employeeFilter, monthFilter, yearFilter]);
 
   const resetFilters = () => {
     setQuery('');
@@ -288,7 +290,7 @@ export function MinutesPage() {
               value={draft.employeeId}
               error={errors.employeeId}
               onChange={(value) => set('employeeId', value)}
-              options={activeEmployees.map((row) => ({ id: row.id, name: row.name, meta: `رقم ${row.employeeNo}` }))}
+              options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((row) => ({ id: row.id, name: row.name, meta: `رقم ${row.employeeNo}` }))}
             />
 
             <Field label="توقيت طلب الملف" error={errors.fileRequestTime} htmlFor="min-request">

@@ -132,7 +132,7 @@ test('navigation has no separate follow-up register; employees page summary rend
   expect(document.querySelector('.employees-summary')?.textContent).toContain('إجمالي الموظفين');
   // no «سجل المتابعة» nav item / route link anywhere
   expect(document.querySelector('a[href="#/mgmt/observations"]')).toBeNull();
-  const navText = document.querySelector('.sidebar__nav')?.textContent ?? '';
+  const navText = document.querySelector('.bottom-nav')?.textContent ?? '';
   expect(navText).not.toContain('سجل المتابعة');
   expect(navText).toContain('الملاحظات والمتابعة');
 }, 60000);

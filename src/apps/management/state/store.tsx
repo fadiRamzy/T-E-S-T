@@ -80,6 +80,30 @@ interface AppContextValue {
   runAction: <T>(action: () => Promise<T>, successMessage?: string) => Promise<T | undefined>;
 }
 
+interface AppMetaValue {
+  ready: boolean;
+  fatalError: string | null;
+  settings: AppSettings;
+}
+
+interface AppActionsValue {
+  refresh: () => Promise<void>;
+  saveSettings: (patch: Partial<AppSettings>) => Promise<void>;
+  notify: (message: string, kind?: ToastKind) => void;
+  dismissToast: (id: number) => void;
+  runAction: <T>(action: () => Promise<T>, successMessage?: string) => Promise<T | undefined>;
+}
+
+interface AppToastValue {
+  toasts: Toast[];
+  dismissToast: (id: number) => void;
+}
+
+const AppDataContext = createContext<AppData | null>(null);
+const AppMetaContext = createContext<AppMetaValue | null>(null);
+const AppActionsContext = createContext<AppActionsValue | null>(null);
+const AppToastContext = createContext<AppToastValue | null>(null);
+// Backward-compatible combined context for existing useApp() consumers.
 const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -90,6 +114,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastId = useRef(0);
 
+  const dismissToast = useCallback((id: number) => setToasts((prev) => prev.filter((toast) => toast.id !== id)), []);
+
   const notify = useCallback((message: string, kind: ToastKind = 'info') => {
     toastId.current += 1;
     const id = toastId.current;
@@ -97,25 +123,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => setToasts((prev) => prev.filter((toast) => toast.id !== id)), 3500);
   }, []);
 
-  const dismissToast = useCallback((id: number) => setToasts((prev) => prev.filter((toast) => toast.id !== id)), []);
-
   const load = useCallback(async () => {
     await migrateLegacyEmployeeNotes();
     const [employees, employeeNotes, evaluations, visits, minutes, visitTimings, observations, leaves, leavePermissions, attendanceRecords, annualNotes, loadedSettings] =
       await Promise.all([
-      listEmployees(true),
-      listEmployeeNotes(),
-      listMonthlyEvaluations(),
-      listFieldVisits(),
-      listMinutes(),
-      listVisitTimings(),
-      listObservations(),
-      listLeaves(),
-      listLeavePermissions(),
-      listAttendanceRecords(),
-      listAnnualNotes(),
-      readSettings(),
-    ]);
+        listEmployees(true),
+        listEmployeeNotes(),
+        listMonthlyEvaluations(),
+        listFieldVisits(),
+        listMinutes(),
+        listVisitTimings(),
+        listObservations(),
+        listLeaves(),
+        listLeavePermissions(),
+        listAttendanceRecords(),
+        listAnnualNotes(),
+        readSettings(),
+      ]);
     setData({ employees, employeeNotes, evaluations, visits, minutes, visitTimings, observations, leaves, leavePermissions, attendanceRecords, annualNotes });
     setSettings(loadedSettings);
   }, []);
@@ -179,6 +203,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [load, notify],
   );
 
+  const metaValue = useMemo<AppMetaValue>(() => ({ ready, fatalError, settings }), [ready, fatalError, settings]);
+  const actionsValue = useMemo<AppActionsValue>(
+    () => ({ refresh: load, saveSettings, notify, dismissToast, runAction }),
+    [load, saveSettings, notify, dismissToast, runAction],
+  );
+  const toastValue = useMemo<AppToastValue>(() => ({ toasts, dismissToast }), [toasts, dismissToast]);
+
   const value = useMemo<AppContextValue>(
     () => ({
       ready,
@@ -195,11 +226,45 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [ready, fatalError, settings, data, load, saveSettings, notify, toasts, dismissToast, runAction],
   );
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppActionsContext.Provider value={actionsValue}>
+      <AppMetaContext.Provider value={metaValue}>
+        <AppDataContext.Provider value={data}>
+          <AppToastContext.Provider value={toastValue}>
+            <AppContext.Provider value={value}>{children}</AppContext.Provider>
+          </AppToastContext.Provider>
+        </AppDataContext.Provider>
+      </AppMetaContext.Provider>
+    </AppActionsContext.Provider>
+  );
 }
 
 export function useApp(): AppContextValue {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error('useApp must be used inside AppProvider');
+  return ctx;
+}
+
+export function useAppData(): AppData {
+  const ctx = useContext(AppDataContext);
+  if (!ctx) throw new Error('useAppData must be used inside AppProvider');
+  return ctx;
+}
+
+export function useAppMeta(): AppMetaValue {
+  const ctx = useContext(AppMetaContext);
+  if (!ctx) throw new Error('useAppMeta must be used inside AppProvider');
+  return ctx;
+}
+
+export function useAppActions(): AppActionsValue {
+  const ctx = useContext(AppActionsContext);
+  if (!ctx) throw new Error('useAppActions must be used inside AppProvider');
+  return ctx;
+}
+
+export function useAppToasts(): AppToastValue {
+  const ctx = useContext(AppToastContext);
+  if (!ctx) throw new Error('useAppToasts must be used inside AppProvider');
   return ctx;
 }

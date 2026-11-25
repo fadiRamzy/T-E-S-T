@@ -18,8 +18,8 @@ export function Modal({ title, onClose, children, wide }: { title: string; onClo
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className={`modal ${wide ? 'wide' : ''}`} role="dialog" aria-modal="true" aria-label={title}>
-        <h2>{title}</h2>
-        {children}
+        <div className="modal-head"><h2>{title}</h2><button type="button" className="iconbtn" onClick={onClose} aria-label="إغلاق"><Icon name="close" /></button></div>
+        <div className="modal-body">{children}</div>
       </div>
     </div>
   );
@@ -33,7 +33,7 @@ export function Drawer({ onClose, children }: { onClose: () => void; children: R
   }, [onClose]);
   return (
     <>
-      <div className="overlay" style={{ background: 'rgba(15,25,50,.25)', zIndex: 39 }} onMouseDown={onClose} />
+      <div className="overlay" style={{ background: 'rgba(42, 33, 27, 0.35)', zIndex: 39 }} onMouseDown={onClose} />
       <aside className="drawer" role="dialog" aria-modal="true">{children}</aside>
     </>
   );

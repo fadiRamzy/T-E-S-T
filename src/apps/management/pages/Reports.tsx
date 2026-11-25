@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useApp } from '../state/store';
+import { useAppActions } from '../state/store';
 import { Button, Callout, Modal, PageHeader } from '../components/ui';
 import {
   backupFileName,
@@ -13,7 +13,7 @@ import { downloadFile, readTextFile, safeJsonParse } from '../lib/utils';
 import { fmtDateTime } from '../lib/format';
 
 export function ReportsPage() {
-  const { refresh, notify } = useApp();
+  const { refresh, notify } = useAppActions();
   const [pending, setPending] = useState<{ payload: BackupPayload; validation: ValidationResult; name: string } | null>(null);
   const [restoring, setRestoring] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -61,36 +61,48 @@ export function ReportsPage() {
         title="التقارير والنسخ الاحتياطي"
         description="نزّل نسخة كاملة من سجلاتك أو ارفع نسخة محفوظة لاستعادتها."
       />
-      <section className="backup-actions" aria-label="إجراءات النسخ الاحتياطي">
-        <article className="backup-action-card">
-          <span className="backup-action-card__icon" aria-hidden="true">↓</span>
-          <div>
-            <h2>تنزيل آخر نسخة</h2>
-            <p>تنزيل نسخة JSON كاملة تشمل السجلات والإعدادات المحفوظة.</p>
+      <div className="page-stack">
+        <section className="section-card" aria-label="إجراءات النسخ الاحتياطي">
+          <div className="section-card__head">
+            <div>
+              <span className="section-card__eyebrow">النسخ الاحتياطي</span>
+              <h2 className="section-card__title">إجراءات النسخ الاحتياطي والاستعادة</h2>
+            </div>
           </div>
-          <Button variant="primary" icon="download" onClick={exportBackup}>تنزيل آخر نسخة</Button>
-        </article>
-        <article className="backup-action-card">
-          <span className="backup-action-card__icon backup-action-card__icon--upload" aria-hidden="true">↑</span>
-          <div>
-            <h2>رفع نسخة بيانات</h2>
-            <p>استعادة نسخة موجودة بعد التحقق منها، مع تنزيل نسخة أمان قبل التنفيذ.</p>
+          <div className="section-card__body">
+            <div className="backup-actions" aria-label="إجراءات النسخ الاحتياطي">
+              <article className="backup-action-card">
+                <span className="backup-action-card__icon" aria-hidden="true">↓</span>
+                <div>
+                  <h3>تنزيل آخر نسخة</h3>
+                  <p>تنزيل نسخة JSON كاملة تشمل السجلات والإعدادات المحفوظة.</p>
+                </div>
+                <Button variant="primary" icon="download" onClick={exportBackup}>تنزيل آخر نسخة</Button>
+              </article>
+              <article className="backup-action-card">
+                <span className="backup-action-card__icon backup-action-card__icon--upload" aria-hidden="true">↑</span>
+                <div>
+                  <h3>رفع نسخة بيانات</h3>
+                  <p>استعادة نسخة موجودة بعد التحقق منها، مع تنزيل نسخة أمان قبل التنفيذ.</p>
+                </div>
+                <Button icon="upload" onClick={() => fileRef.current?.click()}>رفع نسخة بيانات</Button>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="application/json,.json"
+                  className="visually-hidden"
+                  aria-label="اختيار ملف نسخة بيانات"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) void pickFile(file);
+                    event.target.value = '';
+                  }}
+                />
+              </article>
+            </div>
           </div>
-          <Button icon="upload" onClick={() => fileRef.current?.click()}>رفع نسخة بيانات</Button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/json,.json"
-            className="visually-hidden"
-            aria-label="اختيار ملف نسخة بيانات"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) void pickFile(file);
-              event.target.value = '';
-            }}
-          />
-        </article>
-      </section>
+        </section>
+      </div>
 
       <Modal
         open={Boolean(pending)}

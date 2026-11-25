@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { App as ManagementApp } from './apps/management/App';
 import { AppProvider } from './apps/management/state/store';
 import { App as EvaluationApp } from './apps/evaluation/ui/App';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 /**
  * Unified portal — merges the two original projects without changing either:
@@ -48,23 +49,23 @@ export default function App() {
 
   if (view === 'mgmt') {
     return (
-      <>
+      <ErrorBoundary name="management">
         <AppProvider>
           <ManagementApp />
         </AppProvider>
         <SiteSwitchButton view="mgmt" />
-      </>
+      </ErrorBoundary>
     );
   }
   if (view === 'eval') {
     return (
-      <>
+      <ErrorBoundary name="evaluation">
         <EvaluationApp />
         <SiteSwitchButton view="eval" />
-      </>
+      </ErrorBoundary>
     );
   }
-  return <Portal />;
+  return <ErrorBoundary name="portal"><Portal /></ErrorBoundary>;
 }
 
 /**
@@ -93,10 +94,28 @@ function SiteSwitchButton({ view }: { view: 'mgmt' | 'eval' }) {
 function Portal() {
   return (
     <div className="portal">
-      <h1 className="portal-title">منظومة إدارة المخاطر الموحدة</h1>
+      <div className="portal-hero">
+        <span className="portal-eyebrow">منظومة موحدة</span>
+        <h1 className="portal-title">منظومة إدارة المخاطر الموحدة</h1>
+        <div className="portal-subtitle">وصول سريع وواضح إلى نظام المتابعة ونظام التقييمات في تجربة واحدة متناسقة.</div>
+      </div>
       <div className="portal-actions">
-        <a className="portal-btn portal-btn--mgmt" href="#/mgmt/employees">نظام المتابعة</a>
-        <a className="portal-btn portal-btn--eval" href="#/eval/dashboard">نظام التقييمات</a>
+        <a className="portal-btn portal-btn--mgmt" href="#/mgmt/employees">
+          <span className="portal-btn__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5Z"/><path d="M8 15.5v-4m4 4v-7m4 7v-2.5"/></svg>
+          </span>
+          <span className="portal-btn__label">نظام المتابعة</span>
+          <span className="portal-btn__desc" aria-hidden="true"></span>
+          <span className="portal-btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 7l5 5-5 5"/></svg></span>
+        </a>
+        <a className="portal-btn portal-btn--eval" href="#/eval/dashboard">
+          <span className="portal-btn__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.47L20.7 9.3l-4.35 4.24 1.03 5.98L12 16.7l-5.38 2.83 1.03-5.98L3.3 9.3l6-0.83Z"/></svg>
+          </span>
+          <span className="portal-btn__label">نظام التقييمات</span>
+          <span className="portal-btn__desc" aria-hidden="true"></span>
+          <span className="portal-btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 7l5 5-5 5"/></svg></span>
+        </a>
       </div>
     </div>
   );
