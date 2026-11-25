@@ -203,8 +203,8 @@ export function EmployeePicker({
               dir="rtl"
               className={cn('picker__pop scope-mgmt', placement === 'top' && 'picker__pop--top')}
               style={{
-                top: rect.top,
-                bottom: rect.bottom,
+                ...(rect.top != null ? { top: rect.top } : { top: 'auto' }),
+                ...(rect.bottom != null ? { bottom: rect.bottom } : { bottom: 'auto' }),
                 left: rect.left,
                 width: rect.width,
                 zIndex: 10020,
