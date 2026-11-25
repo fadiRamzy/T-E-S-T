@@ -248,7 +248,7 @@ const { notify } = useAppActions();
             </Button>
           </div>
         </div>
-        <div className="profile-facts">
+        <div className="profile-facts profile-chips">
           <span className="profile-chip">
             <em>الكود</em>
             <strong className="mono">{employee.code}</strong>

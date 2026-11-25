@@ -1,0 +1,129 @@
+/* ==========================================================================
+   Quiet Ledger — unified design tokens
+   Light by default; dark via prefers-color-scheme (no manual toggle/storage).
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* ── Light theme (spec) ─────────────────────────────────────────────── */
+  --canvas: #F4F6F9;
+  --surface: #FFFFFF;
+  --surface-sunken: #EEF1F5;
+  --text: #111827;
+  --text-2: #4B5563;
+  --text-3: #5F6B7A;
+  --divider: #E3E8EF;
+  --control-border: #8A94A6;
+  --accent: #0B5FCC;
+  --on-accent: #FFFFFF;
+  --accent-soft: #E8F1FD;
+
+  --success: #16703A;
+  --success-bg: #E7F6EC;
+  --warning: #8F4700;
+  --warning-bg: #FDF1E0;
+  --danger: #B4232F;
+  --danger-bg: #FDEBED;
+
+  /* ── Typography ─────────────────────────────────────────────────────── */
+  --font-family: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-numeric: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+
+  /* ── Spacing / radii / control sizes ────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --page-pad: 24px;
+  --radius-badge: 6px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-dialog: 16px;
+
+  --control-h: 36px;
+  --table-row-h: 40px;
+
+  /* ── Motion / elevation ─────────────────────────────────────────────── */
+  --motion: 150ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --shadow-popover: 0 8px 24px rgba(17, 24, 39, 0.08), 0 2px 6px rgba(17, 24, 39, 0.04);
+  --shadow-dialog: 0 16px 48px rgba(17, 24, 39, 0.12), 0 2px 8px rgba(17, 24, 39, 0.04);
+
+  /* ── Liquid glass (functional surfaces only) ────────────────────────── */
+  --glass-fill: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(227, 232, 239, 0.9);
+  --glass-blur: 16px;
+
+  /* ── Legacy aliases (keep existing CSS working while redesigning) ───── */
+  --apple-font: var(--font-family);
+  --apple-font-formal: var(--font-family);
+  --apple-bg: var(--canvas);
+  --apple-bg-deep: var(--surface-sunken);
+  --apple-surface: var(--glass-fill);
+  --apple-surface-solid: var(--surface);
+  --apple-surface-elevated: var(--surface);
+  --apple-text: var(--text);
+  --apple-text-secondary: var(--text-2);
+  --apple-text-tertiary: var(--text-3);
+  --apple-blue: var(--accent);
+  --apple-blue-hover: #0A56B3;
+  --apple-navy: var(--text);
+  --apple-separator: var(--divider);
+  --apple-separator-strong: var(--control-border);
+  --apple-glass-fill: var(--glass-fill);
+  --apple-glass-fill-strong: rgba(255, 255, 255, 0.92);
+  --apple-glass-border: var(--glass-border);
+  --apple-glass-shadow: var(--shadow-popover);
+  --apple-glass-shadow-lg: var(--shadow-dialog);
+  --apple-radius: var(--radius-card);
+  --apple-radius-sm: var(--radius-control);
+  --apple-radius-xs: var(--radius-badge);
+  --apple-ease: var(--ease);
+  --apple-spring: var(--ease);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0E131B;
+    --surface: #161D28;
+    --surface-sunken: #1C2533;
+    --text: #E8ECF3;
+    --text-2: #A7B1C2;
+    --text-3: #8E99AB;
+    --divider: #263041;
+    --control-border: #6E7889;
+    --accent: #6EAAFF;
+    --on-accent: #071526;
+    --accent-soft: #172B47;
+
+    --success: #6FD695;
+    --success-bg: #12301F;
+    --warning: #F2B866;
+    --warning-bg: #35260F;
+    --danger: #FF9AA2;
+    --danger-bg: #3A171C;
+
+    --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+    --shadow-dialog: 0 16px 48px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
+
+    --glass-fill: rgba(22, 29, 40, 0.88);
+    --glass-border: rgba(38, 48, 65, 0.9);
+    --apple-blue-hover: #8BBDFF;
+  }
+}
+
+@media (max-width: 860px) {
+  :root { --page-pad: 16px; }
+}
+
+@media (pointer: coarse) {
+  :root { --control-h: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion: 0.01ms; }
+}

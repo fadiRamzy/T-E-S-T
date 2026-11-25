@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {useApp, useAppMeta} from '../state/store';
+import { useAppMeta } from '../state/store';
 import { useRoute } from '../state/router';
 import { Icon, type IconName } from './Icon';
 import { CollapseProvider, type CollapseSignal } from './ui';
@@ -28,7 +28,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'العمليات الميدانية',
     items: [
-      { path: '/visit-times', label: 'توقيت الزيارات', icon: 'clock' },
+      { path: '/visit-times', label: 'توقيت الزيارات', icon: 'visits' },
       { path: '/minutes', label: 'المحاضر اليومية', icon: 'minutes' },
     ],
   },
@@ -45,6 +45,8 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
+const NAV_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const { settings, ready } = useAppMeta();
   const route = useRoute();
@@ -53,7 +55,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const broadcast = (collapsed: boolean) => setCollapse((prev) => ({ version: prev.version + 1, collapsed }));
   const isActive = (path: string) => path === '/employees' ? route.path === '/' || route.path === path || route.path.startsWith(`${path}/`) : route.path === path;
-
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -95,16 +96,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           >
             <Icon name={sidebarCollapsed ? 'chevron-left' : 'chevron-right'} size={16} />
           </button>
-          <button
-            type="button"
-            className="app-topbar__menu"
-            aria-label="فتح قائمة التنقل"
-            aria-controls="app-sidebar"
-            aria-expanded={sidebarOpen}
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Icon name="menu" size={19} />
-          </button>
           <button type="button" className="sidebar__mobile-close" aria-label="إغلاق القائمة" onClick={() => setSidebarOpen(false)}>
             <Icon name="close" size={18} />
           </button>
@@ -141,6 +132,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="sidebar__footer">
+            <a className="sidebar__switch" href="#/eval/dashboard" title="الانتقال إلى نظام التقييمات">
+              <Icon name="chart" size={16} />
+              <span>نظام التقييمات</span>
+            </a>
             <div className="sidebar__status">
               <span className="sidebar__status-indicator" />
               <span className="sidebar__status-copy"><strong>{ready ? 'البيانات جاهزة' : 'جارٍ فتح البيانات'}</strong><small>محفوظة على هذا الجهاز</small></span>
@@ -162,6 +157,44 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {sidebarOpen && <button className="sidebar-scrim" type="button" aria-label="إغلاق القائمة" onClick={() => setSidebarOpen(false)} />}
 
       <div className="app-frame">
+        <div className="mobile-topbar print-hide">
+          <div className="mobile-topbar__head">
+            <button
+              type="button"
+              className="app-topbar__menu"
+              aria-label="فتح قائمة التنقل"
+              aria-controls="app-sidebar"
+              aria-expanded={sidebarOpen}
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Icon name="menu" size={18} />
+            </button>
+            <div className="mobile-topbar__title">
+              <strong>إدارة المخاطر</strong>
+              <small>{settings.organizationName}</small>
+            </div>
+            <a className="mobile-topbar__switch" href="#/eval/dashboard" aria-label="الانتقال إلى نظام التقييمات">
+              <Icon name="chart" size={15} />
+              <span>التقييمات</span>
+            </a>
+          </div>
+          <div className="mobile-nav-wrap">
+            <nav className="mobile-nav" aria-label="تنقل سريع">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.path}
+                  href={`#/mgmt${item.path}`}
+                  className={cn('mobile-nav__item', isActive(item.path) && 'is-active')}
+                  aria-current={isActive(item.path) ? 'page' : undefined}
+                >
+                  <Icon name={item.icon} size={15} />
+                  <span>{item.label}</span>
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+
         <CollapseProvider signal={collapse}>
           <main className="page" id="main-content">
             <ErrorBoundary name="mgmt-page">
