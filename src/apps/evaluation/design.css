@@ -797,3 +797,61 @@
 .scope-eval .tablewrap .t{width:100%;}
 .scope-eval .actions-cell{white-space:nowrap;}
 .scope-eval .actions-row{display:inline-flex;gap:8px;align-items:center;}
+
+
+/* ==========================================================================
+   Institutional Government Portal theme (White House-inspired) — Evaluation
+   ========================================================================== */
+.scope-eval { background: var(--canvas); color: var(--text); }
+.scope-eval .sidebar { background: var(--navy); color: #fff; border-inline-end: 0; }
+.scope-eval .brand { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.10); }
+.scope-eval .brand .logo { background: rgba(168,137,79,0.18); color: #E6D2A8; border: 1px solid rgba(168,137,79,0.30); border-radius: 4px; }
+.scope-eval .brand b { font-family: var(--font-serif); font-size: 18px; color: #fff; }
+.scope-eval .sidebar-switch { color: rgba(255,255,255,0.86); border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; background: transparent; }
+.scope-eval .sidebar-switch:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.scope-eval .nav { color: rgba(255,255,255,0.82); border-radius: 4px; margin: 1px 8px; padding: 10px 12px; }
+.scope-eval .nav:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.scope-eval .nav.active { background: rgba(255,255,255,0.10); color: #fff; box-shadow: inset 3px 0 0 var(--gold); }
+[dir="rtl"] .scope-eval .nav.active { box-shadow: inset -3px 0 0 var(--gold); }
+.scope-eval .nav.active:hover { background: rgba(255,255,255,0.10); color: #fff; }
+.scope-eval .side-foot { border-top: 1px solid rgba(255,255,255,0.10); }
+.scope-eval .status { color: rgba(255,255,255,0.72); }
+.scope-eval .iconbtn { color: rgba(255,255,255,0.78); border-color: rgba(255,255,255,0.16); background: transparent; border-radius: 4px; }
+.scope-eval .iconbtn:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: #fff; }
+
+.scope-eval .eval-desktop-topbar { background: var(--surface); border-bottom: 1px solid var(--divider); position: sticky; top: 0; z-index: 30; }
+.scope-eval .eval-desktop-topbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 28px; }
+.scope-eval .eval-desktop-topbar__eyebrow { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--gold); margin-bottom: 2px; }
+.scope-eval .eval-desktop-topbar__title { display: block; font-family: var(--font-serif); font-size: 20px; line-height: 28px; color: var(--navy); font-weight: 700; }
+.scope-eval .eval-desktop-topbar__switch { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 4px; border: 1px solid var(--divider); background: var(--surface-sunken); color: var(--navy); text-decoration: none; font-size: 13px; font-weight: 600; }
+.scope-eval .eval-desktop-topbar__switch:hover { background: #EEF3F8; }
+.scope-eval .eval-desktop-topbar__switch svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; stroke-width: 1.8; }
+@media (max-width: 860px) { .scope-eval .eval-desktop-topbar { display: none !important; } }
+@media (min-width: 861px) { .scope-eval .eval-mobile-topbar { display: none !important; } }
+
+.scope-eval .container { padding: 24px 28px 32px; }
+@media (max-width: 860px) { .scope-eval .container { padding: 16px; } }
+.scope-eval .pagehead { border-bottom: 1px solid var(--divider); padding-bottom: 18px; margin-bottom: 24px; }
+.scope-eval .pagehead h1 { font-family: var(--font-serif); color: var(--navy); font-size: 30px; line-height: 38px; font-weight: 700; }
+.scope-eval .pagehead p { color: var(--text-2); }
+.scope-eval .card { border: 1px solid var(--divider); border-radius: 6px; box-shadow: none; }
+.scope-eval .card h2 { font-family: var(--font-serif); color: var(--navy); }
+.scope-eval .kpi { border: 1px solid var(--divider); border-radius: 6px; box-shadow: none; }
+.scope-eval .kpi::before { content: ""; display: block; height: 3px; background: var(--gold); margin: -16px -16px 12px; border-radius: 6px 6px 0 0; }
+.scope-eval .kpi .kpi-ic { background: var(--accent-soft); color: var(--navy); border-radius: 4px; }
+.scope-eval .kpi b { color: var(--navy); font-family: var(--font-serif); }
+.scope-eval .tablewrap { border: 1px solid var(--divider); border-radius: 6px; }
+.scope-eval table th, .scope-eval .grid th { background: #F3F6FA; color: var(--navy); font-weight: 700; border-bottom: 1px solid var(--divider); }
+.scope-eval table td, .scope-eval .grid td { border-bottom: 1px solid #E7EDF3; }
+.scope-eval .btn { border-radius: 4px; font-weight: 600; }
+.scope-eval .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.scope-eval .btn.primary:hover:not(:disabled) { background: var(--navy-2); border-color: var(--navy-2); }
+.scope-eval .input, .scope-eval .select, .scope-eval .textarea, .scope-eval input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), .scope-eval select, .scope-eval textarea { border-radius: 4px; border-color: var(--control-border); }
+.scope-eval .input:focus, .scope-eval .select:focus, .scope-eval .textarea:focus, .scope-eval input:focus, .scope-eval select:focus, .scope-eval textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,77,128,0.12); }
+.scope-eval .overlay { background: rgba(11,35,65,0.45); }
+.scope-eval .modal { border-radius: 6px; box-shadow: var(--shadow-dialog); }
+.scope-eval .modal-head h2, .scope-eval .drawer-head h2 { font-family: var(--font-serif); color: var(--navy); }
+.scope-eval .mobile-topbar, .scope-eval .eval-mobile-topbar { background: var(--navy); color: #fff; border-bottom: 0; }
+.scope-eval .eval-mobile-topbar__title { color: #fff; font-family: var(--font-serif); }
+.scope-eval .eval-mobile-topbar__switch { color: #fff; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+@media (max-width: 860px) { .scope-eval .eval-desktop-topbar { display: none !important; } }

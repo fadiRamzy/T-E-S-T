@@ -1,82 +1,94 @@
 /* ==========================================================================
-   Quiet Ledger — unified design tokens
-   Light by default; dark via prefers-color-scheme (no manual toggle/storage).
+   Institutional Government Portal — unified design tokens
+   Inspired by whitehouse.gov principles: formal, premium, readable.
+   Light default; dark via prefers-color-scheme.
    ========================================================================== */
-
 :root {
   color-scheme: light dark;
 
-  /* ── Light theme (spec) ─────────────────────────────────────────────── */
-  --canvas: #F4F6F9;
+  /* Surfaces */
+  --canvas: #F5F6F8;
   --surface: #FFFFFF;
-  --surface-sunken: #EEF1F5;
-  --text: #111827;
-  --text-2: #4B5563;
-  --text-3: #5F6B7A;
-  --divider: #E3E8EF;
-  --control-border: #8A94A6;
-  --accent: #0B5FCC;
+  --surface-sunken: #F0F2F5;
+  --surface-alt: #E8EDF3;
+
+  /* Text */
+  --text: #142033;
+  --text-2: #3D4F63;
+  --text-3: #5C6F85;
+
+  /* Lines / controls */
+  --divider: #D7DEE6;
+  --control-border: #AAB8C8;
+  --control-border-strong: #7E93A8;
+
+  /* Brand / institutional */
+  --navy: #0B2341;
+  --navy-2: #163A5F;
+  --navy-3: #1E4B78;
+  --accent: #1A4D80;
+  --accent-hover: #163F69;
   --on-accent: #FFFFFF;
-  --accent-soft: #E8F1FD;
+  --accent-soft: #EAF1F8;
+  --gold: #A8894F;
+  --gold-soft: #F5F0E6;
 
-  --success: #16703A;
-  --success-bg: #E7F6EC;
-  --warning: #8F4700;
-  --warning-bg: #FDF1E0;
-  --danger: #B4232F;
-  --danger-bg: #FDEBED;
+  /* Semantic */
+  --success: #1E6B45;
+  --success-bg: #EAF4EE;
+  --warning: #8A6508;
+  --warning-bg: #FBF5E6;
+  --danger: #A1262B;
+  --danger-bg: #FCEEEF;
 
-  /* ── Typography ─────────────────────────────────────────────────────── */
+  /* Typography */
   --font-family: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", "Noto Naskh Arabic", "IBM Plex Sans Arabic", serif;
   --font-numeric: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 
-  /* ── Spacing / radii / control sizes ────────────────────────────────── */
+  /* Spacing / layout */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
+  --page-pad: 28px;
+  --radius-badge: 3px;
+  --radius-control: 4px;
+  --radius-card: 6px;
+  --radius-dialog: 6px;
+  --control-h: 38px;
+  --table-row-h: 42px;
 
-  --page-pad: 24px;
-  --radius-badge: 6px;
-  --radius-control: 8px;
-  --radius-card: 12px;
-  --radius-dialog: 16px;
+  /* Motion / elevation */
+  --motion: 140ms;
+  --ease: ease;
+  --shadow-popover: 0 4px 12px rgba(11, 35, 65, 0.10);
+  --shadow-dialog: 0 8px 24px rgba(11, 35, 65, 0.14);
 
-  --control-h: 36px;
-  --table-row-h: 40px;
-
-  /* ── Motion / elevation ─────────────────────────────────────────────── */
-  --motion: 150ms;
-  --ease: cubic-bezier(0.2, 0, 0, 1);
-  --shadow-popover: 0 8px 24px rgba(17, 24, 39, 0.08), 0 2px 6px rgba(17, 24, 39, 0.04);
-  --shadow-dialog: 0 16px 48px rgba(17, 24, 39, 0.12), 0 2px 8px rgba(17, 24, 39, 0.04);
-
-  /* ── Liquid glass (functional surfaces only) ────────────────────────── */
-  --glass-fill: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(227, 232, 239, 0.9);
-  --glass-blur: 16px;
-
-  /* ── Legacy aliases (keep existing CSS working while redesigning) ───── */
+  /* Compatibility aliases */
+  --glass-fill: var(--surface);
+  --glass-border: var(--divider);
+  --glass-blur: 0px;
   --apple-font: var(--font-family);
-  --apple-font-formal: var(--font-family);
+  --apple-font-formal: var(--font-serif);
   --apple-bg: var(--canvas);
   --apple-bg-deep: var(--surface-sunken);
-  --apple-surface: var(--glass-fill);
+  --apple-surface: var(--surface);
   --apple-surface-solid: var(--surface);
   --apple-surface-elevated: var(--surface);
   --apple-text: var(--text);
   --apple-text-secondary: var(--text-2);
   --apple-text-tertiary: var(--text-3);
   --apple-blue: var(--accent);
-  --apple-blue-hover: #0A56B3;
-  --apple-navy: var(--text);
+  --apple-blue-hover: var(--accent-hover);
+  --apple-navy: var(--navy);
   --apple-separator: var(--divider);
   --apple-separator-strong: var(--control-border);
-  --apple-glass-fill: var(--glass-fill);
-  --apple-glass-fill-strong: rgba(255, 255, 255, 0.92);
-  --apple-glass-border: var(--glass-border);
+  --apple-glass-fill: var(--surface);
+  --apple-glass-fill-strong: var(--surface);
+  --apple-glass-border: var(--divider);
   --apple-glass-shadow: var(--shadow-popover);
   --apple-glass-shadow-lg: var(--shadow-dialog);
   --apple-radius: var(--radius-card);
@@ -88,42 +100,37 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #0E131B;
-    --surface: #161D28;
-    --surface-sunken: #1C2533;
-    --text: #E8ECF3;
-    --text-2: #A7B1C2;
-    --text-3: #8E99AB;
-    --divider: #263041;
-    --control-border: #6E7889;
-    --accent: #6EAAFF;
-    --on-accent: #071526;
-    --accent-soft: #172B47;
-
-    --success: #6FD695;
-    --success-bg: #12301F;
-    --warning: #F2B866;
-    --warning-bg: #35260F;
-    --danger: #FF9AA2;
-    --danger-bg: #3A171C;
-
-    --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
-    --shadow-dialog: 0 16px 48px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
-
-    --glass-fill: rgba(22, 29, 40, 0.88);
-    --glass-border: rgba(38, 48, 65, 0.9);
-    --apple-blue-hover: #8BBDFF;
+    --canvas: #0F1824;
+    --surface: #172437;
+    --surface-sunken: #1C2C42;
+    --surface-alt: #24364F;
+    --text: #EDF2F8;
+    --text-2: #C2CEDB;
+    --text-3: #9FB0C3;
+    --divider: #304A66;
+    --control-border: #5A7590;
+    --control-border-strong: #7891AA;
+    --navy: #081828;
+    --navy-2: #10263D;
+    --navy-3: #183756;
+    --accent: #7BA9D6;
+    --accent-hover: #96BCE2;
+    --on-accent: #0B1A2A;
+    --accent-soft: #1D3550;
+    --gold: #C9AA70;
+    --gold-soft: #2E281C;
+    --success: #7BCB98;
+    --success-bg: #183326;
+    --warning: #E0C06A;
+    --warning-bg: #352D14;
+    --danger: #F0A39C;
+    --danger-bg: #3B2123;
+    --shadow-popover: 0 4px 12px rgba(0,0,0,0.30);
+    --shadow-dialog: 0 8px 24px rgba(0,0,0,0.36);
+    --glass-fill: var(--surface);
+    --glass-border: var(--divider);
   }
 }
-
-@media (max-width: 860px) {
-  :root { --page-pad: 16px; }
-}
-
-@media (pointer: coarse) {
-  :root { --control-h: 44px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root { --motion: 0.01ms; }
-}
+@media (max-width: 860px) { :root { --page-pad: 16px; } }
+@media (pointer: coarse) { :root { --control-h: 44px; } }
+@media (prefers-reduced-motion: reduce) { :root { --motion: 0.01ms; } }
