@@ -5,7 +5,7 @@
    Light default; dark via prefers-color-scheme.
    ========================================================================== */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
   /* --- palette (warm ivory / deep maroon / muted gold) --- */
   --canvas: #FAF6EC;
@@ -93,14 +93,14 @@
   --surface-glass-border: rgba(173, 131, 50, 0.22);
 
   /* --- compatibility aliases (kept so existing component CSS still resolves) --- */
-  --navy: var(--maroon);
-  --navy-2: var(--maroon-dark);
-  --navy-3: var(--maroon-bright);
+  --navy: var(--text);
+  --navy-2: var(--text-2);
+  --navy-3: var(--text-3);
   --accent: var(--maroon);
   --accent-hover: var(--maroon-dark);
   --on-accent: #FFFFFF;
   --accent-soft: var(--maroon-tint);
-  --gold: var(--gold);
+  --gold: #AD8332;
   --gold-soft: var(--gold-tint);
   --bg: var(--canvas);
 
@@ -132,47 +132,6 @@
   --apple-radius-xs: var(--radius-xs);
   --apple-ease: var(--ease);
   --apple-spring: var(--ease-spring);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --canvas: #211916;
-    --surface: #2A211B;
-    --surface-alt: #3A2D29;
-    --surface-tint: #302521;
-
-    --text: #F0EDE8;
-    --text-2: #D1C9BF;
-    --text-3: #B7AFA6;
-
-    --divider: #786052;
-    --divider-strong: #5B483E;
-    --control-border: #5B483E;
-    --control-border-strong: #786052;
-
-    --maroon: #EFB1B5;
-    --maroon-dark: #FFD2D3;
-    --maroon-bright: #F2B7BB;
-    --maroon-tint: #55383E;
-
-    --gold: #E1C382;
-    --gold-dark: #EDCF8C;
-    --gold-light: #B79B68;
-    --gold-tint: #4B4332;
-
-    --success: #A9D5B1;
-    --success-bg: #354B40;
-    --danger: #FFB4AD;
-    --danger-bg: #53363C;
-    --warning: #EDCF8C;
-    --warning-bg: #4B4332;
-
-    --shadow-popover: 0 6px 18px -12px rgba(0, 0, 0, 0.7);
-    --shadow-dialog: 0 6px 20px -14px rgba(0, 0, 0, 0.6);
-
-    --surface-glass: rgba(55, 41, 35, 0.94);
-    --surface-glass-border: rgba(217, 186, 149, 0.25);
-  }
 }
 
 @media (max-width: 860px) {
