@@ -55,6 +55,9 @@ export function App() {
           <span className="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-6 4 3 7-9" /></svg></span>
           <b>تقييم مسئولي المخاطر</b>
         </div>
+        <a className="sidebar-switch" href="#/mgmt/employees" title="الانتقال إلى نظام المتابعة">
+          <Icon name="chart" /><span className="lbl">نظام المتابعة</span>
+        </a>
         <nav className="navbar" aria-label="التنقل الرئيسي">
           {PAGES.map((p) => {
             const off = !model && p.id !== 'files';
@@ -77,6 +80,10 @@ export function App() {
         </div>
       </aside>
       <div className="main">
+        <header className="eval-mobile-topbar print-hide">
+          <div className="eval-mobile-topbar__title">تقييم مسئولي المخاطر</div>
+          <a className="eval-mobile-topbar__switch" href="#/mgmt/employees">نظام المتابعة</a>
+        </header>
         <main className="container">
           {model && (
             <>

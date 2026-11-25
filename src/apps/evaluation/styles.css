@@ -110,3 +110,14 @@
   .scope-eval .filters select { flex: 1 1 45%; }
   .scope-eval .kpis, .scope-eval.kpis { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 }
+
+
+/* Quiet Ledger token alignment */
+.scope-eval, .scope-eval body { font-family: var(--font-family); color: var(--text); background: var(--canvas); }
+.scope-eval .card, .scope-eval .panel, .scope-eval .box { background: var(--surface); border: 1px solid var(--divider); border-radius: 12px; box-shadow: none; }
+.scope-eval .muted, .scope-eval .sub, .scope-eval small { color: var(--text-2); }
+.scope-eval .tablewrap { overflow: auto; -webkit-overflow-scrolling: touch; }
+.scope-eval .btn, .scope-eval button { font-family: var(--font-family); }
+@media (prefers-color-scheme: dark) {
+  .scope-eval .card, .scope-eval .panel, .scope-eval .box, .scope-eval .modal, .scope-eval .drawer { background: var(--surface); color: var(--text); border-color: var(--divider); }
+}

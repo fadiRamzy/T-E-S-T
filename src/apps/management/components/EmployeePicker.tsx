@@ -208,11 +208,6 @@ export function EmployeePicker({
                 left: rect.left,
                 width: rect.width,
                 zIndex: 10020,
-                background: '#ffffff',
-                color: '#1d1d1f',
-                fontFamily: '"IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Arabic", system-ui, sans-serif',
-                fontSize: 14,
-                lineHeight: '22px',
               }}
               onKeyDown={onKeyDown}
             >
@@ -246,28 +241,18 @@ export function EmployeePicker({
                           isActive && 'is-active',
                           isSelected && 'is-selected',
                         )}
-                        style={{
-                          color: '#1d1d1f',
-                          background: isSelected ? 'rgba(0,113,227,0.10)' : isActive ? 'rgba(0,113,227,0.06)' : '#ffffff',
-                          minHeight: 40,
-                          padding: '8px 12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          cursor: 'pointer',
-                          borderRadius: 8,
-                        }}
+                        style={{ minHeight: 40 }}
                         onMouseEnter={() => setActiveIndex(index)}
                         onClick={() => choose(option)}
                       >
-                        <span className="picker__name" style={{ flex: '1 1 auto', whiteSpace: 'normal', overflowWrap: 'anywhere', wordBreak: 'break-word', color: '#1d1d1f' }}>{option.name}</span>
-                        {option.meta ? <span className="picker__meta" style={{ flex: '0 0 auto', fontSize: 12, color: '#6e6e73' }}>{option.meta}</span> : null}
+                        <span className="picker__name">{option.name}</span>
+                        {option.meta ? <span className="picker__meta">{option.meta}</span> : null}
                         {isSelected ? <Icon name="check" size={14} /> : null}
                       </li>
                     );
                   })
                 ) : (
-                  <li className="picker__empty" style={{ padding: '12px 10px', textAlign: 'center', fontSize: 13, color: '#6e6e73', background: '#fff' }}>{options.length === 0 ? 'لا يوجد موظفون متاحون للاختيار' : 'لا يوجد موظف مطابق لهذا البحث.'}</li>
+                  <li className="picker__empty">{options.length === 0 ? 'لا يوجد موظفون متاحون للاختيار' : 'لا يوجد موظف مطابق لهذا البحث.'}</li>
                 )}
               </ul>
             </div>,
