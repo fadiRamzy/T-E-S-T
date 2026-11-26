@@ -201,7 +201,6 @@ const { runAction } = useAppActions();
               </div>
             </div>
             <div className="section-card__body">
-              <div className="filter-strip-label">تصفية حسب الموظف</div>
               <div
                 className="emp-filter-row filter-strip"
                 role="group"

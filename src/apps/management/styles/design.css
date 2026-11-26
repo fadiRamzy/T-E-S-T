@@ -271,7 +271,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
   background: transparent;
   border: 1.5px solid var(--divider);
 }
-.scope-mgmt .count-ring--zero { color: var(--text-3); border-color: var(--line); }
+.scope-mgmt .count-ring--zero { color: var(--text-3); border: none; background: var(--danger-bg); }
 .scope-mgmt .count-ring--total { color: var(--maroon-dark); border-color: var(--maroon); background: var(--maroon-tint); }
 .scope-mgmt .count-ring--leave { color: var(--teal-700); border-color: var(--teal-600); background: rgba(19, 137, 127, 0.08); }
 .scope-mgmt .count-ring--permission { color: var(--gold-dark); border-color: var(--gold); background: var(--gold-tint); }

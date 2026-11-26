@@ -155,6 +155,7 @@ export function ListCard({
             onClick={toggle}
             aria-expanded={!collapsed}
             aria-controls={id}
+            style={{ backgroundColor: 'var(--brand-100)', color: 'var(--brand-700)', borderColor: 'var(--brand-100)' }}
           >
             {collapsed ? showLabel : hideLabel}
           </Button>
