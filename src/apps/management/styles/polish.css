@@ -233,9 +233,9 @@
 
 .scope-mgmt.scope-mgmt .card__actions {
   padding: 4px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .scope-mgmt.scope-mgmt .card__actions .btn {
@@ -269,8 +269,8 @@
   background: var(--surface);
   border: 1.5px solid var(--line-strong);
   box-shadow: 0 -2px 14px rgba(15, 39, 64, 0.12);
-  padding: 8px;
-  gap: 8px;
+  padding: 10px 8px;
+  gap: 10px;
 }
 
 .scope-mgmt.scope-mgmt .bottom-nav__item {
