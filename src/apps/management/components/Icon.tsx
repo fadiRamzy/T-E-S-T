@@ -66,6 +66,10 @@ export function Icon({ name, size = 18, className, style, strokeWidth = 1.8 }: I
       width={size}
       height={size}
       style={{ strokeWidth, ...style }}
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
       focusable="false"
     >

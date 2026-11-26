@@ -18,7 +18,7 @@ import {
   TimeInput,
   Toolbar,
 } from '../components/ui';
-import { deleteAttendanceRecord, saveAttendanceRecord } from '../db/repo';
+import { ValidationError, deleteAttendanceRecord, saveAttendanceRecord } from '../db/repo';
 import type { AttendanceRecord } from '../db/schema';
 import { MONTHS_AR } from '../db/schema';
 import { fmtDate, fmtDurationWords, fmtTime, fmtNumber, todayInputValue } from '../lib/format';
@@ -37,6 +37,7 @@ const { runAction } = useAppActions();
   const [yearFilter, setYearFilter] = useState(thisYear());
   const [draft, setDraft] = useState<Draft | null>(null);
   const [deleting, setDeleting] = useState<AttendanceRecord | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((prev) => prev ? { ...prev, [key]: value } : prev);
   const filters = { employeeId: employeeFilter, month: monthFilter, year: yearFilter };
   const years = useMemo(() => Array.from(new Set([thisYear(), ...data.attendanceRecords.map((row) => row.date.slice(0, 4)).filter(Boolean)])).sort().reverse(), [data.attendanceRecords]);
@@ -50,8 +51,16 @@ const { runAction } = useAppActions();
 
   const submit = async () => {
     if (!draft) return;
-    await runAction(() => saveAttendanceRecord({ ...draft }), draft.id ? 'تم حفظ تعديلات سجل الحضور.' : 'تمت إضافة سجل الحضور والانصراف.');
-    setDraft(null);
+    setErrors({});
+    try {
+      await runAction(
+        () => saveAttendanceRecord({ ...draft }),
+        draft.id ? 'تم حفظ تعديلات سجل الحضور.' : 'تمت إضافة سجل الحضور والانصراف.',
+      );
+      setDraft(null);
+    } catch (error) {
+      if (error instanceof ValidationError) setErrors(error.errors);
+    }
   };
   const edit = (row: AttendanceRecord) => setDraft({ id: row.id, employeeId: row.employeeId, date: row.date, arrivalTime: row.arrivalTime, departureTime: row.departureTime, notes: row.notes });
 
@@ -104,11 +113,12 @@ const { runAction } = useAppActions();
         <EmployeePicker
           id="att-employee"
           label="الموظف"
+          error={errors.employeeId}
           value={draft.employeeId}
           onChange={(value) => set('employeeId', value)}
           options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((employee) => ({ id: employee.id, name: employee.name, meta: `رقم ${employee.employeeNo}` }))}
         />
-        <Field label="التاريخ" htmlFor="att-date"><div className="date-today-row"><Input id="att-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button size="sm" onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div></Field>
+        <Field label="التاريخ" htmlFor="att-date" error={errors.date}><div className="date-today-row"><Input id="att-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button size="sm" onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div></Field>
         <Field label="وقت الحضور" htmlFor="att-arrival"><TimeInput id="att-arrival" label="وقت الحضور" value={draft.arrivalTime} onChange={(value) => set('arrivalTime', value)} /></Field>
         <Field label="وقت الانصراف" htmlFor="att-departure"><TimeInput id="att-departure" label="وقت الانصراف" value={draft.departureTime} onChange={(value) => set('departureTime', value)} /></Field>
         <Field label="الملاحظات" htmlFor="att-notes" className="span2"><Textarea id="att-notes" rows={3} value={draft.notes} onChange={(event) => set('notes', event.target.value)} /></Field>

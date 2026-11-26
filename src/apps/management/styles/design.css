@@ -119,7 +119,7 @@
 .scope-mgmt .page,
 .scope-mgmt.page {
   width: 100%;
-  max-width: var(--content-max, 1600px);
+  max-width: var(--content-max, 1920px);
   margin: 0 auto;
   padding: 24px var(--page-gutter, 32px) calc(72px + env(safe-area-inset-bottom, 0px) + 20px);
 }
@@ -502,7 +502,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
   box-shadow: var(--shadow-popover) !important; padding: 8px !important;
   font-family: var(--font-body) !important;
   max-height: 340px;
-  overflow: hidden;
+  overflow: visible;
 }
 .scope-mgmt .picker__search { display: flex; align-items: center; gap: 8px; padding: 0 10px; min-height: 38px;
   border: 1.5px solid var(--control-border); border-radius: var(--radius-control); background: var(--surface); margin-bottom: 8px; }
@@ -520,7 +520,18 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 
 /* ── Leave summary ──────────────────────────────────────────────────────── */
 .scope-mgmt .leave-summary-table thead th { font-size: 11px; line-height: 18px; }
-.scope-mgmt .leave-summary-total { font-weight: 800; background: var(--surface-alt) !important; color: var(--maroon-dark) !important; border-radius: var(--radius-sm); }
+/* Remove full-cell colored backgrounds — keep only the count-ring highlight around the number */
+.scope-mgmt .leave-summary-table td.leave-summary-leave,
+.scope-mgmt .leave-summary-table td.leave-summary-permission,
+.scope-mgmt .leave-summary-table td.leave-summary-hours,
+.scope-mgmt .leave-summary-table td.leave-summary-warning,
+.scope-mgmt .leave-summary-table td.leave-summary-error,
+.scope-mgmt .leave-summary-table td.leave-summary-remaining,
+.scope-mgmt .leave-summary-table td.leave-summary-total,
+.scope-mgmt .leave-summary-table td.leave-summary-neutral {
+  background: transparent !important;
+}
+.scope-mgmt .leave-summary-total { font-weight: 800; color: var(--maroon-dark) !important; border-radius: var(--radius-sm); }
 .scope-mgmt .leave-summary-hours { font-variant-numeric: tabular-nums; }
 
 /* ── Profile ────────────────────────────────────────────────────────────── */
