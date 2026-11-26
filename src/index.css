@@ -36,8 +36,8 @@ body {
   text-transform: uppercase;
   line-height: 18px;
   color: var(--maroon-bright);
-  background: rgba(173, 131, 50, 0.14);
-  border: 1px solid rgba(173, 131, 50, 0.35);
+  background: rgba(74, 155, 224, 0.14);
+  border: 1px solid rgba(74, 155, 224, 0.35);
 }
 .portal-title {
   margin: 0;
@@ -96,7 +96,7 @@ body {
   place-items: center;
   color: var(--maroon-dark);
   background: var(--gold-tint);
-  border: 1.5px solid rgba(173, 131, 50, 0.3);
+  border: 1.5px solid rgba(74, 155, 224, 0.3);
 }
 .portal-btn__icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .portal-btn__label {

@@ -8,28 +8,28 @@
 /* 1. One palette across both apps: the old green/blue ramps map to the portal's
       warm neutrals + maroon. Semantic status colours (green/amber/red) are kept. */
 .scope-mgmt {
-  --brand-900: #3f0f18;
-  --brand-800: #591420;
-  --brand-700: #7c1f2c;
-  --brand-600: #93283a;
-  --brand-500: #a84553;
-  --brand-100: #efe6d2;
-  --brand-50: #f8f3e6;
+  --brand-900: #0a2c57;
+  --brand-800: #0f3f78;
+  --brand-700: #1d5fa8;
+  --brand-600: #2b77c9;
+  --brand-500: #2b77c9;
+  --brand-100: #dce9f6;
+  --brand-50: #eaf3fc;
 
-  --ink-900: #2a211b;
-  --ink-800: #3a2f27;
-  --ink-700: #4f4236;
-  --ink-600: #5f5243;
-  --ink-500: #6b5e4f;
-  --ink-400: #94897b;
-  --ink-300: #bdb3a3;
+  --ink-900: #0f2740;
+  --ink-800: #1b3a5c;
+  --ink-700: #35506b;
+  --ink-600: #4a6076;
+  --ink-500: #4a6076;
+  --ink-400: #5e7388;
+  --ink-300: #9db3c8;
 
-  --line: #e6dcc5;
-  --line-strong: #d9cea8;
-  --surface-muted: #faf7ee;
-  --surface-sunken: #f3eddd;
-  --accent-lime: #ad8332;
-  --sidebar-line: #e6dcc5;
+  --line: #d6e4f2;
+  --line-strong: #bcd1e6;
+  --surface-muted: #f5f9fe;
+  --surface-sunken: #e8f1fa;
+  --accent-lime: #4a9be0;
+  --sidebar-line: #d6e4f2;
 }
 
 /* 2. Calm surfaces: no glass/blur, no decorative glows. */
@@ -152,7 +152,7 @@
   background: var(--maroon);
   border-color: var(--maroon-dark);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(42, 33, 27, 0.12);
+  box-shadow: 0 1px 2px rgba(15, 39, 64, 0.12);
 }
 
 .scope-mgmt .btn--primary:hover:not(:disabled) {
@@ -268,7 +268,7 @@
 .scope-mgmt.scope-mgmt .bottom-nav__inner {
   background: var(--surface);
   border: 1.5px solid var(--line-strong);
-  box-shadow: 0 -2px 14px rgba(63, 15, 24, 0.12);
+  box-shadow: 0 -2px 14px rgba(15, 39, 64, 0.12);
 }
 
 .scope-mgmt.scope-mgmt .bottom-nav__item {
@@ -279,7 +279,7 @@
 .scope-mgmt.scope-mgmt .bottom-nav__item.is-active {
   font-weight: 800;
   color: #fff;
-  background: var(--brand-800, #5a1824);
+  background: var(--brand-800, #0f3f78);
 }
 
 .scope-mgmt.scope-mgmt .bottom-nav__item.is-active svg {
@@ -294,4 +294,29 @@
   .scope-mgmt.scope-mgmt .listcard__controls {
     padding: 12px 16px 16px;
   }
+}
+
+/* 12. Icy white & blue palette: replace remaining orange/ember accents from the base layer. */
+.scope-mgmt.scope-mgmt {
+  --accent-ember: #4a9be0;
+}
+
+.scope-mgmt.scope-mgmt .pagehead__text::before,
+.scope-mgmt.scope-mgmt .sidebar__active-dot,
+.scope-mgmt.scope-mgmt .sidebar__link.is-active::before {
+  background: #4a9be0;
+  box-shadow: none;
+}
+
+.scope-mgmt.scope-mgmt .backup-action-card__icon--upload {
+  color: var(--brand-700);
+  background: var(--brand-50);
+}
+
+.scope-mgmt.scope-mgmt .req {
+  color: var(--danger);
+}
+
+.scope-mgmt.scope-mgmt .loading::before {
+  border-top-color: var(--brand-600);
 }

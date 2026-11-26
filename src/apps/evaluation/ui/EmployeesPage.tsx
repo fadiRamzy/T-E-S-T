@@ -154,9 +154,9 @@ function EmployeeDrawer({ model, emp, onClose, onEdit, onDelete }: { model: AppM
           const x = 355 - (i + 1) * 29;
           return (
             <g key={i}>
-              <rect x={x} y={105 - h} width={20} height={h} rx={3} fill={m.present ? '#7C1F2C' : '#F3EDDD'}><title>{MONTH_NAMES[i]}: {m.total}</title></rect>
-              <text x={x + 10} y={100 - h} fontSize="9" textAnchor="middle" fill="#591420">{m.present ? m.total : ''}</text>
-              <text x={x + 10} y={120} fontSize="8" textAnchor="middle" fill="#6B5E4F">{MONTH_NAMES[i].slice(0, 3)}</text>
+              <rect x={x} y={105 - h} width={20} height={h} rx={3} fill={m.present ? '#1D5FA8' : '#E8F1FA'}><title>{MONTH_NAMES[i]}: {m.total}</title></rect>
+              <text x={x + 10} y={100 - h} fontSize="9" textAnchor="middle" fill="#0f3f78">{m.present ? m.total : ''}</text>
+              <text x={x + 10} y={120} fontSize="8" textAnchor="middle" fill="#4A6076">{MONTH_NAMES[i].slice(0, 3)}</text>
             </g>
           );
         })}

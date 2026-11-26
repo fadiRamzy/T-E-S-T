@@ -1,43 +1,43 @@
 /* ==========================================================================
-   Unified design system — warm institutional identity
-   Inspired by Anba-Bishoy-Church visual language: ivory / maroon / gold.
+   Unified design system — icy white & blue identity
+   Icy white surfaces with a strong blue primary.
    Adapted for a professional financial risk-management platform.
    Light default; dark via prefers-color-scheme.
    ========================================================================== */
 :root {
   color-scheme: light;
 
-  /* --- palette (warm ivory / deep maroon / muted gold) --- */
-  --canvas: #FAF6EC;
+  /* --- palette (icy white / blue; token names kept for compatibility) --- */
+  --canvas: #F3F8FD;
   --surface: #FFFFFF;
-  --surface-alt: #F3EDDD;
-  --surface-tint: #FBF8F0;
+  --surface-alt: #E8F1FA;
+  --surface-tint: #F7FAFE;
 
-  --text: #2A211B;
-  --text-2: #6B5E4F;
-  --text-3: #94897B;
+  --text: #0F2740;
+  --text-2: #4A6076;
+  --text-3: #5E7388;
 
-  --divider: #E6DCC5;
-  --divider-strong: #D9CEA8;
-  --control-border: #C9BDA3;
-  --control-border-strong: #B8A88E;
+  --divider: #D6E4F2;
+  --divider-strong: #BCD1E6;
+  --control-border: #A9C0D8;
+  --control-border-strong: #8FAAC6;
 
-  --maroon: #7C1F2C;
-  --maroon-dark: #591420;
-  --maroon-bright: #93283A;
-  --maroon-tint: #F6E9EA;
+  --maroon: #1D5FA8;
+  --maroon-dark: #0f3f78;
+  --maroon-bright: #2B77C9;
+  --maroon-tint: #E6F0FB;
 
-  --gold: #AD8332;
-  --gold-dark: #8C6926;
-  --gold-light: #E7D6A8;
-  --gold-tint: #FBF3DF;
+  --gold: #4A9BE0;
+  --gold-dark: #1F5F99;
+  --gold-light: #BFDDF6;
+  --gold-tint: #EAF4FD;
 
   --success: #3F7A4F;
   --success-bg: #F0F6F1;
   --danger: #A6362C;
   --danger-bg: #FBEBEA;
-  --warning: #8C6926;
-  --warning-bg: #FBF3DF;
+  --warning: #8A5A00;
+  --warning-bg: #FFF4D6;
 
   /* --- typography --- */
   --font-body: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont,
@@ -81,16 +81,16 @@
   --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
 
   /* --- elevation --- */
-  --shadow-soft: 0 2px 10px rgba(42, 33, 27, 0.06), 0 1px 2px rgba(42, 33, 27, 0.05);
-  --shadow-card: 0 1px 2px rgba(42, 33, 27, 0.05), 0 8px 22px -14px rgba(42, 33, 27, 0.22);
-  --shadow-lift: 0 10px 30px rgba(42, 33, 27, 0.12);
-  --shadow-bar: 0 6px 24px -10px rgba(42, 33, 27, 0.22);
-  --shadow-popover: 0 4px 12px rgba(42, 33, 27, 0.08);
-  --shadow-dialog: 0 10px 30px rgba(42, 33, 27, 0.14);
+  --shadow-soft: 0 2px 10px rgba(15, 39, 64, 0.06), 0 1px 2px rgba(15, 39, 64, 0.05);
+  --shadow-card: 0 1px 2px rgba(15, 39, 64, 0.05), 0 8px 22px -14px rgba(15, 39, 64, 0.22);
+  --shadow-lift: 0 10px 30px rgba(15, 39, 64, 0.12);
+  --shadow-bar: 0 6px 24px -10px rgba(15, 39, 64, 0.22);
+  --shadow-popover: 0 4px 12px rgba(15, 39, 64, 0.08);
+  --shadow-dialog: 0 10px 30px rgba(15, 39, 64, 0.14);
 
   /* --- glass / surface helpers --- */
-  --surface-glass: rgba(253, 250, 243, 0.86);
-  --surface-glass-border: rgba(173, 131, 50, 0.22);
+  --surface-glass: rgba(247, 250, 254, 0.86);
+  --surface-glass-border: rgba(74, 155, 224, 0.22);
 
   /* --- compatibility aliases (kept so existing component CSS still resolves) --- */
   --navy: var(--text);
@@ -100,7 +100,7 @@
   --accent-hover: var(--maroon-dark);
   --on-accent: #FFFFFF;
   --accent-soft: var(--maroon-tint);
-  --gold: #AD8332;
+  --gold: #4A9BE0;
   --gold-soft: var(--gold-tint);
   --bg: var(--canvas);
 

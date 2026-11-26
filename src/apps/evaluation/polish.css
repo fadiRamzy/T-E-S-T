@@ -266,7 +266,7 @@
   background: var(--maroon);
   border-color: var(--maroon-dark);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(42, 33, 27, 0.12);
+  box-shadow: 0 1px 2px rgba(15, 39, 64, 0.12);
 }
 
 .scope-eval .btn.primary:hover:not(:disabled),
@@ -396,8 +396,8 @@
 /* Bottom navigation: bold labels, solid bar, clearly filled active item. */
 .scope-eval.scope-eval .bottom-nav__inner {
   background: var(--surface, #fff);
-  border: 1.5px solid var(--line-strong, #d9cea8);
-  box-shadow: 0 -2px 14px rgba(63, 15, 24, 0.12);
+  border: 1.5px solid var(--line-strong, #bcd1e6);
+  box-shadow: 0 -2px 14px rgba(15, 39, 64, 0.12);
 }
 
 .scope-eval.scope-eval .bottom-nav__item {
@@ -407,9 +407,20 @@
 .scope-eval.scope-eval .bottom-nav__item.is-active {
   font-weight: 800;
   color: #fff;
-  background: var(--maroon, #7b1e2e);
+  background: var(--maroon, #1d5fa8);
 }
 
 .scope-eval.scope-eval .bottom-nav__item.is-active svg {
   color: #fff;
+}
+
+/* Icy white & blue palette: the legacy eval scope still declared a gold/teal accent. */
+.scope-eval.scope-eval {
+  --gold: #4a9be0;
+  --teal: #2b77c9;
+  --teal-soft: #e6f0fb;
+  --bg: #f3f8fd;
+  --line: #d6e4f2;
+  --line-2: #e3eef8;
+  --muted: #4a6076;
 }

@@ -13,7 +13,7 @@
   font-size: 15px;
   line-height: 1.6;
   --line: var(--divider);
-  --line-soft: rgba(42, 33, 27, 0.06);
+  --line-soft: rgba(15, 39, 64, 0.06);
 }
 
 /* ── Shell ──────────────────────────────────────────────────────────────── */
@@ -140,7 +140,7 @@
   display: inline-flex; padding: 4px 12px; border-radius: var(--radius-pill);
   font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
   line-height: 18px; color: var(--gold-dark); background: var(--gold-tint);
-  border: 1px solid rgba(173, 131, 50, 0.3);
+  border: 1px solid rgba(74, 155, 224, 0.3);
 }
 .scope-eval .pagehead h1, .scope-eval.pagehead h1 {
   margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 800;
@@ -148,7 +148,7 @@
 }
 .scope-eval .pagehead h1::after {
   content: ''; display: block; width: 34px; height: 3px; margin-top: 10px;
-  border-radius: 3px; background: linear-gradient(90deg, var(--gold), rgba(173, 131, 50, 0.15));
+  border-radius: 3px; background: linear-gradient(90deg, var(--gold), rgba(74, 155, 224, 0.15));
 }
 .scope-eval .pagehead p, .scope-eval.pagehead p {
   margin: 0; color: var(--text-2); font-size: 14px; line-height: 22px;
@@ -180,28 +180,28 @@
 .scope-eval .btn--primary, .scope-eval.btn--primary,
 .scope-eval .btn.primary {
   background: linear-gradient(180deg, var(--maroon-bright), var(--maroon));
-  border-color: rgba(89, 20, 32, 0.85); color: #fff;
-  box-shadow: 0 6px 16px -6px rgba(124, 31, 44, 0.45), inset 0 1px 0 rgba(255,255,255,0.14);
+  border-color: rgba(15, 63, 120, 0.85); color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(29, 95, 168, 0.45), inset 0 1px 0 rgba(255,255,255,0.14);
 }
 .scope-eval .btn--primary:hover:not(:disabled), .scope-eval.btn--primary:hover:not(:disabled),
 .scope-eval .btn.primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #9C2C3F, var(--maroon-dark));
-  box-shadow: 0 8px 20px -6px rgba(124, 31, 44, 0.55);
+  background: linear-gradient(180deg, #2B77C9, var(--maroon-dark));
+  box-shadow: 0 8px 20px -6px rgba(29, 95, 168, 0.55);
 }
 .scope-eval .btn--outline, .scope-eval.btn--outline {
   background: rgba(255,255,255,0.86); border-color: var(--divider); color: var(--text);
-  box-shadow: 0 1px 2px rgba(42, 33, 27, 0.04);
+  box-shadow: 0 1px 2px rgba(15, 39, 64, 0.04);
 }
 .scope-eval .btn--outline:hover:not(:disabled) {
   border-color: var(--gold); color: var(--maroon-dark);
 }
 .scope-eval .btn--gold, .scope-eval.btn--gold {
-  background: linear-gradient(180deg, #C1953C, var(--gold));
-  border-color: rgba(140, 105, 38, 0.8); color: #fff;
-  box-shadow: 0 6px 16px -8px rgba(173, 131, 50, 0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+  background: linear-gradient(180deg, #6BAEE8, var(--gold));
+  border-color: rgba(31, 95, 153, 0.8); color: #fff;
+  box-shadow: 0 6px 16px -8px rgba(74, 155, 224, 0.6), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 .scope-eval .btn--gold:hover:not(:disabled) {
-  background: linear-gradient(180deg, #B58A34, var(--gold-dark));
+  background: linear-gradient(180deg, #4A9BE0, var(--gold-dark));
 }
 .scope-eval .btn--danger, .scope-eval.btn--danger,
 .scope-eval .btn.danger {
@@ -237,7 +237,7 @@
 }
 .scope-eval .search:focus-within {
   border-color: var(--gold); background: #fff;
-  box-shadow: 0 0 0 4px rgba(173, 131, 50, 0.14);
+  box-shadow: 0 0 0 4px rgba(74, 155, 224, 0.14);
 }
 .scope-eval .search input, .scope-eval .search input[type="search"] {
   border: 0 !important; outline: none !important; box-shadow: none !important;
@@ -299,9 +299,9 @@
   font-size: 12px; font-weight: 700; line-height: 1.5; white-space: nowrap;
 }
 .scope-eval .badge--neutral { color: var(--text-2); background: var(--surface-alt); border-color: var(--line); }
-.scope-eval .badge--info { color: var(--maroon-dark); background: var(--maroon-tint); border-color: rgba(124, 31, 44, 0.2); }
+.scope-eval .badge--info { color: var(--maroon-dark); background: var(--maroon-tint); border-color: rgba(29, 95, 168, 0.2); }
 .scope-eval .badge--success { color: var(--success); background: var(--success-bg); border-color: rgba(63, 122, 79, 0.18); }
-.scope-eval .badge--warning { color: var(--warning); background: var(--warning-bg); border-color: rgba(140, 105, 38, 0.18); }
+.scope-eval .badge--warning { color: var(--warning); background: var(--warning-bg); border-color: rgba(31, 95, 153, 0.18); }
 .scope-eval .badge--danger { color: var(--danger); background: var(--danger-bg); border-color: rgba(166, 54, 44, 0.18); }
 
 .scope-eval .chip, .scope-eval.chip {
@@ -316,14 +316,14 @@
 .scope-eval .chip.active {
   background: linear-gradient(180deg, var(--maroon-bright), var(--maroon));
   border-color: var(--maroon); color: #fff;
-  box-shadow: 0 4px 12px -6px rgba(124, 31, 44, 0.5);
+  box-shadow: 0 4px 12px -6px rgba(29, 95, 168, 0.5);
 }
 .scope-eval .chip .count { color: var(--text-3); font-weight: 600; margin-inline-start: 2px; font-size: 0.78rem; }
-.scope-eval .chip.active .count { color: #F1D9DB; }
+.scope-eval .chip.active .count { color: #D6E7F8; }
 button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor: pointer; }
 
 .scope-eval .warnchip, .scope-eval.warnchip {
-  background: rgba(140, 105, 38, 0.14); color: var(--warning);
+  background: rgba(31, 95, 153, 0.14); color: var(--warning);
   border-radius: 7px; padding: 1px 7px; font-size: 12px; font-weight: 600;
 }
 
@@ -338,7 +338,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   -webkit-tap-highlight-color: transparent;
 }
 .scope-eval .card:hover {
-  border-color: rgba(173, 131, 50, 0.55); box-shadow: var(--shadow-lift); transform: translateY(-1px);
+  border-color: rgba(74, 155, 224, 0.55); box-shadow: var(--shadow-lift); transform: translateY(-1px);
 }
 .scope-eval .card:active { transform: scale(0.99); background: #fff; }
 
@@ -475,12 +475,12 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   vertical-align: middle; text-align: start;
 }
 .scope-eval .table td {
-  padding: 12px 16px; border-bottom: 1px solid rgba(42, 33, 27, 0.04);
+  padding: 12px 16px; border-bottom: 1px solid rgba(15, 39, 64, 0.04);
   vertical-align: middle; font-size: 14px; color: var(--text);
 }
 .scope-eval .table tbody tr:last-child td { border-bottom: none; }
 .scope-eval .table tbody tr:hover td {
-  background: rgba(173, 131, 50, 0.06);
+  background: rgba(74, 155, 224, 0.06);
 }
 .scope-eval .table td a { color: var(--maroon-dark); font-weight: 700; }
 .scope-eval .table td.num, .scope-eval .table th.num {
@@ -517,10 +517,10 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .mgrid td {
   padding: 8px 3px; border-bottom: 0; vertical-align: middle;
 }
-.scope-eval .mgrid tbody.rec { border-bottom: 1px solid rgba(42, 33, 27, 0.04); }
+.scope-eval .mgrid tbody.rec { border-bottom: 1px solid rgba(15, 39, 64, 0.04); }
 .scope-eval .mgrid tbody.rec:last-child { border-bottom: 0; }
 .scope-eval .mgrid tbody.rec:hover td {
-  background: rgba(173, 131, 50, 0.06);
+  background: rgba(74, 155, 224, 0.06);
 }
 .scope-eval .mgrid td.emp, .scope-eval .mgrid td.org, .scope-eval .mgrid td.job {
   padding-inline: 10px; font-size: 13.5px; line-height: 1.45;
@@ -537,7 +537,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .cellin {
   text-align: center; width: 100%; min-width: 0; height: 34px;
   padding: 4px 2px; border: 1px solid transparent;
-  background: rgba(42, 33, 27, 0.035); border-radius: 9px;
+  background: rgba(15, 39, 64, 0.035); border-radius: 9px;
   font-family: var(--font-body); font-size: 13.5px;
   font-variant-numeric: tabular-nums;
   transition: border-color var(--dur-fast) var(--ease),
@@ -545,14 +545,14 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
               box-shadow var(--dur-fast) var(--ease);
 }
 .scope-eval .cellin:hover {
-  border-color: rgba(42, 33, 27, 0.12); background: #fff;
+  border-color: rgba(15, 39, 64, 0.12); background: #fff;
 }
 .scope-eval .cellin:focus {
   background: #fff; border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(173, 131, 50, 0.28); outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 155, 224, 0.28); outline: none;
 }
 .scope-eval .cellin.left { text-align: start; padding-inline: 10px; }
-.scope-eval .cellin.txt { background: rgba(173, 131, 50, 0.14); }
+.scope-eval .cellin.txt { background: rgba(74, 155, 224, 0.14); }
 .scope-eval .cellin.bad {
   border-color: rgba(166, 54, 44, 0.4);
   background: rgba(166, 54, 44, 0.08);
@@ -573,8 +573,8 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   font-size: 12px; font-weight: 550; color: var(--text-3); flex: none;
 }
 .scope-eval .mgrid tr.notes .cellin {
-  height: 34px; background: rgba(42, 33, 27, 0.025);
-  border-color: rgba(42, 33, 27, 0.04);
+  height: 34px; background: rgba(15, 39, 64, 0.025);
+  border-color: rgba(15, 39, 64, 0.04);
 }
 .scope-eval .tablewrap.fit { overflow: auto; max-height: 74vh; }
 .scope-eval .tablewrap.fit thead th { position: sticky; top: 0; z-index: 3; }
@@ -628,7 +628,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .tab.active, .scope-eval.tab.active {
   background: linear-gradient(180deg, var(--maroon-bright), var(--maroon));
   color: #fff; border-color: var(--maroon);
-  box-shadow: 0 4px 12px -6px rgba(124, 31, 44, 0.5);
+  box-shadow: 0 4px 12px -6px rgba(29, 95, 168, 0.5);
 }
 .scope-eval .tab.active small { color: rgba(255,255,255,0.72); }
 
@@ -655,7 +655,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 }
 .scope-eval input:focus, .scope-eval select:focus, .scope-eval textarea:focus {
   outline: none; border-color: var(--gold);
-  box-shadow: 0 0 0 4px rgba(173, 131, 50, 0.14); background: #fff;
+  box-shadow: 0 0 0 4px rgba(74, 155, 224, 0.14); background: #fff;
 }
 .scope-eval input[type="checkbox"], .scope-eval input[type="radio"] {
   width: auto; min-height: 0; accent-color: var(--maroon);
@@ -722,7 +722,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .emp-filter-btn.is-active {
   background: linear-gradient(180deg, var(--maroon-bright), var(--maroon));
   border-color: var(--maroon); color: #fff; font-weight: 700;
-  box-shadow: 0 4px 12px -6px rgba(124, 31, 44, 0.5);
+  box-shadow: 0 4px 12px -6px rgba(29, 95, 168, 0.5);
 }
 .scope-eval .emp-count {
   display: inline-flex; align-items: center; justify-content: center;
@@ -738,7 +738,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .overlay, .scope-eval.overlay {
   position: fixed; inset: 0; z-index: 1000;
   display: flex; align-items: center; justify-content: center;
-  padding: 24px; background: rgba(42, 33, 27, 0.35);
+  padding: 24px; background: rgba(15, 39, 64, 0.35);
 }
 @media (prefers-color-scheme: dark) {
   .scope-eval .overlay { background: rgba(2,6,12,0.55); }
@@ -778,7 +778,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   position: fixed; inset-block: 0; inset-inline-end: 0;
   width: min(440px, 100vw); background: var(--surface);
   z-index: 51; padding: 24px; overflow: auto;
-  box-shadow: -20px 0 60px rgba(42, 33, 27, 0.14);
+  box-shadow: -20px 0 60px rgba(15, 39, 64, 0.14);
   border-inline-start: 1px solid var(--divider);
   border-start-start-radius: var(--radius-dialog);
   border-end-start-radius: var(--radius-dialog);
@@ -838,7 +838,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   transition: background-color var(--dur) var(--ease);
 }
 .scope-eval .rank li:last-child { border-bottom: 0; }
-.scope-eval .rank li:hover { background: rgba(173, 131, 50, 0.06); }
+.scope-eval .rank li:hover { background: rgba(74, 155, 224, 0.06); }
 .scope-eval .rank .n, .scope-eval.rank .n {
   width: 28px; height: 28px; flex: none;
   display: grid; place-items: center; border-radius: 50%;
@@ -883,7 +883,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .bigbtn.primary, .scope-eval.bigbtn.primary {
   background: linear-gradient(180deg, var(--maroon-bright), var(--maroon));
   border-color: transparent; color: #fff;
-  box-shadow: 0 12px 32px rgba(124, 31, 44, 0.2);
+  box-shadow: 0 12px 32px rgba(29, 95, 168, 0.2);
 }
 .scope-eval .bigbtn.primary svg.ic, .scope-eval.bigbtn.primary svg.ic {
   color: #fff;
@@ -1033,7 +1033,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
     border: 1px solid rgba(255,255,255,0.75);
     border-radius: var(--radius-lg);
     background: rgba(255,255,255,0.88);
-    box-shadow: 0 8px 32px rgba(42, 33, 27, 0.12);
+    box-shadow: 0 8px 32px rgba(15, 39, 64, 0.12);
     overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
   }
   .scope-eval .nav, .scope-eval.nav {
