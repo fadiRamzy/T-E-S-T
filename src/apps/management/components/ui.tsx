@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Icon, type IconName } from './Icon';
 import { cn } from '../lib/utils';
 import { fmtTime, joinTime12, parseTimeText, splitTime12 } from '../lib/format';
@@ -28,11 +28,12 @@ export function IconButton({
   label,
   tone,
   className,
+  style,
   ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string; tone?: 'danger' }) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string; tone?: 'danger'; style?: React.CSSProperties }) {
   return (
-    <button type="button" className={cn('iconbtn', tone === 'danger' && 'iconbtn--danger', className)} title={label} aria-label={label} {...rest}>
-      <Icon name={icon} size={15} />
+    <button type="button" className={cn('iconbtn', tone === 'danger' && 'iconbtn--danger', className)} title={label} aria-label={label} style={style} {...rest}>
+      <Icon name={icon} size={15} style={style} />
     </button>
   );
 }

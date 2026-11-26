@@ -317,6 +317,7 @@ const { runAction } = useAppActions();
                               <IconButton
                                 icon="edit"
                                 label="تعديل"
+                                style={{ color: 'var(--gold-dark)' }}
                                 onClick={() => {
                                   setErrors({});
                                   setDraft({
@@ -332,7 +333,7 @@ const { runAction } = useAppActions();
                                   });
                                 }}
                               />
-                              <IconButton icon="trash" tone="danger" label="حذف" onClick={() => setConfirmDelete(row)} />
+                              <IconButton icon="trash" tone="danger" style={{ color: 'var(--danger)' }} label="حذف" onClick={() => setConfirmDelete(row)} />
                             </div>
                           </td>
                         </tr>

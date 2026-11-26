@@ -94,14 +94,14 @@ const { runAction } = useAppActions();
 
     <ListCard id="attendance-records" title="سجلات الحضور والانصراف" subtitle={`${rows.length} سجل في الفترة المختارة`} defaultCollapsed hideLabel="إخفاء التفاصيل" showLabel="إظهار التفاصيل" note={`قائمة السجلات مخفية (${rows.length} سجل) — اضغط «إظهار التفاصيل» لعرضها.`}>
       {rows.length ? <div className="table-panel"><TableWrap><Table>
-        <thead><tr><th>الموظف</th><th>التاريخ</th><th>الحضور</th><th>التأخير</th><th>الانصراف</th><th>الانصراف المبكر</th><th>الملاحظات</th><th>إجراءات</th></tr></thead>
+        <thead><tr><th>الموظف</th><th className="nowrap">التاريخ</th><th className="num nowrap">الحضور</th><th className="num nowrap">التأخير</th><th className="num nowrap">الانصراف</th><th className="num nowrap">الانصراف المبكر</th><th>الملاحظات</th><th>إجراءات</th></tr></thead>
         <tbody>{rows.map((row) => {
           const late = attendanceDelayMinutes(row.arrivalTime);
           const early = earlyDepartureMinutes(row.departureTime);
           return <tr key={row.id}>
             <td>{employeeName(row.employeeId)}</td><td className="nowrap">{row.date ? fmtDate(row.date) : '—'}</td>
-            <td>{row.arrivalTime ? fmtTime(row.arrivalTime) : '—'}</td><td>{late ? <Badge tone="danger">{fmtDurationWords(late)}</Badge> : row.arrivalTime ? 'لا يوجد' : '—'}</td>
-            <td>{row.departureTime ? fmtTime(row.departureTime) : '—'}</td><td>{early ? <Badge tone="warning">{fmtDurationWords(early)}</Badge> : row.departureTime ? 'لا يوجد' : '—'}</td>
+            <td className="num nowrap">{row.arrivalTime ? fmtTime(row.arrivalTime) : '—'}</td><td className="num nowrap">{late ? <Badge tone="danger">{fmtDurationWords(late)}</Badge> : row.arrivalTime ? 'لا يوجد' : '—'}</td>
+            <td className="num nowrap">{row.departureTime ? fmtTime(row.departureTime) : '—'}</td><td className="num nowrap">{early ? <Badge tone="warning">{fmtDurationWords(early)}</Badge> : row.departureTime ? 'لا يوجد' : '—'}</td>
             <td className="wrap small">{row.notes || '—'}</td><td><div className="table__actions"><IconButton icon="edit" label="تعديل" onClick={() => edit(row)} /><IconButton icon="trash" tone="danger" label="حذف" onClick={() => setDeleting(row)} /></div></td>
           </tr>;
         })}</tbody>

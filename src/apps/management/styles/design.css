@@ -164,7 +164,7 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: var(--control-h); padding: 0 18px; border-radius: var(--radius-md);
   border: 1.5px solid transparent; background: var(--surface-tint);
-  color: var(--text); font-family: var(--font-body); font-size: 0.92rem; font-weight: 700;
+  color: var(--text); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700;
   line-height: 1.4; cursor: pointer; white-space: nowrap; text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur) var(--ease),
@@ -351,7 +351,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 }
 .scope-mgmt .table td {
   padding: 12px 16px; border-bottom: 1px solid rgba(42, 33, 27, 0.04);
-  vertical-align: middle; font-size: 13.5px; color: var(--text);
+  vertical-align: middle; font-size: 14px; color: var(--text);
 }
 .scope-mgmt .table tbody tr:last-child td { border-bottom: none; }
 .scope-mgmt .table tbody tr:hover td { background: rgba(173, 131, 50, 0.06); }
@@ -499,9 +499,9 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 .scope-mgmt.picker__pop {
   background: var(--surface) !important; color: var(--text) !important;
   border: 1.5px solid var(--divider) !important; border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-popover) !important; padding: 8px !important;
+  box-shadow: var(--shadow-popover) !important; padding: 6px !important;
   font-family: var(--font-body) !important;
-  max-height: 340px;
+  max-height: none;
   overflow: visible;
 }
 .scope-mgmt .picker__search { display: flex; align-items: center; gap: 8px; padding: 0 10px; min-height: 38px;
@@ -509,7 +509,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 .scope-mgmt .picker__search input { border: 0 !important; outline: 0 !important; box-shadow: none !important;
   background: transparent !important; padding: 0 !important; min-height: 0 !important; height: auto !important;
   width: 100%; font-size: 14px; color: var(--text); }
-.scope-mgmt .picker__list { max-height: 280px !important; overflow: auto; display: flex; flex-direction: column;
+.scope-mgmt .picker__list { max-height: 240px; overflow: auto; display: flex; flex-direction: column;
   gap: 2px; padding: 0; margin: 0; list-style: none; }
 .scope-mgmt .picker__option { min-height: 40px !important; padding: 8px 10px !important;
   border-radius: var(--radius-sm) !important; font-size: 14px !important; color: var(--text) !important;
@@ -520,7 +520,8 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 
 /* ── Leave summary ──────────────────────────────────────────────────────── */
 .scope-mgmt .leave-summary-table thead th { font-size: 11px; line-height: 18px; }
-/* Remove full-cell colored backgrounds — keep only the count-ring highlight around the number */
+/* Remove ALL full-cell colored backgrounds from leave/permission table — keep table clean and neutral.
+   Only the count-ring circular highlights around numbers may have color. */
 .scope-mgmt .leave-summary-table td.leave-summary-leave,
 .scope-mgmt .leave-summary-table td.leave-summary-permission,
 .scope-mgmt .leave-summary-table td.leave-summary-hours,
@@ -528,11 +529,21 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 .scope-mgmt .leave-summary-table td.leave-summary-error,
 .scope-mgmt .leave-summary-table td.leave-summary-remaining,
 .scope-mgmt .leave-summary-table td.leave-summary-total,
-.scope-mgmt .leave-summary-table td.leave-summary-neutral {
+.scope-mgmt .leave-summary-table td.leave-summary-neutral,
+.scope-mgmt .leave-summary-table tbody th.leave-summary-name {
   background: transparent !important;
 }
 .scope-mgmt .leave-summary-total { font-weight: 800; color: var(--maroon-dark) !important; border-radius: var(--radius-sm); }
 .scope-mgmt .leave-summary-hours { font-variant-numeric: tabular-nums; }
+/* Ensure count-ring backgrounds stay as the only colored highlights */
+.scope-mgmt .leave-summary-table .count-ring { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--zero { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--total { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--leave { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--permission { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--warning { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--error { background: transparent !important; }
+.scope-mgmt .leave-summary-table .count-ring--remaining { background: transparent !important; }
 
 /* ── Profile ────────────────────────────────────────────────────────────── */
 .scope-mgmt .profile-hero {

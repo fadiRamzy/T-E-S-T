@@ -310,11 +310,12 @@ const { runAction, notify } = useAppActions();
                     </td>
                     <td className="col-emp-actions">
                       <div className="table__actions">
-                        <IconButton icon="user" label="عرض الملف" onClick={() => navigate(`/employees/${employee.id}`)} />
-                        <IconButton icon="edit" label="تعديل" onClick={() => openEdit(employee)} />
+                        <IconButton icon="user" label="عرض الملف" style={{ color: 'var(--text-2)' }} onClick={() => navigate(`/employees/${employee.id}`)} />
+                        <IconButton icon="edit" label="تعديل" style={{ color: 'var(--gold-dark)' }} onClick={() => openEdit(employee)} />
                         <IconButton
                           icon="archive"
                           label={employee.archived ? 'إلغاء الأرشفة' : 'أرشفة'}
+                          style={{ color: 'var(--maroon-dark)' }}
                           onClick={() =>
                             runAction(
                               () => setEmployeeArchived(employee.id, !employee.archived),
@@ -322,7 +323,7 @@ const { runAction, notify } = useAppActions();
                             )
                           }
                         />
-                        <IconButton icon="trash" tone="danger" label="حذف" onClick={() => setConfirmDelete(employee)} />
+                        <IconButton icon="trash" tone="danger" style={{ color: 'var(--danger)' }} label="حذف" onClick={() => setConfirmDelete(employee)} />
                       </div>
                     </td>
                   </tr>
