@@ -423,11 +423,6 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   gap: 14px;
   margin-bottom: 24px;
 }
-@media (max-width: 900px) {
-  .scope-eval .kpis, .scope-eval.kpis {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 @media (max-width: 560px) {
   .scope-eval .kpis, .scope-eval.kpis {
     grid-template-columns: 1fr;
@@ -1116,7 +1111,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   .scope-eval .textarea, .scope-eval textarea {
     min-height: 96px; height: auto;
   }
-  .scope-eval .kpi { min-width: 100%; }
+  .scope-eval .kpi { min-width: 0; }
 }
 
 /* Monthly desktop layout preservation */

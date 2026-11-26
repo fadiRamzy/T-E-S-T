@@ -18,6 +18,7 @@ import {
   TimeInput,
   Toolbar,
 } from '../components/ui';
+import { EmployeePicker } from '../components/EmployeePicker';
 import { ValidationError, deleteAttendanceRecord, saveAttendanceRecord } from '../db/repo';
 import type { AttendanceRecord } from '../db/schema';
 import { MONTHS_AR } from '../db/schema';

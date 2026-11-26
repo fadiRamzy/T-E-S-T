@@ -501,6 +501,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
   border: 1.5px solid var(--divider) !important; border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-popover) !important; padding: 6px !important;
   font-family: var(--font-body) !important;
+  min-height: 0 !important;
   max-height: none;
   overflow: visible;
 }

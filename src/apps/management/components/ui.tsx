@@ -30,7 +30,7 @@ export function IconButton({
   className,
   style,
   ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string; tone?: 'danger'; style?: React.CSSProperties }) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string; tone?: 'danger'; style?: CSSProperties }) {
   return (
     <button type="button" className={cn('iconbtn', tone === 'danger' && 'iconbtn--danger', className)} title={label} aria-label={label} style={style} {...rest}>
       <Icon name={icon} size={15} style={style} />
