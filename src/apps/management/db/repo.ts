@@ -662,6 +662,8 @@ export async function listAttendanceRecords(): Promise<AttendanceRecord[]> {
 export async function saveAttendanceRecord(input: Partial<AttendanceRecord>): Promise<AttendanceRecord> {
   const current = input.id ? await getById<AttendanceRecord>('attendanceRecords', input.id) : undefined;
   const normalizeTime = (value?: string) => (value && TIME_RE.test(value) ? value : '');
+  if (!trim(input.employeeId)) fail({ employeeId: 'الموظف مطلوب' });
+  if (!trim(input.date)) fail({ date: 'التاريخ مطلوب' });
   const record: AttendanceRecord = {
     id: input.id ?? uid('att'),
     createdAt: current?.createdAt ?? nowIso(),

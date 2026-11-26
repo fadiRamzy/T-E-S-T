@@ -123,7 +123,7 @@
 /* Leave room for the fixed bottom nav bar so content is never blocked */
 .scope-eval .container, .scope-eval.container {
   width: 100%;
-  max-width: var(--content-max, 1600px);
+  max-width: var(--content-max, 1920px);
   margin: 0 auto;
   padding: 24px var(--page-gutter, 32px) calc(72px + env(safe-area-inset-bottom, 0px) + 20px);
 }
@@ -355,7 +355,11 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 .scope-eval .card__body--flush { padding: 0; }
 
 .scope-eval .twocol, .scope-eval.twocol {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  max-width: 100%;
 }
 
 .scope-eval .banner, .scope-eval.banner {
@@ -411,8 +415,11 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 
 /* ── KPI strip ──────────────────────────────────────────────────────────── */
 .scope-eval .kpis, .scope-eval.kpis {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px; margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 340px));
+  gap: 14px;
+  margin-bottom: 24px;
+  justify-content: start;
 }
 .scope-eval .kpi, .scope-eval.kpi {
   position: relative;
@@ -1103,7 +1110,7 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
 /* Monthly desktop layout preservation */
 @media (min-width: 861px) {
   .scope-eval .container, .scope-eval.container {
-    max-width: 1520px; padding: 24px 28px 40px;
+    max-width: 1920px; padding: 24px 28px 40px;
   }
   .scope-eval .pagehead, .scope-eval.pagehead { margin-bottom: 16px; }
   .scope-eval .tabs, .scope-eval.tabs { margin-bottom: 12px; gap: 8px; }

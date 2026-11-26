@@ -25,6 +25,21 @@ const P: Record<string, ReactNode> = {
 };
 
 export type IconName = keyof typeof P;
-export function Icon({ name }: { name: IconName }) {
-  return <svg className="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{P[name]}</svg>;
-}
+export function Icon({ name, size = 18, style }: { name: IconName; size?: number; style?: React.CSSProperties }) {
+  return (
+    <svg
+      className="ic"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      style={{ ...style }}
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {P[name]}
+    </svg>
+  );
