@@ -42,11 +42,11 @@ export const CAP = {
 export const GRADE_BASE = { poor: 240, ok: 280, good: 330, vgood: 430 } as const;
 
 export const GRADE_COLORS: Record<string, { bg: string; fg: string }> = {
-  'ممتاز': { bg: '#2E8B3E', fg: '#ffffff' },
-  'جيد جداً': { bg: '#BFE3C3', fg: '#14391b' },
-  'جيد': { bg: '#FFC000', fg: '#3a2b00' },
-  'مقبول': { bg: '#FFFF00', fg: '#3a3a00' },
-  'ضعيف': { bg: '#FF0000', fg: '#ffffff' },
+  'ممتاز': { bg: '#2F7D45', fg: '#ffffff' },
+  'جيد جداً': { bg: '#CDE7D1', fg: '#14391b' },
+  'جيد': { bg: '#F2C14E', fg: '#3a2b00' },
+  'مقبول': { bg: '#F7E9A0', fg: '#3f3a00' },
+  'ضعيف': { bg: '#C0392B', fg: '#ffffff' },
 };
 
 /** Governorate suggestions for the forms (written in the workbook's «محافظه - X» format). Suggestions only — free text is still accepted. */

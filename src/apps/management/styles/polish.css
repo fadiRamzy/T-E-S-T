@@ -1,0 +1,214 @@
+/* ==========================================================================
+   Management — final UI polish layer (loaded after base.css + design.css).
+   Visual only: palette harmonisation (warm ivory / maroon / gold, same as the
+   Evaluation system), readable minimum type sizes, calm surfaces (no glow,
+   blur or glass), a styled top bar. No layout structure, logic or data here.
+   ========================================================================== */
+
+/* 1. One palette across both apps: the old green/blue ramps map to the portal's
+      warm neutrals + maroon. Semantic status colours (green/amber/red) are kept. */
+.scope-mgmt {
+  --brand-900: #3f0f18;
+  --brand-800: #591420;
+  --brand-700: #7c1f2c;
+  --brand-600: #93283a;
+  --brand-500: #a84553;
+  --brand-100: #efe6d2;
+  --brand-50: #f8f3e6;
+
+  --ink-900: #2a211b;
+  --ink-800: #3a2f27;
+  --ink-700: #4f4236;
+  --ink-600: #5f5243;
+  --ink-500: #6b5e4f;
+  --ink-400: #94897b;
+  --ink-300: #bdb3a3;
+
+  --line: #e6dcc5;
+  --line-strong: #d9cea8;
+  --surface-muted: #faf7ee;
+  --surface-sunken: #f3eddd;
+  --accent-lime: #ad8332;
+  --sidebar-line: #e6dcc5;
+}
+
+/* 2. Calm surfaces: no glass/blur, no decorative glows. */
+.scope-mgmt .stat,
+.scope-mgmt .card,
+.scope-mgmt .section-card,
+.scope-mgmt .toast,
+.scope-mgmt .modal,
+.scope-mgmt .overlay,
+.scope-mgmt .picker__pop {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.scope-mgmt .stat::before,
+.scope-mgmt .stat::after {
+  display: none;
+}
+
+.scope-mgmt .stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+.scope-mgmt .stat:hover {
+  transform: none;
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-card);
+}
+
+.scope-mgmt .stat__icon {
+  background: var(--brand-100);
+  color: var(--brand-700);
+  box-shadow: none;
+}
+
+.scope-mgmt .stat__value {
+  color: var(--ink-900);
+}
+
+.scope-mgmt .stat__label {
+  color: var(--ink-600);
+  font-size: 12px;
+}
+
+/* 3. Minimum readable type size (was 9.5–10px in a few places). */
+.scope-mgmt .stat__hint,
+.scope-mgmt .eyebrow,
+.scope-mgmt .unified-section-heading .eyebrow,
+.scope-mgmt .pagehead__eyebrow,
+.scope-mgmt .profile-hero__eyebrow {
+  font-size: 11.5px;
+  color: var(--ink-500);
+}
+
+/* 4. Top bar. */
+.scope-mgmt .desktop-topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.scope-mgmt .desktop-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: var(--content-max, 1600px);
+  margin: 0 auto;
+  padding: 10px var(--page-gutter, 32px);
+}
+
+.scope-mgmt .desktop-topbar__title {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.scope-mgmt .desktop-topbar__eyebrow {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gold-dark);
+  line-height: 1.4;
+}
+
+.scope-mgmt .desktop-topbar__title strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brand-800);
+  line-height: 1.4;
+}
+
+.scope-mgmt .desktop-topbar__org {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-600);
+  white-space: nowrap;
+}
+
+.scope-mgmt .desktop-topbar__org svg {
+  color: var(--gold);
+}
+
+@media (max-width: 620px) {
+  .scope-mgmt .desktop-topbar__inner {
+    padding-inline: 14px;
+  }
+
+  .scope-mgmt .desktop-topbar__title strong {
+    font-size: 14px;
+  }
+}
+
+/* 5. Primary buttons: solid maroon (no gradient). */
+.scope-mgmt .btn--primary {
+  background: var(--maroon);
+  border-color: var(--maroon-dark);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(42, 33, 27, 0.12);
+}
+
+.scope-mgmt .btn--primary:hover:not(:disabled) {
+  background: var(--maroon-dark);
+  border-color: var(--maroon-dark);
+  color: #fff;
+}
+
+/* 6. Table readability. */
+.scope-mgmt table th {
+  color: var(--ink-700);
+}
+
+.scope-mgmt table td .nowrap,
+.scope-mgmt table td.nowrap {
+  white-space: nowrap;
+}
+
+/* 7. Bottom navigation: icon + label legible; active item is clear. */
+.scope-mgmt .bottom-nav__item {
+  color: var(--ink-600);
+}
+
+.scope-mgmt .bottom-nav__item:hover {
+  color: var(--maroon-dark);
+  background: var(--surface-sunken);
+}
+
+.scope-mgmt .bottom-nav__item.is-active {
+  color: var(--maroon-dark);
+  background: var(--maroon-tint);
+}
+
+/* 8. Remaining hard-coded greens → the shared palette. Success badges/toasts keep green (semantic).
+      The scope class is repeated on purpose: it out-ranks the older layered rules in base/design.css. */
+.scope-mgmt.scope-mgmt table thead th,
+.scope-mgmt.scope-mgmt .table thead th {
+  background: var(--surface-sunken);
+  color: var(--ink-700);
+  border-bottom-color: var(--line-strong);
+}
+
+.scope-mgmt.scope-mgmt table tbody tr:hover > td,
+.scope-mgmt.scope-mgmt table tbody tr:hover > th,
+.scope-mgmt.scope-mgmt table tbody tr:focus-within > td {
+  background: var(--surface-muted);
+}
+
+.scope-mgmt.scope-mgmt .btn.btn--secondary {
+  background: var(--surface);
+  color: var(--maroon-dark);
+  border-color: var(--control-border);
+}
+
+.scope-mgmt.scope-mgmt .btn.btn--secondary:hover:not(:disabled) {
+  background: var(--maroon-tint);
+  border-color: var(--maroon);
+  color: var(--maroon-dark);
+}

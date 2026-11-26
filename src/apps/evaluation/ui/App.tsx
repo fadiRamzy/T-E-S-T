@@ -64,6 +64,10 @@ export function App() {
     <div className="shell scope-eval">
       <header className="eval-desktop-topbar print-hide" aria-label="رأس الصفحة">
         <div className="eval-desktop-topbar__inner">
+          <div>
+            <span className="eval-desktop-topbar__eyebrow">منظومة رسمية</span>
+            <strong className="eval-desktop-topbar__title">نظام تقييم مسئولي المخاطر</strong>
+          </div>
           <a className="eval-desktop-topbar__switch" href="#/mgmt/employees"><Icon name="chart" /><span>نظام المتابعة</span></a>
         </div>
       </header>

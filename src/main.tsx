@@ -16,6 +16,9 @@ import './apps/management/styles/base.css';
 import './apps/management/styles/design.css';
 import './apps/evaluation/styles.css';
 import './apps/evaluation/design.css';
+// final UI polish layers (visual only) — must stay after each app's own CSS
+import './apps/management/styles/polish.css';
+import './apps/evaluation/polish.css';
 import './index.css';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';

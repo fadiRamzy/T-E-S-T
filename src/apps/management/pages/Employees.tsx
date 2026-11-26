@@ -207,7 +207,7 @@ const { runAction, notify } = useAppActions();
         title="الموظفون"
         actions={
           <>
-            <Button icon="database" onClick={() => setExportOpen(true)} disabled={!data.employees.length} style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)', borderColor: 'var(--success)' }}>
+            <Button icon="database" onClick={() => setExportOpen(true)} disabled={!data.employees.length}>
               استخراج بيانات
             </Button>
             <Button variant="primary" icon="plus" onClick={openNew}>
@@ -267,7 +267,7 @@ const { runAction, notify } = useAppActions();
             ))}
           </Select>
           <Checkbox label="إظهار المؤرشفين" checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
-          <Button size="sm" icon="restore" onClick={resetFilters} disabled={!filtersActive} style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)', borderColor: 'var(--success)' }}>
+          <Button size="sm" icon="restore" onClick={resetFilters} disabled={!filtersActive}>
             إعادة تعيين
           </Button>
         </Toolbar>

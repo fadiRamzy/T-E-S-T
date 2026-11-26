@@ -248,7 +248,7 @@ const { runAction } = useAppActions();
                     size="sm"
                     icon={filtersCollapsed ? 'search' : 'filter'}
                     onClick={() => setFiltersCollapsed((prev) => !prev)}
-                    style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)', borderColor: 'var(--success)' }}
+                   
                   >
                     {filtersCollapsed ? 'إظهار الفلاتر' : 'إخفاء الفلاتر'}
                   </Button>
@@ -323,7 +323,7 @@ const { runAction } = useAppActions();
                           <td>{row.location || '—'}</td>
                           <td className="nowrap">{fmtTime(row.departureTime)}</td>
                           <td className="nowrap">{fmtTime(row.returnTime)}</td>
-                          <td>{durationCell(row)}</td>
+                          <td className="nowrap">{durationCell(row)}</td>
                           <td className="wrap small">{row.notes || '—'}</td>
                           <td>
                             <div className="table__actions">
