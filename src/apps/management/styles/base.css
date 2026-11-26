@@ -426,11 +426,10 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
-}.scope-mgmt .modal--sm, .scope-mgmt.modal--sm { max-width: 460px; }.scope-mgmt .modal--lg, .scope-mgmt.modal--lg { max-width: 940px; }.scope-mgmt .modal__head, .scope-mgmt.modal__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); }.scope-mgmt .modal__head h2, .scope-mgmt.modal__head h2 { font-size: 15.5px; }.scope-mgmt .modal__head p, .scope-mgmt.modal__head p { font-size: 11.5px; color: var(--ink-500); margin-top: 2px; }.scope-mgmt .modal__body, .scope-mgmt.modal__body { padding: 18px 20px; max-height: calc(100vh - 220px); overflow: auto; }.scope-mgmt .modal__foot, .scope-mgmt.modal__foot { display: flex; justify-content: flex-end; gap: 8px; padding: 13px 20px; border-top: 1px solid var(--line); background: var(--surface-muted); }/* -------------------------------- تنبيهات -------------------------------- */ .scope-mgmt .toast-stack, .scope-mgmt.toast-stack { position: fixed; inset-inline-end: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 100; pointer-events: none; }.scope-mgmt .toast, .scope-mgmt.toast {
+}.scope-mgmt .modal--sm, .scope-mgmt.modal--sm { max-width: 460px; }.scope-mgmt .modal--lg, .scope-mgmt.modal--lg { max-width: 940px; }.scope-mgmt .modal__head, .scope-mgmt.modal__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); }.scope-mgmt .modal__head h2, .scope-mgmt.modal__head h2 { font-size: 15.5px; }.scope-mgmt .modal__head p, .scope-mgmt.modal__head p { font-size: 11.5px; color: var(--ink-500); margin-top: 2px; }.scope-mgmt .modal__body, .scope-mgmt.modal__body { padding: 18px 20px; max-height: calc(100vh - 220px); overflow: auto; }.scope-mgmt .modal__foot, .scope-mgmt.modal__foot { display: flex; justify-content: flex-end; gap: 8px; padding: 13px 20px; border-top: 1px solid var(--line); background: var(--surface-muted); }/* -------------------------------- تنبيهات -------------------------------- */ .scope-mgmt .toast-stack, .scope-mgmt.toast-stack { position: fixed; inset-inline-end: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }.scope-mgmt .toast, .scope-mgmt.toast {
   display: flex;
   align-items: center;
   gap: 9px;
-  pointer-events: auto;
   padding: 10px 13px;
   border-radius: 12px;
   font-size: 12.5px;
