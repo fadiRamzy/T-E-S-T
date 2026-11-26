@@ -264,23 +264,29 @@
   margin-top: 4px;
 }
 
-/* 11. Bottom navigation: bold labels, solid bar, clearly filled active item. */
+/* 11. Bottom navigation: bold labels, solid bar, clearly filled active item.
+   All icons fit visibly without scrolling; no item is clipped at the edges. */
 .scope-mgmt.scope-mgmt .bottom-nav__inner {
   background: var(--surface);
   border: 1.5px solid var(--line-strong);
   box-shadow: 0 -2px 14px rgba(15, 39, 64, 0.12);
-  padding: 12px 10px;
-  gap: 12px;
+  padding: 14px 10px;
+  gap: 10px;
 }
 
 .scope-mgmt.scope-mgmt .bottom-nav__item {
   font-weight: 700;
   color: var(--ink-700);
-  min-height: 48px;
+  min-height: 52px;
+  height: auto;
   display: inline-grid;
   place-items: center;
-  padding: 8px;
+  padding: 8px 5px;
   border-radius: var(--radius-lg);
+  min-width: auto;
+  flex: 0 1 auto;
+  font-size: 10.5px;
+  text-align: center;
 }
 
 .scope-mgmt.scope-mgmt .bottom-nav__item.is-active {
