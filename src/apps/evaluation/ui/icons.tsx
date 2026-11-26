@@ -43,3 +43,4 @@ export function Icon({ name, size = 18, style }: { name: IconName; size?: number
       {P[name]}
     </svg>
   );
+}
