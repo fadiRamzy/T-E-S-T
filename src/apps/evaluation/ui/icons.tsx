@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 /** Tiny inline SVG icon set (stroke icons, 24×24 grid) — no icon font / external requests. */
 const P: Record<string, ReactNode> = {
@@ -25,7 +25,7 @@ const P: Record<string, ReactNode> = {
 };
 
 export type IconName = keyof typeof P;
-export function Icon({ name, size = 18, style }: { name: IconName; size?: number; style?: React.CSSProperties }) {
+export function Icon({ name, size = 18, style }: { name: IconName; size?: number; style?: CSSProperties }) {
   return (
     <svg
       className="ic"
