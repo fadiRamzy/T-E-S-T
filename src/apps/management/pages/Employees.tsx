@@ -204,9 +204,7 @@ const { runAction, notify } = useAppActions();
   return (
     <>
       <PageHeader
-        eyebrow="السجلات الأساسية"
         title="الموظفون"
-        description="إدارة بيانات الموظفين وسجلاتهم المرتبطة."
         actions={
           <>
             <Button icon="database" onClick={() => setExportOpen(true)} disabled={!data.employees.length}>

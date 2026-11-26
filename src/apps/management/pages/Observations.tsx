@@ -144,7 +144,6 @@ const { runAction } = useAppActions();
       ) : (
         <PageHeader
           title="سجل الملاحظات"
-          description="كل ملاحظة سجل مستقل بتاريخها ومصدرها وإجراءها التصحيحي."
           actions={<Button variant="primary" icon="plus" disabled={!data.employees.length} onClick={() => { setErrors({}); setDraft(emptyDraft(data.employees.find((row) => !row.archived)?.id ?? '')); }}>إضافة ملاحظة</Button>}
         />
       )}

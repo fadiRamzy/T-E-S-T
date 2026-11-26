@@ -123,9 +123,7 @@ const { runAction } = useAppActions();
   return (
     <>
       <PageHeader
-        eyebrow="العمليات اليومية"
         title="محاضر يومية"
-        description="محضر لكل موظف: توقيت طلب الملف واستلامه والرد عليه ونتيجة الفحص. المدة تُحسب من استلام الملف إلى الرد عليه."
         actions={
           <>
             <Button

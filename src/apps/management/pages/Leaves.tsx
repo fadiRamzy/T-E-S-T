@@ -131,7 +131,6 @@ const { runAction } = useAppActions();
       ) : (
         <PageHeader
           title="الإجازات والأذونات"
-          description="سجل يدوي بسيط: النوع والتواريخ وعدد الأيام أو الساعات. الأذونات تُسجَّل بالساعات ولا تُحسب إجازة يوم كامل."
           actions={<Button
               variant="primary"
               icon="plus"

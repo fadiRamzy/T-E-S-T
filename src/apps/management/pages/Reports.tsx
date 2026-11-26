@@ -57,9 +57,7 @@ export function ReportsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="إدارة البيانات المحلية"
         title="التقارير والنسخ الاحتياطي"
-        description="نزّل نسخة كاملة من سجلاتك أو ارفع نسخة محفوظة لاستعادتها."
       />
       <div className="page-stack">
         <section className="section-card" aria-label="إجراءات النسخ الاحتياطي">

@@ -8,11 +8,11 @@ import { EGYPT_GOVERNORATES } from '../domain/constants';
 import { Icon, type IconName } from './icons';
 import { init, redo, undo, useStore } from './store';
 
-const PAGES: Array<{ id: string; label: string; icon: IconName }> = [
-  { id: 'dashboard', label: 'لوحة المؤشرات', icon: 'dashboard' },
-  { id: 'employees', label: 'الموظفون', icon: 'users' },
-  { id: 'monthly', label: 'التقييم الشهري', icon: 'calendar' },
-  { id: 'files', label: 'الملفات', icon: 'file' },
+const PAGES: Array<{ id: string; label: string; icon: IconName; color?: string }> = [
+  { id: 'dashboard', label: 'لوحة المؤشرات', icon: 'dashboard', color: 'var(--maroon-dark)' },
+  { id: 'employees', label: 'الموظفون', icon: 'users', color: 'var(--maroon)' },
+  { id: 'monthly', label: 'التقييم الشهري', icon: 'calendar', color: 'var(--gold-dark)' },
+  { id: 'files', label: 'الملفات', icon: 'file', color: 'var(--text-2)' },
 ];
 type PageId = 'dashboard' | 'employees' | 'monthly' | 'files';
 const isPage = (x: string): x is PageId => PAGES.some((p) => p.id === x);
@@ -64,15 +64,11 @@ export function App() {
     <div className="shell scope-eval">
       <header className="eval-desktop-topbar print-hide" aria-label="رأس الصفحة">
         <div className="eval-desktop-topbar__inner">
-          <div>
-            <span className="eval-desktop-topbar__eyebrow">منظومة رسمية</span>
-            <strong className="eval-desktop-topbar__title">نظام تقييم مسئولي المخاطر</strong>
-          </div>
           <a className="eval-desktop-topbar__switch" href="#/mgmt/employees"><Icon name="chart" /><span>نظام المتابعة</span></a>
         </div>
       </header>
       <header className="eval-mobile-topbar print-hide">
-        <div className="eval-mobile-topbar__title">تقييم مسئولي المخاطر</div>
+        <div className="eval-mobile-topbar__title">نظام التقييم</div>
         <a className="eval-mobile-topbar__switch" href="#/mgmt/employees">نظام المتابعة</a>
       </header>
       <main className="container">
@@ -110,7 +106,7 @@ export function App() {
                   else setPage(p.id as PageId);
                 }}
               >
-                <span className="bottom-nav__icon"><Icon name={p.icon} size={18} /></span>
+                <span className="bottom-nav__icon"><Icon name={p.icon} size={18} style={{ color: p.color }} /></span>
                 <span className="bottom-nav__label">{p.label}</span>
               </a>
             );
@@ -121,7 +117,7 @@ export function App() {
             title="نظام المتابعة"
             aria-label="الانتقال إلى نظام المتابعة"
           >
-            <span className="bottom-nav__icon"><Icon name="chart" size={18} /></span>
+            <span className="bottom-nav__icon"><Icon name="chart" size={18} style={{ color: 'var(--gold-dark)' }} /></span>
             <span className="bottom-nav__label">نظام المتابعة</span>
           </a>
         </div>

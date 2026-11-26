@@ -143,9 +143,7 @@ const { runAction } = useAppActions();
         </div>
       ) : (
         <PageHeader
-          eyebrow="السجلات اليدوية"
           title="الإجازات والأذونات"
-          description="تسجيل ومتابعة الطلبات، مع احتساب رصيد الأذونات الشهري لكل موظف."
           actions={<Button variant="primary" icon="plus" onClick={() => { setErrors({}); setDraft(emptyDraft()); }}>إضافة سجل</Button>}
         />
       )}

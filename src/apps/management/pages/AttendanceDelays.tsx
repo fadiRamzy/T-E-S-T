@@ -57,9 +57,7 @@ const { runAction } = useAppActions();
 
   return <>
     <PageHeader
-      eyebrow="السجلات اليدوية"
       title="تأخيرات الحضور والانصراف"
-      description="إدخال اختياري للأوقات ومتابعة التأخير والانصراف المبكر حسب الدوام الرسمي."
       actions={<Button variant="primary" icon="plus" onClick={() => setDraft(newDraft())}>إضافة سجل</Button>}
     />
 

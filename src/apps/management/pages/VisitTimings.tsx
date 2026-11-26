@@ -163,9 +163,7 @@ const { runAction } = useAppActions();
   return (
     <>
       <PageHeader
-        eyebrow="العمل الميداني"
         title="توقيت الزيارات"
-        description="تسجيل زيارات الموظفين بتوقيت التحرك والرجوع، مع فلاتر وبحث داخل الزيارات المسجلة."
         actions={
           <Button
             variant="primary"
