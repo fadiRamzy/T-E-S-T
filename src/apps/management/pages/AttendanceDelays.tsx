@@ -86,7 +86,7 @@ const { runAction } = useAppActions();
       {summaries.length ? <div className="table-panel"><TableWrap><Table>
         <thead><tr><th>الموظف</th><th className="num">مرات تأخير الحضور</th><th className="num">إجمالي دقائق تأخير الحضور</th></tr></thead>
         <tbody>{summaries.map((summary) => <tr key={summary.employee.id}>
-          <td>{summary.employee.name}</td>
+          <td className="col-emp-name">{summary.employee.name}</td>
           <td className="num"><Badge tone={summary.lateCount ? 'danger' : 'neutral'}>{fmtNumber(summary.lateCount)}</Badge></td>
           <td className="num">{fmtNumber(summary.lateMinutes)}</td>
         </tr>)}</tbody>
@@ -100,7 +100,7 @@ const { runAction } = useAppActions();
           const late = attendanceDelayMinutes(row.arrivalTime);
           const early = earlyDepartureMinutes(row.departureTime);
           return <tr key={row.id}>
-            <td>{employeeName(row.employeeId)}</td><td className="nowrap">{row.date ? fmtDate(row.date) : '—'}</td>
+            <td className="col-emp-name">{employeeName(row.employeeId)}</td><td className="nowrap">{row.date ? fmtDate(row.date) : '—'}</td>
             <td className="num nowrap">{row.arrivalTime ? fmtTime(row.arrivalTime) : '—'}</td><td className="num nowrap">{late ? <Badge tone="danger">{fmtDurationWords(late)}</Badge> : row.arrivalTime ? 'لا يوجد' : '—'}</td>
             <td className="num nowrap">{row.departureTime ? fmtTime(row.departureTime) : '—'}</td><td className="num nowrap">{early ? <Badge tone="warning">{fmtDurationWords(early)}</Badge> : row.departureTime ? 'لا يوجد' : '—'}</td>
             <td className="wrap small">{row.notes || '—'}</td><td><div className="table__actions"><IconButton icon="edit" label="تعديل" onClick={() => edit(row)} /><IconButton icon="trash" tone="danger" label="حذف" onClick={() => setDeleting(row)} /></div></td>

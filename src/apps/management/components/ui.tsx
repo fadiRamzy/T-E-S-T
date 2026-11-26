@@ -510,9 +510,9 @@ export function Checkbox({ label, ...props }: React.InputHTMLAttributes<HTMLInpu
   );
 }
 
-export function SearchInput({ value, onChange, placeholder = 'بحث…' }: { value: string; onChange: (value: string) => void; placeholder?: string }) {
+export function SearchInput({ value, onChange, placeholder = 'بحث…', className }: { value: string; onChange: (value: string) => void; placeholder?: string; className?: string }) {
   return (
-    <div className="search">
+    <div className={cn('search', className)}>
       <Icon name="search" size={14} />
       <input type="search" value={value} placeholder={placeholder} aria-label={placeholder} onChange={(e) => onChange(e.target.value)} />
       {value ? (

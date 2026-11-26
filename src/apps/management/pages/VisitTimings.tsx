@@ -74,6 +74,7 @@ const { runAction } = useAppActions();
   const [draft, setDraft] = useState<Draft | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [confirmDelete, setConfirmDelete] = useState<VisitTiming | null>(null);
+  const [filtersCollapsed, setFiltersCollapsed] = useState(true);
 
   const activeEmployees = data.employees.filter((row) => !row.archived);
   const nameOf = (id: string) => (id ? (data.employees.find((row) => row.id === id)?.name ?? 'موظف محذوف') : '—');
@@ -242,44 +243,56 @@ const { runAction } = useAppActions();
             note={`قائمة الزيارات مخفية (${rows.length} زيارة) — اضغط «إظهار البيانات» لعرضها. الإخفاء لا يحذف أي سجل.`}
 
               controls={
-                <div className="filter-panel">
-                  <div className="filter-panel__head">
-                    <span className="filter-panel__title">بحث وفلاتر</span>
-                    <span className="toolbar__spacer filter-panel__count" data-testid="visit-count-total">
-                      عدد الزيارات: {rows.length}
-                    </span>
-                  </div>
-                  <Toolbar>
-                    <SearchInput value={query} onChange={setQuery} placeholder="بحث بالموظف أو الفرع أو العميل…" />
-                    <Select value={listMonth} onChange={(e) => setListMonth(e.target.value)} aria-label="شهر الزيارة">
-                      <option value="all">كل الشهور</option>
-                      {MONTHS_AR.map((label, index) => (
-                        <option key={label} value={index + 1}>
-                          {label}
-                        </option>
-                      ))}
-                    </Select>
-                    <Select value={listBranch} onChange={(e) => setListBranch(e.target.value)} aria-label="الفرع في الزيارات">
-                      <option value="all">كل الفروع</option>
-                      {branches.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </Select>
-                    <Select value={listYear} onChange={(e) => setListYear(e.target.value)} aria-label="سنة الزيارة">
-                      <option value="all">كل السنوات</option>
-                      {years.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </Select>
-                    <Button size="sm" icon="restore" onClick={resetListFilters} disabled={!filtersActive}>
-                      إعادة تعيين
-                    </Button>
-                  </Toolbar>
-                </div>
+                <>
+                  <Button
+                    size="sm"
+                    icon={filtersCollapsed ? 'search' : 'filter'}
+                    onClick={() => setFiltersCollapsed((prev) => !prev)}
+                    style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)', borderColor: 'var(--success)' }}
+                  >
+                    {filtersCollapsed ? 'إظهار الفلاتر' : 'إخفاء الفلاتر'}
+                  </Button>
+                  {!filtersCollapsed && (
+                    <div className="filter-panel">
+                      <div className="filter-panel__head">
+                        <span className="filter-panel__title">بحث وفلاتر</span>
+                        <span className="toolbar__spacer filter-panel__count" data-testid="visit-count-total">
+                          عدد الزيارات: {rows.length}
+                        </span>
+                      </div>
+                      <Toolbar>
+                        <SearchInput className="search-compact" value={query} onChange={setQuery} placeholder="بحث بالموظف أو الفرع أو العميل…" />
+                        <Select value={listMonth} onChange={(e) => setListMonth(e.target.value)} aria-label="شهر الزيارة">
+                          <option value="all">كل الشهور</option>
+                          {MONTHS_AR.map((label, index) => (
+                            <option key={label} value={index + 1}>
+                              {label}
+                            </option>
+                          ))}
+                        </Select>
+                        <Select value={listBranch} onChange={(e) => setListBranch(e.target.value)} aria-label="الفرع في الزيارات">
+                          <option value="all">كل الفروع</option>
+                          {branches.map((item) => (
+                            <option key={item} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                        </Select>
+                        <Select value={listYear} onChange={(e) => setListYear(e.target.value)} aria-label="سنة الزيارة">
+                          <option value="all">كل السنوات</option>
+                          {years.map((item) => (
+                            <option key={item} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                        </Select>
+                        <Button size="sm" icon="restore" onClick={resetListFilters} disabled={!filtersActive}>
+                          إعادة تعيين
+                        </Button>
+                      </Toolbar>
+                    </div>
+                  )}
+                </>
               }>
 
             {rows.length ? (

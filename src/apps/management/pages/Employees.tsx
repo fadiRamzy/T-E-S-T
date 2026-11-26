@@ -207,7 +207,7 @@ const { runAction, notify } = useAppActions();
         title="الموظفون"
         actions={
           <>
-            <Button icon="database" onClick={() => setExportOpen(true)} disabled={!data.employees.length}>
+            <Button icon="database" onClick={() => setExportOpen(true)} disabled={!data.employees.length} style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)', borderColor: 'var(--success)' }}>
               استخراج بيانات
             </Button>
             <Button variant="primary" icon="plus" onClick={openNew}>
@@ -219,7 +219,7 @@ const { runAction, notify } = useAppActions();
 
       <div className="stats employees-summary" aria-label="ملخص الموظفين">
         <Stat label="إجمالي الموظفين" value={data.employees.length} hint="كل السجلات المسجلة" icon="employees" tone="info" />
-        <Stat label="الزيارات الميدانية المسجلة" value={data.visits.length} hint="السجلات المحفوظة" icon="visits" tone="success" />
+        <Stat label="الزيارات الميدانية المسجلة" value={data.visits.filter((v) => data.employees.some((e) => e.id === v.employeeId && !e.archived)).length} hint="السجلات المحفوظة" icon="visits" tone="success" />
         <Stat label="المحاضر اليومية" value={data.minutes.length} hint="محاضر مسجلة" icon="minutes" tone="warning" />
       </div>
 
@@ -267,7 +267,7 @@ const { runAction, notify } = useAppActions();
             ))}
           </Select>
           <Checkbox label="إظهار المؤرشفين" checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
-          <Button size="sm" icon="restore" onClick={resetFilters} disabled={!filtersActive}>
+          <Button size="sm" icon="restore" onClick={resetFilters} disabled={!filtersActive} style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)', borderColor: 'var(--success)' }}>
             إعادة تعيين
           </Button>
         </Toolbar>

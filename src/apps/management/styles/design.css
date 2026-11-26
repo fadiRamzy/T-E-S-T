@@ -356,9 +356,11 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 .scope-mgmt .table tbody tr:last-child td { border-bottom: none; }
 .scope-mgmt .table tbody tr:hover td { background: rgba(173, 131, 50, 0.06); }
 .scope-mgmt .table td a { color: var(--maroon-dark); font-weight: 700; }
-.scope-mgmt .table td.num, .scope-mgmt .table th.num { text-align: end; font-variant-numeric: tabular-nums; font-family: var(--font-numeric); width: 1%; white-space: nowrap; }
+.scope-mgmt .table td.num, .scope-mgmt .table th.num { text-align: center; font-variant-numeric: tabular-nums; font-family: var(--font-numeric); width: 1%; white-space: nowrap; }
 .scope-mgmt .table td.nowrap, .scope-mgmt .table th.nowrap { white-space: nowrap; }
 .scope-mgmt .table td.wrap { white-space: normal; }
+.scope-mgmt .table td.col-emp-name, .scope-mgmt .table th.col-emp-name { max-width: 150px; width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scope-mgmt .search-compact { max-width: 220px; width: 220px; }
 
 .scope-mgmt .table-panel { padding: 0; }
 .scope-mgmt .table-panel .tablewrap { border: 0; border-radius: 0; }
