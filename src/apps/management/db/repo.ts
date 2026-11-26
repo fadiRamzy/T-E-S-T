@@ -40,9 +40,27 @@ const isDate = (value?: string | null) => Boolean(value) && !Number.isNaN(new Da
 export async function listEmployees(includeArchived = false): Promise<Employee[]> {
   const rows = await getAll<Employee>('employees');
   return rows
-    .map((row) => ({ ...row, status: normalizeEmployeeStatus(row.status) }))
+    .filter((row): row is Employee => Boolean(row && typeof row === 'object' && (row as Employee).id))
+    .map((row) => {
+      const name = typeof row.name === 'string' ? row.name.trim() : String(row.name ?? '').trim();
+      const employeeNo = Number(row.employeeNo);
+      return {
+        ...row,
+        name,
+        employeeNo: Number.isFinite(employeeNo) ? employeeNo : 0,
+        status: normalizeEmployeeStatus(row.status),
+        archived: Boolean(row.archived),
+        code: typeof row.code === 'string' ? row.code : String(row.code ?? ''),
+        sector: typeof row.sector === 'string' ? row.sector : String(row.sector ?? ''),
+        governorate: typeof row.governorate === 'string' ? row.governorate : String(row.governorate ?? ''),
+        jobTitle: typeof row.jobTitle === 'string' ? row.jobTitle : String(row.jobTitle ?? ''),
+        employmentDate: typeof row.employmentDate === 'string' ? row.employmentDate : String(row.employmentDate ?? ''),
+        branches: typeof row.branches === 'string' ? row.branches : String(row.branches ?? ''),
+        notes: typeof row.notes === 'string' ? row.notes : String(row.notes ?? ''),
+      } as Employee;
+    })
     .filter((row) => (includeArchived ? true : !row.archived))
-    .sort((a, b) => a.employeeNo - b.employeeNo || a.name.localeCompare(b.name, 'ar'));
+    .sort((a, b) => (a.employeeNo || 0) - (b.employeeNo || 0) || (a.name || '').localeCompare(b.name || '', 'ar'));
 }
 
 export async function listEmployeeNotes(): Promise<EmployeeNote[]> {

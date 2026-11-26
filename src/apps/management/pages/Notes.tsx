@@ -1,4 +1,4 @@
-import { useApp } from '../state/store';
+import { useAppData } from '../state/store';
 import { PageHeader } from '../components/ui';
 import { EmployeeNotesManager } from '../components/EmployeeNotes';
 
@@ -8,7 +8,7 @@ import { EmployeeNotesManager } from '../components/EmployeeNotes';
  * (سجل المتابعة المنظم له صفحة مستقلة الآن في #/mgmt/observations.)
  */
 export function NotesPage() {
-  const { data } = useApp();
+  const data = useAppData();
   return (
     <>
       <PageHeader

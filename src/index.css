@@ -1,112 +1,169 @@
 /* ==========================================================================
-   DESIGN SYSTEM v4 — «Atlas Institutional» (unified portal)
-   Global shell + landing page. App visuals live under .scope-mgmt /
-   .scope-eval (design.css layers); this file owns the portal, the global
-   font/background, and the floating site-switch clearance rules.
+   Warm institutional portal — global shell
+   Ivory / maroon / gold identity adapted for a financial risk platform.
    ========================================================================== */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html {
-  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
-}
+html { font-family: var(--font-body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 body {
-  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
-  background: #f4f6fa;
-  color: #1e3247;
+  font-family: var(--font-body);
+  background: var(--canvas);
+  color: var(--text);
   -webkit-text-size-adjust: 100%;
 }
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 3px;
-  z-index: 9998;
-  background: #0a2540;
-}
+#root { min-height: 100vh; }
 .scope-mgmt, .scope-eval { min-height: 100vh; }
 
-/* Clearance for the floating site-switch button so it never overlaps page
-   content (both apps reserve the same 64px strip at the top center). */
-@media screen {
-  .scope-mgmt .page { padding-top: 64px; }
-  .scope-eval .container { padding-top: 64px; }
-}
-
-/* ── Landing page — institutional: light canvas, navy wordmark rule,
-      exactly two solid action buttons ── */
+/* Portal */
 .portal {
   min-height: 100vh;
-  background: #f4f6fa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 46px;
+  gap: 28px;
   padding: 48px 24px;
-  text-align: center;
+  background: linear-gradient(180deg, var(--maroon-dark) 0%, var(--maroon) 220px, var(--canvas) 220px, var(--canvas) 100%);
+}
+.portal-hero { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; color: #fff; padding-bottom: 20px; }
+.portal-eyebrow {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 18px;
+  color: var(--maroon-bright);
+  background: rgba(173, 131, 50, 0.14);
+  border: 1px solid rgba(173, 131, 50, 0.35);
 }
 .portal-title {
   margin: 0;
-  font-size: clamp(28px, 5vw, 44px);
+  font-size: clamp(30px, 4.5vw, 44px);
+  line-height: 1.2;
   font-weight: 800;
-  color: #0a2540;
-  line-height: 1.4;
+  font-family: var(--font-display);
+  color: #fff;
+  letter-spacing: -0.02em;
 }
-.portal-title::after {
-  content: "";
-  display: block;
-  width: 64px;
-  height: 4px;
-  margin: 16px auto 0;
-  border-radius: 4px;
-  background: #a8842c;
+.portal-subtitle {
+  margin: 0;
+  max-width: 620px;
+  font-size: 16px;
+  line-height: 26px;
+  color: rgba(255, 255, 255, 0.88);
 }
 .portal-actions {
-  display: flex;
-  gap: 22px;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 320px));
+  gap: 20px;
+  width: 100%;
+  max-width: 700px;
 }
 .portal-btn {
-  display: inline-block;
-  min-width: 240px;
-  padding: 18px 48px;
-  border-radius: 12px;
-  font-size: 19px;
-  font-weight: 700;
-  color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 170px;
+  padding: 26px 24px;
+  border-radius: var(--radius-lg);
   text-decoration: none;
-  transition: transform .2s cubic-bezier(.2, .7, .2, 1), box-shadow .25s cubic-bezier(.2, .7, .2, 1), background-color .2s;
+  text-align: start;
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--divider);
+  border-top: 4px solid var(--gold);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.portal-btn:hover { transform: translateY(-3px); }
-.portal-btn:active { transform: translateY(-1px); }
-.portal-btn:focus-visible, .site-switch:focus-visible { outline: 3px solid #1b4a73; outline-offset: 3px; }
-.portal-btn--mgmt { background: #0a2540; box-shadow: 0 14px 30px -14px rgba(8, 31, 56, .5); }
-.portal-btn--mgmt:hover { background: #10365c; }
-.portal-btn--eval { background: #fff; color: #0a2540; border: 1px solid #cbd6e4; box-shadow: 0 1px 2px rgba(16, 42, 67, .06); }
-.portal-btn--eval:hover { background: #edf1f7; border-color: #b9c7d6; box-shadow: 0 10px 24px -12px rgba(16, 42, 67, .25); }
-@media (max-width: 560px) {
-  .portal-actions { flex-direction: column; width: 100%; max-width: 340px; }
-  .portal-btn { width: 100%; }
+.portal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--gold);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .portal-title { animation: portal-rise .5s cubic-bezier(.2, .7, .2, 1) both; }
-  .portal-actions { animation: portal-rise .5s .12s cubic-bezier(.2, .7, .2, 1) both; }
-  @keyframes portal-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.portal-btn:focus-visible, .site-switch:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.portal-btn__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  color: var(--maroon-dark);
+  background: var(--gold-tint);
+  border: 1.5px solid rgba(173, 131, 50, 0.3);
+}
+.portal-btn__icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.portal-btn__label {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--maroon-dark);
+}
+.portal-btn__desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-2);
+}
+.portal-btn--mgmt .portal-btn__desc::before { content: "الموظفون، الزيارات، المحاضر، والإجازات"; }
+.portal-btn--eval .portal-btn__desc::before { content: "لوحة المؤشرات، التقييم الشهري، والملفات"; }
+.portal-btn__arrow {
+  position: absolute;
+  top: 22px;
+  inset-start: 22px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+  border: 1.5px solid var(--divider);
+  background: var(--surface);
+}
+.portal-btn__arrow svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.portal-btn:hover .portal-btn__arrow { color: var(--maroon); border-color: var(--control-border); }
+@media (max-width: 640px) {
+  .portal { padding: 32px 16px; gap: 24px; background: linear-gradient(180deg, var(--maroon-dark) 0%, var(--maroon) 200px, var(--canvas) 200px, var(--canvas) 100%); }
+  .portal-actions { grid-template-columns: 1fr; max-width: 440px; }
+  .portal-btn { min-height: 152px; }
 }
 
-/* ── Dynamic website-switching button — floating, precisely centered
-      horizontally at the top of both websites ── */
+/* Site switch fallback */
 .site-switch {
-  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-  z-index: 9999;
-  display: inline-flex; align-items: center; gap: 8px;
-  background: #0a2540; color: #fff; text-decoration: none;
-  font-size: 13.5px; font-weight: 700; padding: 10px 18px; border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, .25);
-  box-shadow: 0 12px 26px -12px rgba(8, 31, 56, .55);
-  transition: background-color .2s, transform .2s cubic-bezier(.2, .7, .2, 1);
+  position: fixed;
+  top: 12px;
+  inset-start: 50%;
+  transform: translateX(50%);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  color: var(--maroon-dark);
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--surface);
+  border: 1.5px solid var(--divider);
+  box-shadow: var(--shadow-card);
 }
-.site-switch:hover { background: #10365c; transform: translateX(-50%) translateY(-2px); }
-.site-switch svg { width: 17px; height: 17px; stroke: #e8c87a; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-@media print { .site-switch { display: none; } body::before { display: none; } }
+.site-switch:hover { background: var(--surface-tint); border-color: var(--gold); }
+.site-switch svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+@media (min-width: 1200px) { body:has(.scope-mgmt) .site-switch, body:has(.scope-eval) .site-switch { display: none !important; } }
+@media (max-width: 1199px) { body:has(.scope-mgmt) .site-switch, body:has(.scope-eval) .site-switch { display: none !important; } }
+@media print { .site-switch { display: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

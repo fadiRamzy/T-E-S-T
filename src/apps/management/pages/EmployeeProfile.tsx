@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData} from '../state/store';
 import { navigate } from '../state/router';
 import {
   Badge,
@@ -38,10 +38,12 @@ import { downloadPdf, loadReportFonts } from '../lib/pdf/loadFonts';
  * لا تظهر أي سجلات أو مؤشرات تخص موظفين آخرين أو لوحة متابعة عامة.
  */
 export function EmployeeProfilePage({ employeeId }: { employeeId: string }) {
-  const { data, notify } = useApp();
+  const data = useAppData();
+const { notify } = useAppActions();
 
   // فلاتر سجلات هذا الموظف (الشهر / السنة / الفرع / بحث نصي) — لا تغيّر أي سجل محفوظ
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [monthFilter, setMonthFilter] = useState('all');
   const [yearFilter, setYearFilter] = useState('all');
   const [branchFilter, setBranchFilter] = useState('all');
@@ -84,7 +86,7 @@ export function EmployeeProfilePage({ employeeId }: { employeeId: string }) {
     (monthFilter === 'all' || Number(isoDate.slice(5, 7)) === Number(monthFilter));
 
   const minutes = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return allMinutes
       .filter((row) => matchesPeriod(row.date ?? row.createdAt.slice(0, 10)))
       .filter((row) =>
@@ -96,10 +98,10 @@ export function EmployeeProfilePage({ employeeId }: { employeeId: string }) {
       )
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allMinutes, query, monthFilter, yearFilter]);
+  }, [allMinutes, deferredQuery, monthFilter, yearFilter]);
 
   const visitTimings = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return allVisitTimings
       .filter((row) => matchesPeriod(row.visitDate ?? ''))
       .filter((row) => (branchFilter === 'all' ? true : row.branch === branchFilter))
@@ -107,7 +109,7 @@ export function EmployeeProfilePage({ employeeId }: { employeeId: string }) {
         !text ? true : `${row.clientName} ${row.branch} ${row.location}`.toLowerCase().includes(text),
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allVisitTimings, query, monthFilter, yearFilter, branchFilter]);
+  }, [allVisitTimings, deferredQuery, monthFilter, yearFilter, branchFilter]);
 
   const filtersActive = query !== '' || monthFilter !== 'all' || yearFilter !== 'all' || branchFilter !== 'all';
   const resetFilters = () => {
@@ -246,7 +248,7 @@ export function EmployeeProfilePage({ employeeId }: { employeeId: string }) {
             </Button>
           </div>
         </div>
-        <div className="profile-facts">
+        <div className="profile-facts profile-chips">
           <span className="profile-chip">
             <em>الكود</em>
             <strong className="mono">{employee.code}</strong>

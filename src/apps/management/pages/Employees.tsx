@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import { useDeferredValue, useMemo, useState } from 'react';
+import {useApp, useAppActions, useAppData, useAppMeta} from '../state/store';
 import { navigate } from '../state/router';
 import {
   Badge,
@@ -54,8 +54,11 @@ const emptyDraft = (employeeNo: number): Draft => ({
 });
 
 export function EmployeesPage() {
-  const { data, settings, runAction, notify } = useApp();
+  const data = useAppData();
+const { settings } = useAppMeta();
+const { runAction, notify } = useAppActions();
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [sector, setSector] = useState('all');
   const [governorate, setGovernorate] = useState('all');
   const [status, setStatus] = useState('all');
@@ -73,7 +76,7 @@ export function EmployeesPage() {
   const [exporting, setExporting] = useState(false);
 
   const rows = useMemo(() => {
-    const text = query.trim().toLowerCase();
+    const text = deferredQuery.trim().toLowerCase();
     return data.employees
       .filter((row) => (showArchived ? true : !row.archived))
       .filter((row) => (sector === 'all' ? true : row.sector === sector))
@@ -84,7 +87,7 @@ export function EmployeesPage() {
         !text ? true : [row.name, row.code, row.sector, row.governorate, row.jobTitle, row.branches].join(' ').toLowerCase().includes(text),
       )
       .sort((a, b) => a.employeeNo - b.employeeNo);
-  }, [data.employees, query, sector, governorate, status, branch, showArchived]);
+  }, [data.employees, deferredQuery, sector, governorate, status, branch, showArchived]);
 
   const sectors = Array.from(new Set([...settings.sectors, ...data.employees.map((row) => row.sector)].filter(Boolean)));
   const governorates = Array.from(new Set([...settings.governorates, ...data.employees.map((row) => row.governorate)].filter(Boolean)));
@@ -269,7 +272,6 @@ export function EmployeesPage() {
           <Button size="sm" icon="restore" onClick={resetFilters} disabled={!filtersActive}>
             إعادة تعيين
           </Button>
-          <span className="toolbar__spacer">{rows.length} موظف</span>
         </Toolbar>
           }>
         
@@ -279,36 +281,36 @@ export function EmployeesPage() {
             <Table>
               <thead>
                 <tr>
-                  <th className="num">الرقم</th>
-                  <th>الاسم</th>
-                  <th>الكود</th>
+                  <th className="num col-emp-no">الرقم</th>
+                  <th className="col-emp-name">الاسم</th>
+                  <th className="col-emp-code">الكود</th>
                   <th>القطاع</th>
                   <th>المحافظة</th>
                   <th>المسمى الوظيفي</th>
                   <th>تاريخ التعيين</th>
-                  <th>الفروع</th>
-                  <th>حالة الموظف</th>
-                  <th>إجراءات</th>
+                  <th className="col-emp-branches">الفروع</th>
+                  <th className="col-emp-status">حالة الموظف</th>
+                  <th className="col-emp-actions">إجراءات</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((employee) => (
                   <tr key={employee.id}>
-                    <td className="num">{employee.employeeNo}</td>
-                    <td>
+                    <td className="num col-emp-no">{employee.employeeNo}</td>
+                    <td className="col-emp-name">
                       <a href={`#/mgmt/employees/${employee.id}`}>{employee.name}</a>
                       {employee.archived ? <Badge> مؤرشف</Badge> : null}
                     </td>
-                    <td className="mono">{employee.code}</td>
+                    <td className="mono col-emp-code">{employee.code}</td>
                     <td>{employee.sector}</td>
                     <td>{employee.governorate}</td>
                     <td>{employee.jobTitle}</td>
                     <td className="nowrap">{fmtDate(employee.employmentDate)}</td>
-                    <td>{employee.branches || '—'}</td>
-                    <td>
+                    <td className="col-emp-branches"><span>{employee.branches || '—'}</span></td>
+                    <td className="col-emp-status">
                       <Badge tone={employee.status === 'active' ? 'success' : 'neutral'}>{EMPLOYEE_STATUS_LABELS[employee.status]}</Badge>
                     </td>
-                    <td>
+                    <td className="col-emp-actions">
                       <div className="table__actions">
                         <IconButton icon="user" label="عرض الملف" onClick={() => navigate(`/employees/${employee.id}`)} />
                         <IconButton icon="edit" label="تعديل" onClick={() => openEdit(employee)} />

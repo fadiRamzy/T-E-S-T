@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useApp } from '../state/store';
+import {useApp, useAppActions, useAppData} from '../state/store';
 import {
   Badge,
   Button,
@@ -17,6 +17,7 @@ import {
   Textarea,
   Toolbar,
 } from '../components/ui';
+import { EmployeePicker } from '../components/EmployeePicker';
 import { ValidationError, deleteLeavePermission, saveLeavePermission } from '../db/repo';
 import type { LeavePermissionRecord } from '../db/schema';
 import { MONTHS_AR } from '../db/schema';
@@ -48,7 +49,8 @@ const emptyDraft = (): Draft => ({
 });
 
 export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean }) {
-  const { data, runAction } = useApp();
+  const data = useAppData();
+const { runAction } = useAppActions();
   const [employeeFilter, setEmployeeFilter] = useState('all');
   const [monthFilter, setMonthFilter] = useState(currentMonth());
   const [yearFilter, setYearFilter] = useState(currentYear());
@@ -76,9 +78,19 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
   );
   const employeeName = (id: string) => data.employees.find((row) => row.id === id)?.name ?? '—';
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
-  /** خلية رقمية عادية — الشارة الحمراء الشفافة (نفس شارة تأخيرات الحضور) تظهر فقط حول القيمة عندما تكون أكبر من صفر */
+  /** خلية رقمية — دائرة حدودية صغيرة ملوّنة حول الرقم فقط (بدون تلوين الخلية) */
+  const ringTone = (cls: string) => {
+    if (cls.includes('leave-summary-total')) return 'total';
+    if (cls.includes('leave-summary-warning')) return 'warning';
+    if (cls.includes('leave-summary-hours')) return 'hours';
+    if (cls.includes('leave-summary-permission')) return 'permission';
+    if (cls.includes('leave-summary-leave')) return 'leave';
+    return 'neutral';
+  };
   const numCell = (value: number, cls: string) => (
-    <td className={cls}>{value > 0 ? <Badge tone="danger">{fmtNumber(value)}</Badge> : fmtNumber(value)}</td>
+    <td className={cls}>
+      {value > 0 ? <span className={`count-ring count-ring--${ringTone(cls)}`}>{fmtNumber(value)}</span> : <span className="count-ring count-ring--zero">{fmtNumber(value)}</span>}
+    </td>
   );
 
   const submit = async () => {
@@ -176,8 +188,16 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
                 {numCell(summary.attendancePermissions, 'leave-summary-permission')}
                 {numCell(summary.totalPermissions, `leave-summary-${approaching ? 'warning' : 'permission'}`)}
                 {numCell(summary.permissionHours, `leave-summary-${approaching ? 'warning' : 'hours'}`)}
-                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? (summary.remainingEntries > 0 ? <Badge tone="danger">{fmtNumber(summary.remainingEntries)}</Badge> : fmtNumber(summary.remainingEntries)) : '—'}</td>
-                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>{allowanceSelected ? (summary.remainingHours > 0 ? <Badge tone="danger">{fmtNumber(summary.remainingHours)}</Badge> : fmtNumber(summary.remainingHours)) : '—'}</td>
+                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>
+                  {allowanceSelected
+                    ? <span className={`count-ring count-ring--${summary.remainingEntries > 0 ? quotaTone : 'zero'}`}>{fmtNumber(summary.remainingEntries)}</span>
+                    : '—'}
+                </td>
+                <td className={allowanceSelected ? `leave-summary-${quotaTone}` : 'leave-summary-neutral'}>
+                  {allowanceSelected
+                    ? <span className={`count-ring count-ring--${summary.remainingHours > 0 ? quotaTone : 'zero'}`}>{fmtNumber(summary.remainingHours)}</span>
+                    : '—'}
+                </td>
               </tr>;
             })}</tbody>
           </Table></TableWrap>
@@ -205,11 +225,14 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
 
       <Modal open={Boolean(draft)} onClose={() => setDraft(null)} title={draft?.id ? 'تعديل طلب' : 'إضافة إجازة أو إذن'} footer={<><Button onClick={() => setDraft(null)}>إلغاء</Button><Button variant="primary" icon="save" onClick={submit}>حفظ</Button></>}>
         {draft ? <div className="formgrid">
-          <Field label="الموظف" htmlFor="lp-employee" error={errors.employeeId}>
-            <Select id="lp-employee" value={draft.employeeId} onChange={(event) => set('employeeId', event.target.value)}>
-              <option value="">— اختر الموظف —</option>{data.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.employeeNo} — {employee.name}</option>)}
-            </Select>
-          </Field>
+          <EmployeePicker
+            id="lp-employee"
+            label="الموظف"
+            error={errors.employeeId}
+            value={draft.employeeId}
+            onChange={(value) => set('employeeId', value)}
+            options={data.employees.filter((e) => !e.archived || e.id === draft.employeeId).map((employee) => ({ id: employee.id, name: employee.name, meta: `رقم ${employee.employeeNo}` }))}
+          />
           <Field label="نوع الطلب" htmlFor="lp-request-type">
             <Select id="lp-request-type" value={draft.requestType} onChange={(event) => updateRequestType(event.target.value as Draft['requestType'])}>
               <option value="leave">إجازة</option><option value="permission">إذن</option>
@@ -221,7 +244,7 @@ export function LeavePermissionsPage({ embedded = false }: { embedded?: boolean 
             </Select>
           </Field>
           <Field label="التاريخ" htmlFor="lp-date" error={errors.date}>
-            <div className="date-today-row"><Input id="lp-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button size="sm" onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div>
+            <div className="date-today-row"><Input id="lp-date" type="date" value={draft.date} onChange={(event) => set('date', event.target.value)} /><Button onClick={() => set('date', todayInputValue())}>تاريخ اليوم</Button></div>
           </Field>
           {draft.requestType === 'permission' ? <Field label="مدة الإذن" htmlFor="lp-duration" error={errors.durationHours}>
             <Select id="lp-duration" value={draft.durationHours} onChange={(event) => set('durationHours', event.target.value as Draft['durationHours'])}>

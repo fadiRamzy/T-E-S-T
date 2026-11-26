@@ -76,7 +76,7 @@ test('«الملاحظات والمتابعة» page is notes-only; notes HIDDEN
   expect(document.querySelector('.unified-records-stack')).toBeNull();
   // the separate follow-up register page is gone from navigation and routes
   expect(document.querySelector('a[href="#/mgmt/observations"]')).toBeNull();
-  const navText = document.querySelector('.scope-mgmt .sidebar__nav')?.textContent ?? '';
+  const navText = document.querySelector('.scope-mgmt .bottom-nav')?.textContent ?? '';
   expect(navText).not.toContain('سجل المتابعة');
   expect(navText).toContain('الملاحظات والمتابعة');
 

@@ -36,12 +36,26 @@ export function EmployeePicker({
   label,
   value,
   onChange,
-  options,
+  options: optionsProp,
   placeholder = '— اختر الموظف —',
   error,
   required,
   className,
 }: EmployeePickerProps) {
+  const options = useMemo(() => {
+    const raw = Array.isArray(optionsProp) ? optionsProp : [];
+    return raw
+      .filter((option): option is PickerOption => Boolean(option && typeof option === 'object' && option.id != null))
+      .map((option) => {
+        const name = typeof option.name === 'string' ? option.name.trim() : String(option.name ?? '').trim();
+        const meta = typeof option.meta === 'string' ? option.meta.trim() : option.meta == null ? '' : String(option.meta).trim();
+        return {
+          id: String(option.id),
+          name: name || meta || 'موظف',
+          meta: meta || undefined,
+        } as PickerOption;
+      });
+  }, [optionsProp]);
   const autoId = useId();
   const controlId = id ?? `picker-${autoId}`;
   const listId = `${controlId}-list`;
@@ -50,7 +64,7 @@ export function EmployeePicker({
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const [placement, setPlacement] = useState<'bottom' | 'top'>('bottom');
-  const [rect, setRect] = useState<{ top: number; left: number; width: number } | null>(null);
+  const [rect, setRect] = useState<{ top?: number; bottom?: number; left: number; width: number } | null>(null);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
@@ -69,10 +83,14 @@ export function EmployeePicker({
     if (!node) return;
     const box = node.getBoundingClientRect();
     const width = Math.max(box.width, 280);
-    const left = Math.min(Math.max(8, box.right - width), window.innerWidth - width - 8);
+    const left = Math.min(Math.max(8, box.left), window.innerWidth - width - 8);
     const spaceBelow = window.innerHeight - box.bottom;
-    const nextPlacement = spaceBelow < 260 && box.top > spaceBelow ? 'top' : 'bottom';
-    setRect({ top: nextPlacement === 'top' ? box.top - 6 : box.bottom + 6, left, width });
+    const nextPlacement = spaceBelow < 280 && box.top > spaceBelow ? 'top' : 'bottom';
+    setRect(
+      nextPlacement === 'top'
+        ? { bottom: Math.max(8, window.innerHeight - box.top + 6), left, width }
+        : { top: box.bottom + 6, left, width },
+    );
     setPlacement(nextPlacement);
   };
 
@@ -121,6 +139,7 @@ export function EmployeePicker({
     }
     if (event.key === 'Escape') {
       event.preventDefault();
+      event.stopPropagation();
       close();
       buttonRef.current?.focus();
       return;
@@ -181,8 +200,15 @@ export function EmployeePicker({
         ? createPortal(
             <div
               ref={popRef}
+              dir="rtl"
               className={cn('picker__pop scope-mgmt', placement === 'top' && 'picker__pop--top')}
-              style={{ top: rect.top, left: rect.left, width: rect.width }}
+              style={{
+                ...(rect.top != null ? { top: rect.top } : { top: 'auto' }),
+                ...(rect.bottom != null ? { bottom: rect.bottom } : { bottom: 'auto' }),
+                left: rect.left,
+                width: rect.width,
+                zIndex: 10020,
+              }}
               onKeyDown={onKeyDown}
             >
               <div className="picker__search">
@@ -194,7 +220,7 @@ export function EmployeePicker({
                   placeholder="ابحث بالاسم أو الرقم…"
                   aria-label="بحث في الموظفين"
                   onChange={(event) => {
-                    setQuery(event.target.value);
+                    setQuery(event.target.value ?? '');
                     setActiveIndex(0);
                   }}
                 />
@@ -202,25 +228,31 @@ export function EmployeePicker({
 
               <ul className="picker__list" id={listId} role="listbox" aria-label={label}>
                 {filtered.length ? (
-                  filtered.map((option, index) => (
-                    <li
-                      key={option.id}
-                      role="option"
-                      aria-selected={option.id === value}
-                      className={cn(
-                        'picker__option',
-                        index === activeIndex && 'is-active',
-                        option.id === value && 'is-selected',
-                      )}
-                      onMouseEnter={() => setActiveIndex(index)}
-                      onClick={() => choose(option)}
-                    >
-                      <span className="picker__name">{option.name}</span>
-                      {option.id === value ? <Icon name="check" size={14} /> : null}
-                    </li>
-                  ))
+                  filtered.map((option, index) => {
+                    const isSelected = option.id === value;
+                    const isActive = index === activeIndex;
+                    return (
+                      <li
+                        key={option.id}
+                        role="option"
+                        aria-selected={isSelected}
+                        className={cn(
+                          'picker__option',
+                          isActive && 'is-active',
+                          isSelected && 'is-selected',
+                        )}
+                        style={{ minHeight: 40 }}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onClick={() => choose(option)}
+                      >
+                        <span className="picker__name">{option.name}</span>
+                        {option.meta ? <span className="picker__meta">{option.meta}</span> : null}
+                        {isSelected ? <Icon name="check" size={14} /> : null}
+                      </li>
+                    );
+                  })
                 ) : (
-                  <li className="picker__empty">لا يوجد موظف مطابق لهذا البحث.</li>
+                  <li className="picker__empty">{options.length === 0 ? 'لا يوجد موظفون متاحون للاختيار' : 'لا يوجد موظف مطابق لهذا البحث.'}</li>
                 )}
               </ul>
             </div>,

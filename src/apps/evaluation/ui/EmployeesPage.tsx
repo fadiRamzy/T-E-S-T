@@ -148,15 +148,15 @@ function EmployeeDrawer({ model, emp, onClose, onEdit, onDelete }: { model: AppM
         <button className="btn sm danger" onClick={onDelete}><Icon name="trash" /> حذف</button>
       </div>
       <h3 style={{ marginBottom: 6 }}>إجمالي النقاط الشهري</h3>
-      <svg viewBox="0 0 360 140" role="img" aria-label="مخطط الإجمالي الشهري" style={{ width: '100%', background: '#fafcfe', border: '1px solid var(--line)', borderRadius: 8 }}>
+      <svg viewBox="0 0 360 140" role="img" aria-label="مخطط الإجمالي الشهري" style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
         {monthly.map((m, i) => {
           const h = (m.total / max) * 90;
           const x = 355 - (i + 1) * 29;
           return (
             <g key={i}>
-              <rect x={x} y={105 - h} width={20} height={h} rx={3} fill={m.present ? '#0f8b8d' : '#d5dce8'}><title>{MONTH_NAMES[i]}: {m.total}</title></rect>
-              <text x={x + 10} y={100 - h} fontSize="9" textAnchor="middle" fill="#0f2a4a">{m.present ? m.total : ''}</text>
-              <text x={x + 10} y={120} fontSize="8" textAnchor="middle" fill="#5d6b82">{MONTH_NAMES[i].slice(0, 3)}</text>
+              <rect x={x} y={105 - h} width={20} height={h} rx={3} fill={m.present ? '#7C1F2C' : '#F3EDDD'}><title>{MONTH_NAMES[i]}: {m.total}</title></rect>
+              <text x={x + 10} y={100 - h} fontSize="9" textAnchor="middle" fill="#591420">{m.present ? m.total : ''}</text>
+              <text x={x + 10} y={120} fontSize="8" textAnchor="middle" fill="#6B5E4F">{MONTH_NAMES[i].slice(0, 3)}</text>
             </g>
           );
         })}
