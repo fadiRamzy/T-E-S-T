@@ -12,9 +12,7 @@ export function NotesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="الموظفون والمتابعة"
         title="الملاحظات والمتابعة"
-        description="أضف ملاحظة مرتبطة بموظف، أو اعرض الملاحظات المحفوظة له سابقًا."
       />
       <EmployeeNotesManager employees={data.employees} notes={data.employeeNotes} collapsibleNotes defaultHidden />
     </>

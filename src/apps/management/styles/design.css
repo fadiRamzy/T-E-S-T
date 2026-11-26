@@ -10,7 +10,7 @@
   background: var(--canvas);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
@@ -255,6 +255,30 @@
 .scope-mgmt .chip.active .count { color: #F1D9DB; }
 button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor: pointer; }
 
+/* ── Subtle number highlights (circular rings around numbers only) ──────── */
+.scope-mgmt .count-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: transparent;
+  border: 1.5px solid var(--divider);
+}
+.scope-mgmt .count-ring--zero { color: var(--text-3); border-color: var(--line); }
+.scope-mgmt .count-ring--total { color: var(--maroon-dark); border-color: var(--maroon); background: var(--maroon-tint); }
+.scope-mgmt .count-ring--leave { color: var(--teal-700); border-color: var(--teal-600); background: rgba(19, 137, 127, 0.08); }
+.scope-mgmt .count-ring--permission { color: var(--gold-dark); border-color: var(--gold); background: var(--gold-tint); }
+.scope-mgmt .count-ring--warning { color: var(--warning); border-color: var(--warning); background: var(--warning-bg); }
+.scope-mgmt .count-ring--error { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
+.scope-mgmt .count-ring--remaining { color: var(--success); border-color: var(--success); background: var(--success-bg); }
+
 /* ── Cards ──────────────────────────────────────────────────────────────── */
 .scope-mgmt .card, .scope-mgmt.card {
   padding: 0; margin-bottom: 24px;
@@ -332,7 +356,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 .scope-mgmt .table tbody tr:last-child td { border-bottom: none; }
 .scope-mgmt .table tbody tr:hover td { background: rgba(173, 131, 50, 0.06); }
 .scope-mgmt .table td a { color: var(--maroon-dark); font-weight: 700; }
-.scope-mgmt .table td.num, .scope-mgmt .table th.num { text-align: end; font-variant-numeric: tabular-nums; font-family: var(--font-numeric); }
+.scope-mgmt .table td.num, .scope-mgmt .table th.num { text-align: end; font-variant-numeric: tabular-nums; font-family: var(--font-numeric); width: 1%; white-space: nowrap; }
 .scope-mgmt .table td.nowrap, .scope-mgmt .table th.nowrap { white-space: nowrap; }
 .scope-mgmt .table td.wrap { white-space: normal; }
 
@@ -472,11 +496,13 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
 .scope-mgmt .picker__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
 .scope-mgmt .picker__meta { flex: 0 0 auto; padding: 1px 8px; border-radius: 6px; background: var(--surface-alt); color: var(--text-3); font-size: 12px; line-height: 18px; font-weight: 600; }
 .scope-mgmt .picker__placeholder { color: var(--text-3); }
-.scope-mgmt .picker__pop {
+.scope-mgmt.picker__pop {
   background: var(--surface) !important; color: var(--text) !important;
   border: 1.5px solid var(--divider) !important; border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-popover) !important; padding: 8px !important;
   font-family: var(--font-body) !important;
+  max-height: 340px;
+  overflow: hidden;
 }
 .scope-mgmt .picker__search { display: flex; align-items: center; gap: 8px; padding: 0 10px; min-height: 38px;
   border: 1.5px solid var(--control-border); border-radius: var(--radius-control); background: var(--surface); margin-bottom: 8px; }
@@ -547,7 +573,7 @@ button.scope-mgmt .chip, button.scope-mgmt .chip { font-family: inherit; cursor:
   .scope-mgmt .picker__control, .scope-mgmt .picker__search {
     background: var(--surface); color: var(--text); border-color: var(--control-border);
   }
-  .scope-mgmt .picker__pop { background: var(--surface) !important; color: var(--text) !important; border-color: var(--divider) !important; }
+  .scope-mgmt.picker__pop { background: var(--surface) !important; color: var(--text) !important; border-color: var(--divider) !important; }
   .scope-mgmt .modal__head, .scope-mgmt .modal__foot, .scope-mgmt .modal__body { background: var(--surface-tint); color: var(--text); }
 }
 

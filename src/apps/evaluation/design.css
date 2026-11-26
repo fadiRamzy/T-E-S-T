@@ -10,7 +10,7 @@
   background: var(--canvas);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.6;
   --line: var(--divider);
   --line-soft: rgba(42, 33, 27, 0.06);
@@ -415,10 +415,12 @@ button.scope-eval .chip, button.scope-eval .chip { font-family: inherit; cursor:
   gap: 14px; margin-bottom: 24px;
 }
 .scope-eval .kpi, .scope-eval.kpi {
+  position: relative;
   flex: 1 1 160px; min-width: 150px;
   background: var(--surface-tint); border: 1px solid var(--line);
   border-radius: var(--radius-md); padding: 16px;
   display: flex; align-items: center; gap: 12px;
+  overflow: hidden;
 }
 .scope-eval .kpi__label {
   font-size: 12px; font-weight: 800; letter-spacing: 0.03em;

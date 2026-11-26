@@ -13,14 +13,14 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { path: '/employees', label: 'الموظفون', icon: 'employees' },
-  { path: '/notes', label: 'الملاحظات والمتابعة', icon: 'edit' },
-  { path: '/visit-times', label: 'توقيت الزيارات', icon: 'visits' },
-  { path: '/minutes', label: 'المحاضر', icon: 'minutes' },
-  { path: '/leave-permissions', label: 'الإجازات', icon: 'calendar' },
-  { path: '/attendance-delays', label: 'تأخيرات الحضور', icon: 'clock' },
-  { path: '/reports', label: 'التقارير', icon: 'reports' },
-  { path: '/eval/dashboard', label: 'نظام التقييمات', icon: 'chart' },
+  { path: '/employees', label: 'الموظفون', icon: 'employees', color: 'var(--maroon)' },
+  { path: '/notes', label: 'الملاحظات والمتابعة', icon: 'edit', color: 'var(--gold-dark)' },
+  { path: '/visit-times', label: 'توقيت الزيارات', icon: 'visits', color: 'var(--maroon-dark)' },
+  { path: '/minutes', label: 'المحاضر', icon: 'minutes', color: 'var(--text-2)' },
+  { path: '/leave-permissions', label: 'الإجازات', icon: 'calendar', color: 'var(--gold)' },
+  { path: '/attendance-delays', label: 'تأخيرات الحضور', icon: 'clock', color: 'var(--maroon)' },
+  { path: '/reports', label: 'التقارير', icon: 'reports', color: 'var(--text-2)' },
+  { path: '/eval/dashboard', label: 'نظام التقييمات', icon: 'chart', color: 'var(--gold-dark)' },
 ];
 
 const isMgmtPath = (path: string) => !path.startsWith('/eval');
@@ -41,14 +41,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="app-shell">
       <header className="desktop-topbar print-hide" aria-label="رأس الصفحة">
         <div className="desktop-topbar__inner">
-          <div className="desktop-topbar__title">
-            <span className="desktop-topbar__eyebrow">منظومة رسمية</span>
-            <strong>نظام المتابعة وإدارة المخاطر</strong>
-          </div>
-          <div className="desktop-topbar__meta">
-            <span className="desktop-topbar__org">
-              <Icon name="building" size={14} /> {settings.organizationName}
-            </span>
+          <div className="desktop-topbar__org">
+            <Icon name="building" size={14} /> {settings.organizationName}
           </div>
         </div>
       </header>
@@ -77,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 title={item.label}
               >
                 <span className="bottom-nav__icon">
-                  <Icon name={item.icon} size={18} strokeWidth={1.65} />
+                  <Icon name={item.icon} size={18} strokeWidth={1.65} style={{ color: item.color }} />
                 </span>
                 <span className="bottom-nav__label">{item.label}</span>
               </a>
