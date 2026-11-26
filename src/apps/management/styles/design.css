@@ -104,6 +104,17 @@
   font-weight: 700;
 }
 
+/* The toast container is a fixed, viewport-sized box (base.css anchors it with top + bottom)
+   at z-index 100, i.e. ABOVE the bottom nav (z-index 50). Even when empty it swallowed every
+   click. Make the container click-through; only the toasts themselves (close button) are interactive. */
+.scope-mgmt .toast-stack {
+  pointer-events: none;
+}
+
+.scope-mgmt .toast-stack > * {
+  pointer-events: auto;
+}
+
 /* Leave room for the fixed bottom nav bar so content is never blocked */
 .scope-mgmt .page,
 .scope-mgmt.page {
