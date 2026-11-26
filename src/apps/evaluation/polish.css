@@ -392,3 +392,24 @@
     font-size: 13px;
   }
 }
+
+/* Bottom navigation: bold labels, solid bar, clearly filled active item. */
+.scope-eval.scope-eval .bottom-nav__inner {
+  background: var(--surface, #fff);
+  border: 1.5px solid var(--line-strong, #d9cea8);
+  box-shadow: 0 -2px 14px rgba(63, 15, 24, 0.12);
+}
+
+.scope-eval.scope-eval .bottom-nav__item {
+  font-weight: 700;
+}
+
+.scope-eval.scope-eval .bottom-nav__item.is-active {
+  font-weight: 800;
+  color: #fff;
+  background: var(--maroon, #7b1e2e);
+}
+
+.scope-eval.scope-eval .bottom-nav__item.is-active svg {
+  color: #fff;
+}

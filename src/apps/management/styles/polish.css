@@ -212,3 +212,86 @@
   border-color: var(--maroon);
   color: var(--maroon-dark);
 }
+
+/* 9. Compact headers: actions sit next to the title (no wide empty gap) and are grouped in one toolbar. */
+.scope-mgmt.scope-mgmt .card__head,
+.scope-mgmt.scope-mgmt .section-card__head {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 14px 20px;
+}
+
+.scope-mgmt.scope-mgmt .card__actions,
+.scope-mgmt.scope-mgmt .section-card__meta,
+.scope-mgmt.scope-mgmt .section-card__actions {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scope-mgmt.scope-mgmt .card__actions {
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.scope-mgmt.scope-mgmt .card__actions .btn {
+  box-shadow: none;
+}
+
+.scope-mgmt.scope-mgmt .pagehead {
+  justify-content: flex-start;
+  gap: 12px 24px;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+}
+
+/* 10. Space between the card header / toolbar / filter panel and the table. */
+.scope-mgmt.scope-mgmt .listcard__controls {
+  padding: 14px 20px 18px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.scope-mgmt.scope-mgmt .listcard__controls:empty {
+  display: none;
+}
+
+.scope-mgmt.scope-mgmt .listcard__list > .table-panel,
+.scope-mgmt.scope-mgmt .listcard__list > .tablewrap {
+  margin-top: 4px;
+}
+
+/* 11. Bottom navigation: bold labels, solid bar, clearly filled active item. */
+.scope-mgmt.scope-mgmt .bottom-nav__inner {
+  background: var(--surface);
+  border: 1.5px solid var(--line-strong);
+  box-shadow: 0 -2px 14px rgba(63, 15, 24, 0.12);
+}
+
+.scope-mgmt.scope-mgmt .bottom-nav__item {
+  font-weight: 700;
+  color: var(--ink-700);
+}
+
+.scope-mgmt.scope-mgmt .bottom-nav__item.is-active {
+  font-weight: 800;
+  color: #fff;
+  background: var(--brand-800, #5a1824);
+}
+
+.scope-mgmt.scope-mgmt .bottom-nav__item.is-active svg {
+  color: #fff;
+}
+
+@media (max-width: 560px) {
+  .scope-mgmt.scope-mgmt .card__head,
+  .scope-mgmt.scope-mgmt .section-card__head {
+    padding: 12px 16px;
+  }
+  .scope-mgmt.scope-mgmt .listcard__controls {
+    padding: 12px 16px 16px;
+  }
+}

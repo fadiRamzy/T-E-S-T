@@ -240,18 +240,19 @@ const { runAction } = useAppActions();
             subtitle={`${rows.length} زيارة مطابقة`}
             hideLabel="إخفاء البيانات"
             showLabel="إظهار البيانات"
+            actions={
+              <Button
+                size="sm"
+                icon={filtersCollapsed ? 'search' : 'filter'}
+                onClick={() => setFiltersCollapsed((prev) => !prev)}
+              >
+                {filtersCollapsed ? 'إظهار الفلاتر' : 'إخفاء الفلاتر'}
+              </Button>
+            }
             note={`قائمة الزيارات مخفية (${rows.length} زيارة) — اضغط «إظهار البيانات» لعرضها. الإخفاء لا يحذف أي سجل.`}
 
               controls={
                 <>
-                  <Button
-                    size="sm"
-                    icon={filtersCollapsed ? 'search' : 'filter'}
-                    onClick={() => setFiltersCollapsed((prev) => !prev)}
-                   
-                  >
-                    {filtersCollapsed ? 'إظهار الفلاتر' : 'إخفاء الفلاتر'}
-                  </Button>
                   {!filtersCollapsed && (
                     <div className="filter-panel">
                       <div className="filter-panel__head">
